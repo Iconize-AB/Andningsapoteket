@@ -1,17 +1,29 @@
-// index.js
-const express = require('express');
+const express = require("express");
+const { PrismaClient } = require("@prisma/client");
+const sgMail = require("@sendgrid/mail");
+
+sgMail.setApiKey(SENDGRID_API_KEY);
+const prisma = new PrismaClient();
 const app = express();
-const port = 3000;
 
-// Middleware to parse JSON bodies
 app.use(express.json());
+const PORT = process.env.PORT || 3000;
+const userRouter = require("./users/users");
+const breathworkRouter = require("./breathwork/breathwork");
+const eventsRouter = require("./events/events");
+const savedEntryListsRouter = require("./saved_entry_lists/saved_entry_lists");
 
-// A simple route
+app.use("/userRouter", userRouter);
+app.use("/breathworkRouter", breathworkRouter);
+app.use("/eventsRouter", eventsRouter);
+app.use("/savedEntryListsRouter", savedEntryListsRouter);
+
+require("./runNotificationCronJobs");
+
 app.get('/', (req, res) => {
   res.send('Hello, Andningsapoteket!');
 });
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`App listening on port ${PORT}`);
 });

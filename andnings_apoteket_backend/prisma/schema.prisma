@@ -29,9 +29,8 @@ model User {
   userCategories             UserCategory[]
   batchesFollowed            Batch[]   @relation("FollowedUsers")
   batchesFollowing           Batch[]   @relation("FollowingUsers")
-  profileImageUrl            String?
   viewedOnBoarding           String[]
-  acceptedTermsAndConditions Boolean
+  profile                    Profile
   username                   String    @unique
   role                       String
   createdAt                  DateTime  @default(now())
@@ -41,6 +40,14 @@ model User {
   videoComments              VideoComment[]
   breathworkLists            BreathworkList[]
   eventTracking              EventTracking[]
+}
+
+model Profile {
+  pushNotifications Boolean
+  emailNotifications Boolean
+  acceptedTermsAndConditions Boolean
+  profileImageUrl String?
+  ratingFunction Boolean
 }
 
 model Batch {
