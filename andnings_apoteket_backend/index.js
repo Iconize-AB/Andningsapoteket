@@ -9,6 +9,7 @@ const app = express();
 app.use(express.json());
 const PORT = process.env.PORT || 3000;
 const userRouter = require("./users/users");
+const onboardingRouter = require("./users/onboarding");
 const breathworkRouter = require("./breathwork/breathwork");
 const eventsRouter = require("./events/events");
 const savedEntryListsRouter = require("./saved_entry_lists/saved_entry_lists");
@@ -16,6 +17,7 @@ const savedEntryListsRouter = require("./saved_entry_lists/saved_entry_lists");
 app.use("/userRouter", userRouter);
 app.use("/breathworkRouter", breathworkRouter);
 app.use("/eventsRouter", eventsRouter);
+app.use("/onboardingRouter", onboardingRouter);
 app.use("/savedEntryListsRouter", savedEntryListsRouter);
 
 require("./runNotificationCronJobs");
