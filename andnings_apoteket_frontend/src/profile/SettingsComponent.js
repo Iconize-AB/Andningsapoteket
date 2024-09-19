@@ -12,10 +12,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import Toast from "react-native-toast-message";
 import { FontAwesome } from "@expo/vector-icons";
-import { contactUsEmail } from "../common/Functions";
-import Avatar from "./Avatar";
-import AppText from "./AppText";
-import EditProfileModal from "./EditProfileModal";
+import EnhancedText from "../regular/EnhancedText";
+import { contactUsEmail } from "../common/Validation";
 
 const SettingsComponent = ({
   userDetails,
@@ -122,25 +120,25 @@ const SettingsComponent = ({
       }
     >
       <View style={[styles.section, { paddingTop: 16 }]}>
-        <AppText style={styles.sectionTitle}>Account details</AppText>
+        <EnhancedText style={styles.sectionTitle}>Account details</EnhancedText>
         <View style={styles.sectionBody}>
           <TouchableOpacity onPress={toggleEditMode} style={styles.profile}>
-            <Avatar
+            {/* <Avatar
               onChange={handleAvatarUpdate}
               avatarUri={userDetails.avatar}
-            />
+            /> */}
             <View style={styles.profileBody}>
-              <AppText style={styles.profileName}>{userDetails.name}</AppText>
-              <AppText style={styles.profileHandle}>
+              <EnhancedText style={styles.profileName}>{userDetails.name}</EnhancedText>
+              <EnhancedText style={styles.profileHandle}>
                 {userDetails.email}
-              </AppText>
+              </EnhancedText>
             </View>
             <FeatherIcon color="#fff" name="chevron-right" size={22} />
           </TouchableOpacity>
         </View>
       </View>
       <View style={styles.section}>
-        <AppText style={styles.sectionTitle}>Resources</AppText>
+        <EnhancedText style={styles.sectionTitle}>Resources</EnhancedText>
         <View style={styles.sectionBody}>
           <View style={[styles.rowWrapper, styles.rowFirst]}>
             <TouchableOpacity
@@ -149,16 +147,16 @@ const SettingsComponent = ({
               }}
               style={styles.row}
             >
-              <AppText style={styles.rowLabel}>
+              <EnhancedText style={styles.rowLabel}>
                 Saved sessions{" "}
                 <FontAwesome name="heart" size={15} color="red" />
-              </AppText>
+              </EnhancedText>
 
               <View style={styles.rowSpacer} />
 
-              <AppText style={styles.rowValue}>
+              <EnhancedText style={styles.rowValue}>
                 {userDetails?.trainingListCount}
-              </AppText>
+              </EnhancedText>
 
               <FeatherIcon color="#bcbcbc" name="chevron-right" size={19} />
             </TouchableOpacity>
@@ -170,15 +168,15 @@ const SettingsComponent = ({
               }}
               style={styles.row}
             >
-              <AppText style={styles.rowLabel}>
+              <EnhancedText style={styles.rowLabel}>
                 My categories <FontAwesome name="heart" size={15} color="red" />
-              </AppText>
+              </EnhancedText>
 
               <View style={styles.rowSpacer} />
 
-              <AppText style={styles.rowValue}>
+              <EnhancedText style={styles.rowValue}>
                 {userDetails?.recipeListsCount}
-              </AppText>
+              </EnhancedText>
 
               <FeatherIcon color="#bcbcbc" name="chevron-right" size={19} />
             </TouchableOpacity>
@@ -190,15 +188,15 @@ const SettingsComponent = ({
               }}
               style={styles.row}
             >
-              <AppText style={styles.rowLabel}>
+              <EnhancedText style={styles.rowLabel}>
                 Recipes <FontAwesome name="heart" size={15} color="red" />
-              </AppText>
+              </EnhancedText>
 
               <View style={styles.rowSpacer} />
 
-              <AppText style={styles.rowValue}>
+              <EnhancedText style={styles.rowValue}>
                 {userDetails?.recipeListsCount}
-              </AppText>
+              </EnhancedText>
 
               <FeatherIcon color="#bcbcbc" name="chevron-right" size={19} />
             </TouchableOpacity>
@@ -210,10 +208,10 @@ const SettingsComponent = ({
               }}
               style={styles.row}
             >
-              <AppText style={styles.rowLabel}>
+              <EnhancedText style={styles.rowLabel}>
                 Your insights{" "}
                 <FontAwesomeIcon icon={faChartPie} size={15} color="#fff" />
-              </AppText>
+              </EnhancedText>
               <View style={styles.rowSpacer} />
               <FeatherIcon color="#bcbcbc" name="chevron-right" size={19} />
             </TouchableOpacity>
@@ -225,20 +223,20 @@ const SettingsComponent = ({
               }}
               style={styles.row}
             >
-              <AppText style={styles.rowLabel}>
+              <EnhancedText style={styles.rowLabel}>
                 Appreciation Diary{" "}
                 <FontAwesome name="heart" size={15} color="red" />
-              </AppText>
+              </EnhancedText>
               <View style={styles.rowSpacer} />
-              <AppText style={styles.rowValue}>
+              <EnhancedText style={styles.rowValue}>
                 {userDetails?.diaryEntriesCount}
-              </AppText>
+              </EnhancedText>
               <FeatherIcon color="#bcbcbc" name="chevron-right" size={19} />
             </TouchableOpacity>
           </View>
           <View style={styles.rowWrapper}>
             <View style={styles.row}>
-              <AppText style={styles.rowLabel}>Email Notifications</AppText>
+              <EnhancedText style={styles.rowLabel}>Email Notifications</EnhancedText>
               <View style={styles.rowSpacer} />
               <Switch
                 onValueChange={handleToggleNotification}
@@ -249,7 +247,7 @@ const SettingsComponent = ({
           </View>
           <View style={[styles.rowWrapper, styles.rowLast]}>
             <View style={styles.row}>
-              <AppText style={styles.rowLabel}>Push Notifications</AppText>
+              <EnhancedText style={styles.rowLabel}>Push Notifications</EnhancedText>
               <View style={styles.rowSpacer} />
               <Switch
                 onValueChange={handleTogglePushNotification}
@@ -261,11 +259,11 @@ const SettingsComponent = ({
         </View>
       </View>
       <View style={styles.section}>
-        <AppText style={styles.sectionTitle}>Help</AppText>
+        <EnhancedText style={styles.sectionTitle}>Help</EnhancedText>
         <View style={styles.sectionBody}>
           <View style={[styles.rowWrapper, styles.rowFirst]}>
             <TouchableOpacity onPress={contactUsEmail} style={styles.row}>
-              <AppText style={styles.rowLabel}>Contact Us</AppText>
+              <EnhancedText style={styles.rowLabel}>Contact Us</EnhancedText>
 
               <View style={styles.rowSpacer} />
 
@@ -274,7 +272,7 @@ const SettingsComponent = ({
           </View>
           <View style={styles.rowWrapper}>
             <TouchableOpacity onPress={contactUsEmail} style={styles.row}>
-              <AppText style={styles.rowLabel}>Report Bug</AppText>
+              <EnhancedText style={styles.rowLabel}>Report Bug</EnhancedText>
 
               <View style={styles.rowSpacer} />
 
@@ -288,7 +286,7 @@ const SettingsComponent = ({
               }
               style={styles.row}
             >
-              <AppText style={styles.rowLabel}>Rate in App Store</AppText>
+              <EnhancedText style={styles.rowLabel}>Rate in App Store</EnhancedText>
 
               <View style={styles.rowSpacer} />
 
@@ -301,7 +299,7 @@ const SettingsComponent = ({
               onPress={() => setShowTerms(true)}
               style={styles.row}
             >
-              <AppText style={styles.rowLabel}>Terms and Privacy</AppText>
+              <EnhancedText style={styles.rowLabel}>Terms and Privacy</EnhancedText>
 
               <View style={styles.rowSpacer} />
 
@@ -322,9 +320,9 @@ const SettingsComponent = ({
             ]}
           >
             <TouchableOpacity onPress={handleSignOut} style={styles.row}>
-              <AppText style={[styles.rowLabel, styles.rowLabelLogout]}>
+              <EnhancedText style={[styles.rowLabel, styles.rowLabelLogout]}>
                 Log Out
-              </AppText>
+              </EnhancedText>
             </TouchableOpacity>
           </View>
           <View
@@ -338,14 +336,14 @@ const SettingsComponent = ({
             ]}
           >
             <TouchableOpacity onPress={handleOnDelete} style={styles.row}>
-              <AppText style={[styles.rowLabel, styles.rowLabelLogout]}>
+              <EnhancedText style={[styles.rowLabel, styles.rowLabelLogout]}>
                 Delete My Account
-              </AppText>
+              </EnhancedText>
             </TouchableOpacity>
           </View>
         </View>
       </View>
-      <EditProfileModal
+      {/* <EditProfileModal
         visible={modalVisible}
         userDetails={userDetails}
         onChange={handleInputChange}
@@ -355,8 +353,8 @@ const SettingsComponent = ({
         verificationCode={verificationCode}
         setVerificationCode={setVerificationCode}
         handleVerifyEmail={handleVerifyEmail}
-      />
-      <AppText style={styles.contentFooter}>App Version 1.1 #50491</AppText>
+      /> */}
+      <EnhancedText style={styles.contentFooter}>App Version 1.1 #50491</EnhancedText>
     </ScrollView>
   );
 };

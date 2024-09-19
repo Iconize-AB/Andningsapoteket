@@ -1,17 +1,15 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { StyleSheet, SafeAreaView, View, Alert } from "react-native";
-import { useAuth } from "../context/AuthenticationContext";
-import { DeleteUser } from "../apis/AuthenticationEndpoints";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
-import { useTheme } from "../context/ThemeContextProvider";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faComment, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { LoadingScreen } from "./Loading";
 import SettingsComponent from "./SettingsComponent";
 import { useFocusEffect } from "@react-navigation/native";
 import Title from "../regular/Title";
 import FavoriteScreen from "./FavoriteScreen";
+import { useAuth } from "../context/AuthContext";
+import { LoadingScreen } from "../regular/LoadingSreen";
 
 export default function ProfileScreen({ navigation, route }) {
   const [userDetails, setUserDetails] = useState({
@@ -32,16 +30,12 @@ export default function ProfileScreen({ navigation, route }) {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedList, setSelectedList] = useState(null);
   const [verificationCode, setVerificationCode] = useState("");
+  const [activeTab, setActiveTab] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
   const [awaitingVerification, setAwaitingVerification] = useState(false);
   const [viewComments, setViewComments] = useState(false);
   const [selectedReceipeList, setSelectedReceipeList] = useState(null);
   const { signOut } = useAuth();
-  const { theme } = useTheme();
-
-  useEffect(() => {
-    theme.setProfileActiveTab(theme.profileActiveTab);
-  }, [theme.profileActiveTab, theme.activeProfileTab]);
 
   const handleInputChange = (field, value) => {
     setUserDetails((prev) => ({ ...prev, [field]: value }));
@@ -63,23 +57,6 @@ export default function ProfileScreen({ navigation, route }) {
   const handleCloseModal = () => {
     setUserDetails(originalUserDetails);
     setModalVisible(false);
-  };
-
-  const getTitle = () => {
-    if (selectedList) {
-      return selectedList.name;
-    } else if (selectedReceipeList) {
-      return selectedReceipeList.name;
-    } else {
-      switch (theme.profileActiveTab) {
-        case "settings":
-          return "Settings";
-        case "favorites":
-          return "Favorites";
-        default:
-          return "";
-      }
-    }
   };
 
   const fetchUserProfile = async () => {
@@ -135,10 +112,6 @@ export default function ProfileScreen({ navigation, route }) {
   useFocusEffect(
     useCallback(() => {
       fetchUserProfile();
-      console.log("theme.profileActiveTab", theme.profileActiveTab);
-      if (theme.profileActiveTab !== "settings") {
-        theme.setProfileActiveTab("settings");
-      }
     }, [])
   );
 
@@ -175,7 +148,6 @@ export default function ProfileScreen({ navigation, route }) {
                   },
                   backgroundColor: "#000",
                 });
-                theme.setProfileActiveTab("settings");
                 setSelectedList(null);
               }
             } catch (error) {
@@ -231,7 +203,6 @@ export default function ProfileScreen({ navigation, route }) {
                   },
                   backgroundColor: "#000",
                 });
-                theme.setProfileActiveTab("settings");
                 setSelectedReceipeList(null);
               }
             } catch (error) {
@@ -270,7 +241,7 @@ export default function ProfileScreen({ navigation, route }) {
           onPress: async () => {
             try {
               const token = await AsyncStorage.getItem("userToken");
-              const response = await DeleteUser(token, userDetails.userInfoId);
+              let response;
               if (response.ok) {
                 Toast.show({
                   type: "success",
@@ -407,19 +378,15 @@ export default function ProfileScreen({ navigation, route }) {
   };
 
   const navigate = () => {
-    if (theme.profileActiveTab === "settings") {
-      navigation.navigate("Home");
-    } else if (selectedList) {
+      if (selectedList) {
       setSelectedList(null);
     } else if (selectedReceipeList) {
       setSelectedReceipeList(null);
-    } else {
-      theme.setProfileActiveTab("settings");
     }
   };
 
   const renderTabContent = () => {
-    switch (theme.profileActiveTab) {
+    switch (activeTab) {
       case "settings":
         return (
           <SettingsComponent

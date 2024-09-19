@@ -13,6 +13,7 @@ import {
   faPersonRays,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import EnhancedText from "../regular/EnhancedText";
 
 const HomeScreen = ({ navigation, route }) => {
   const navigateToOption = (option) => {
@@ -63,7 +64,7 @@ const HomeScreen = ({ navigation, route }) => {
                   ]}
                 />
                 <View style={styles.details}>
-                  <AppText style={styles.optionText}>{title}</AppText>
+                  <EnhancedText style={styles.optionText}>{title}</EnhancedText>
                   {/* <FontAwesomeIcon
                     icon={icons[key]}
                     size={35}

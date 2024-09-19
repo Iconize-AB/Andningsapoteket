@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, StyleSheet } from "react-native";
 
-const EnhancedText = ({ children, style, ...otherProps }) => (
+const EnhancedBoldText = ({ children, style, ...otherProps }) => (
   <Text style={[styles.defaultStyle, style]} {...otherProps}>
     {children}
   </Text>
@@ -10,7 +10,8 @@ const EnhancedText = ({ children, style, ...otherProps }) => (
 const styles = StyleSheet.create({
   defaultStyle: {
     fontFamily: "bahnschrift",
+    fontWeight: 700,
   },
 });
 
-export default EnhancedText;
+export default EnhancedBoldText;

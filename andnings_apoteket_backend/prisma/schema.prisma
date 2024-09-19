@@ -30,7 +30,8 @@ model User {
   batchesFollowed            Batch[]   @relation("FollowedUsers")
   batchesFollowing           Batch[]   @relation("FollowingUsers")
   viewedOnBoarding           String[]
-  profile                    Profile
+  profileId                  Int?      // Keep profileId optional
+  profile                    Profile?  // No need for @relation here
   username                   String    @unique
   role                       String
   createdAt                  DateTime  @default(now())
@@ -43,12 +44,16 @@ model User {
 }
 
 model Profile {
-  pushNotifications Boolean
-  emailNotifications Boolean
+  id                         Int       @id @default(autoincrement())
+  pushNotifications          Boolean
+  emailNotifications         Boolean
   acceptedTermsAndConditions Boolean
-  profileImageUrl String?
-  ratingFunction Boolean
+  profileImageUrl            String?
+  ratingFunction             Boolean
+  userId                     Int       @unique
+  user                       User      @relation(fields: [userId], references: [id]) // Foreign key constraint on this side
 }
+
 
 model Batch {
   id              Int      @id @default(autoincrement())

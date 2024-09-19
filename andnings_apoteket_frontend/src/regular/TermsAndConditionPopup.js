@@ -1,12 +1,9 @@
 import React, { useState } from "react";
 import { View, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
-import AppText from "../components/AppText";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { LoadingScreen } from "./Loading";
-import { Signin } from "../apis/AuthenticationEndpoints";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { LoadingScreen } from "./LoadingSreen";
+import EnhancedText from "./EnhancedText";
 
 const termsAndConditionsText = `
 By using this app, you agree to the following terms and conditions:
@@ -53,7 +50,7 @@ const TermsAndConditionPopup = ({ setAccepted, onClose }) => {
         }
       );
       if (response.ok) {
-        Signin(token);
+        // Signin(token);
         setAccepted(true);
       } else {
         const errorData = await response.json();
@@ -92,9 +89,9 @@ const TermsAndConditionPopup = ({ setAccepted, onClose }) => {
           style={[styles.overlay, { backgroundColor: "rgba(0, 0, 0, 0.8)" }]}
         />
         <View style={styles.popupContent}>
-          <AppText style={styles.title}>Terms and Conditions</AppText>
+          <EnhancedText style={styles.title}>Terms and Conditions</EnhancedText>
           <ScrollView style={styles.scrollView}>
-            <AppText style={styles.message}>{termsAndConditionsText}</AppText>
+            <EnhancedText style={styles.message}>{termsAndConditionsText}</EnhancedText>
           </ScrollView>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
@@ -102,9 +99,9 @@ const TermsAndConditionPopup = ({ setAccepted, onClose }) => {
               onPress={onClose ? onClose : handleAccept}
               disabled={isLoading}
             >
-              <AppText style={styles.buttonText}>
+              <EnhancedText style={styles.buttonText}>
                 {onClose ? "Done" : "Accept"}
-              </AppText>
+              </EnhancedText>
             </TouchableOpacity>
           </View>
         </View>

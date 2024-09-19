@@ -1,10 +1,8 @@
 import React from "react";
 import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
-import { LoadingScreen } from "./Loading";
-import { useLists } from "./Common/CustomHooks";
-import ListItem from "./ListItem";
-import FavoriteVideoContainer from "./FavoriteVideoContainer";
 import NoData from "../regular/NoData";
+import { LoadingScreen } from "../regular/LoadingSreen";
+import ListItem from "../regular/ListItem";
 
 const FavoriteScreen = ({
   setSelectedList,
@@ -13,7 +11,7 @@ const FavoriteScreen = ({
   setViewComments,
   navigate,
 }) => {
-  const { lists, isLoading } = useLists();
+  // const { lists, isLoading } = useLists();
 
   if (isLoading) {
     return <LoadingScreen />;
@@ -43,21 +41,12 @@ const FavoriteScreen = ({
 
   return (
     <View style={styles.favorites}>
-      {selectedList ? (
-        <FavoriteVideoContainer
-          selectedList={selectedList}
-          navigate={navigate}
-          setViewComments={setViewComments}
-          viewComments={viewComments}
-        />
-      ) : (
-        <FlatList
-          data={lists}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id.toString()}
-          style={styles.listContainer}
-        />
-      )}
+      <FlatList
+        data={lists}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id.toString()}
+        style={styles.listContainer}
+      />
     </View>
   );
 };
