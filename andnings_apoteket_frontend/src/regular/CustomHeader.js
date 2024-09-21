@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     alignItems: "center",
     backgroundColor: colors.background,
+    
     justifyContent: "center",
     position: "relative",
   },

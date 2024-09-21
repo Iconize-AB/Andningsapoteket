@@ -23,6 +23,7 @@ import toastConfiguration from "./src/common/ToastConfiguration";
 import CustomHeader from "./src/regular/CustomHeader";
 import UsersChoice from "./src/authentication/UsersChoice";
 import SigninScreen from "./src/authentication/SigninScreen";
+import HomeScreen from "./src/home/HomeScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -30,9 +31,9 @@ const Stack = createStackNavigator();
 function Root({ userDetails, refreshUserProfile }) {
   const [accepted, setAccepted] = useState(false);
   
-  if (!userDetails.acceptedTermsAndCondition && !accepted) {
-    return <TermsAndConditionPopup setAccepted={setAccepted} />;
-  }
+  // if (!userDetails?.acceptedTermsAndCondition && !accepted) {
+  //   return <TermsAndConditionPopup setAccepted={setAccepted} />;
+  // }
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -58,7 +59,7 @@ function Root({ userDetails, refreshUserProfile }) {
         },
         tabBarIcon: ({ focused }) => {
           let icon;
-          let iconColor = focused ? getColorByRoute(route.name) : "#000";
+          let iconColor = "#000";
 
           switch (route.name) {
             case "Profile":
@@ -290,7 +291,7 @@ function AppNavigator({ navigation }) {
     return <DynamicSplashScreen />;
   }
 
-  return userToken && userDetails?.isActivated ? (
+  return !userToken && !userDetails?.isActivated ? (
     <Root
       handleSignOut={handleSignOut}
       userDetails={userDetails}

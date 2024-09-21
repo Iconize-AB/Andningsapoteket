@@ -10,6 +10,7 @@ import Title from "../regular/Title";
 import FavoriteScreen from "./FavoriteScreen";
 import { useAuth } from "../context/AuthContext";
 import { LoadingScreen } from "../regular/LoadingSreen";
+import ActionMenu from "../regular/ActionMenu";
 
 export default function ProfileScreen({ navigation, route }) {
   const [userDetails, setUserDetails] = useState({
@@ -482,7 +483,7 @@ export default function ProfileScreen({ navigation, route }) {
             route={route}
             visibility={selectedList || selectedReceipeList ? "1" : "0"}
             toggle={toggleMenu}
-            title={getTitle()}
+            title="Profile"
           />
         </View>
         {renderTabContent()}
