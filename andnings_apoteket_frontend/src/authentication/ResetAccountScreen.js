@@ -8,9 +8,9 @@ import {
 } from "react-native";
 import Toast from "react-native-toast-message";
 import BackIcon from "../regular/BackIcon";
+import EnhancedText from "../regular/EnhancedText";
 
 const ResetAccountScreen = ({ route, navigation }) => {
-  const { email } = route.params;
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -88,7 +88,7 @@ const ResetAccountScreen = ({ route, navigation }) => {
         <BackIcon navigation={navigation} />
         <View style={styles.wrapper}>
           <View style={[styles.overlay, { backgroundColor: "#466F78" }]} />
-          <EnhancedText style={styles.title}>SET NEW PASSWORD</EnhancedText>
+          <Text style={styles.title}>SET NEW PASSWORD</Text>
           {/* <PasswordField
             onChangeText={setNewPassword}
             value={newPassword}
@@ -103,7 +103,7 @@ const ResetAccountScreen = ({ route, navigation }) => {
             style={styles.button}
             onPress={handleUpdatePassword}
           >
-            <EnhancedText style={styles.buttonText}>Update Password</EnhancedText>
+            <Text style={styles.buttonText}>Update Password</Text>
           </TouchableOpacity>
         </View>
       </ImageBackground>

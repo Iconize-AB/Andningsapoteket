@@ -1,19 +1,18 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet, Text } from "react-native";
-import colors from "../common/colors/Colors"; // Centralized colors
+import colors from "../common/colors/Colors"; // Assuming centralized color management
+import EnhancedText from "./EnhancedText"; // Assuming you use EnhancedText component
 
 const EnhancedButton = ({
   onPress,
   title,
-  size = "medium", // Default size is medium
-  type = "solid", // Can be 'solid', 'outline', 'primary', or 'secondary'
+  type = "solid", // Can be 'solid', 'outline', 'primary', 'secondary'
   customStyle = {}, // Custom style prop to override default styles
   textStyle = {}, // Custom text style if needed
   disabled = false, // Add disabled state
 }) => {
   const buttonStyles = [
     styles.button,
-    styles[size], // Size-based style
     type === "outline" ? styles.buttonOutline : styles.buttonSolid, // Conditional style based on solid/outline
     type === "primary" && styles.primaryButton, // Style for primary button
     type === "secondary" && styles.secondaryButton, // Style for secondary button
@@ -29,7 +28,7 @@ const EnhancedButton = ({
 
   return (
     <TouchableOpacity onPress={onPress} style={buttonStyles} disabled={disabled}>
-      <EnhancedButton style={textStyles}>{title}</EnhancedButton>
+      <EnhancedText style={textStyles}>{title}</EnhancedText>
     </TouchableOpacity>
   );
 };
@@ -38,51 +37,37 @@ const styles = StyleSheet.create({
   button: {
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 10,
-    marginVertical: 10,
+    borderRadius: 120, // Full rounded corners
+    marginTop: 12,
+    width: "100%", // Button takes full width
+    padding: 10, // Padding inside the button
   },
   buttonSolid: {
-    backgroundColor: colors.primary, // Default primary solid background
+    backgroundColor: "#F55E09", // Default solid background color (primary style)
   },
   buttonOutline: {
     backgroundColor: "transparent",
     borderWidth: 2,
-    borderColor: colors.primary, // Outline border color
+    borderColor: "#F55E09", // Outline border color for outline buttons
   },
   primaryButton: {
-    backgroundColor: colors.primary, // Use primary color for the primary button
+    backgroundColor: colors.primary, // Primary button background color
   },
   secondaryButton: {
-    backgroundColor: colors.secondary, // Use secondary color for the secondary button
+    backgroundColor: colors.secondary, // Secondary button background color
   },
   buttonText: {
-    textTransform: "uppercase",
-    fontSize: 18,
+    textTransform: "uppercase", // Text is transformed to uppercase
+    fontSize: 18, // Font size for the button text
   },
   solidText: {
-    color: colors.textPrimary, // Text color for solid buttons
+    color: "#fff", // Text color for solid buttons (white)
   },
   outlineText: {
-    color: colors.primary, // Text color for outline buttons
-  },
-  large: {
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    width: "100%",
-  },
-  medium: {
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    width: "80%",
-  },
-  small: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    width: "60%",
+    color: "#F55E09", // Text color for outline buttons
   },
   disabled: {
-    backgroundColor: colors.disabledBackground, // Disabled state background
-    borderColor: colors.disabledBorder,
+    backgroundColor: "#d3d3d3", // Disabled button background color
   },
 });
 

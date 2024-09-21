@@ -396,7 +396,7 @@ export default function ProfileScreen({ navigation, route }) {
             setOriginalUserDetails={setOriginalUserDetails}
             setModalVisible={setModalVisible}
             fetchUserProfile={fetchUserProfile}
-            setActiveTab={theme.setProfileActiveTab}
+            setActiveTab={setActiveTab}
             setSelectedList={setSelectedList}
             setSelectedReceipeList={setSelectedReceipeList}
             handleSignOut={handleSignOut}
@@ -434,7 +434,7 @@ export default function ProfileScreen({ navigation, route }) {
             setOriginalUserDetails={setOriginalUserDetails}
             setModalVisible={setModalVisible}
             setShowTerms={setShowTerms}
-            setActiveTab={theme.setProfileActiveTab}
+            setActiveTab={setActiveTab}
             setSelectedList={setSelectedList}
             setSelectedReceipeList={setSelectedReceipeList}
             handleSignOut={handleSignOut}
@@ -474,7 +474,6 @@ export default function ProfileScreen({ navigation, route }) {
       <View
         style={{
           ...styles.container,
-          marginBottom: theme.profileActiveTab === "diary" ? 0 : 100,
         }}
       >
         <View style={styles.header}>

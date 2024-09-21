@@ -11,11 +11,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import EnhancedText from "../regular/EnhancedText";
 import { isValidEmail } from "../common/Validation";
 import BackIcon from "../regular/BackIcon";
+import EnhancedTextInput from "../regular/EnhancedTextInput";
+import colors from "../common/colors/Colors";
+import EnhancedButton from "../regular/EnhancedButton";
 
 const SignupScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [formError, setFormError] = useState({ email: "", password: "" });
 
   const handleSignUp = async () => {
@@ -83,53 +86,30 @@ const SignupScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <ImageBackground
-        source={{
-          uri: "https://images.squarespace-cdn.com/content/v1/60191f970b559218574dd995/e61a9073-054f-46ac-9847-12fda6e9cd79/PHOTO-2022-10-21-17-02-32.jpg?format=2500w",
-        }}
-        style={styles.image}
-      >
-        <BackIcon navigation={navigation} />
-        <View style={styles.wrapper}>
-          <View style={[styles.overlay, { backgroundColor: "#466F78" }]} />
-          <View style={styles.titleContainer}>
-            <EnhancedText style={styles.title}>WELCOME TO PRIMAL HEALTH.</EnhancedText>
-            <View style={styles.subTitleContainer}>
-              <EnhancedText style={styles.subTitle}>
-                WE EXIST TO HELP YOU FEEL GOOD ABOUT YOURSELF, TO BECOME YOUR
-                STRONGEST SELF IN BODY & MIND,
-              </EnhancedText>
-              <EnhancedText style={styles.subTitle}>
-                SIGN UP TO BECOME A PART OF THE PRIMAL FAMILY.
-              </EnhancedText>
-            </View>
-          </View>
-          <TextInput
-            style={styles.input}
-            onChangeText={(text) => {
-              setName(text);
-              setFormError((prev) => ({ ...prev, name: "" }));
-            }}
-            value={name}
-            placeholderTextColor="#A9A9A9"
-            placeholder="Name"
-            keyboardType="email-address"
-          />
-          <TextInput
-            style={styles.input}
-            onChangeText={(text) => {
-              setEmail(text);
-              setFormError((prev) => ({ ...prev, email: "" }));
-            }}
-            value={email}
-            placeholderTextColor="#A9A9A9"
-            placeholder="Email"
-            keyboardType="email-address"
-          />
-          {formError.email !== "" && (
-            <EnhancedText style={styles.errorText}>{formError.email}</EnhancedText>
-          )}
-          {/* <PasswordField
+      <BackIcon navigation={navigation} />
+      <View style={styles.wrapper}>
+        <View style={styles.titleContainer}>
+          <EnhancedText style={styles.title}>
+            WELCOME TO ANDNINGSAPOTEKET.
+          </EnhancedText>
+        </View>
+        <EnhancedTextInput
+          style={styles.input}
+          onChangeText={(text) => {
+            setPhoneNumber(text);
+            setFormError((prev) => ({ ...prev, phoneNumber: "" }));
+          }}
+          value={phoneNumber}
+          placeholderTextColor="#A9A9A9"
+          placeholder="Phone Number"
+          keyboardType="numeric"
+        />
+        {formError.email !== "" && (
+          <EnhancedText style={styles.errorText}>
+            {formError.email}
+          </EnhancedText>
+        )}
+        {/* <PasswordField
             value={password}
             onChangeText={(text) => {
               setPassword(text);
@@ -137,22 +117,26 @@ const SignupScreen = ({ navigation }) => {
             }}
             placeholder="Password"
           /> */}
-          {formError.password !== "" && (
-            <EnhancedText style={styles.errorText}>{formError.password}</EnhancedText>
-          )}
-          <TouchableOpacity style={styles.button} onPress={handleSignUp}>
-            <EnhancedText style={styles.buttonText}>Sign Up</EnhancedText>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.textButton}
-            onPress={() => navigation.navigate("SignIn")}
-          >
-            <EnhancedText style={styles.textButton}>
-              Already have an account?
-            </EnhancedText>
-          </TouchableOpacity>
-        </View>
-      </ImageBackground>
+        {formError.password !== "" && (
+          <EnhancedText style={styles.errorText}>
+            {formError.password}
+          </EnhancedText>
+        )}
+        <EnhancedButton
+          onPress={handleSignUp}
+          title="Sign Up"
+          size="medium"
+          type="outline"
+        />
+        <TouchableOpacity
+          style={styles.textButton}
+          onPress={() => navigation.navigate("SignIn")}
+        >
+          <EnhancedText style={styles.textButton}>
+            Already have an account?
+          </EnhancedText>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -161,7 +145,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "#000",
+    backgroundColor: colors.background,
     alignItems: "center",
   },
   errorText: {
@@ -177,20 +161,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
-    color: "#fff",
+    color: "#000",
     fontSize: 24,
     marginBottom: 30,
     marginTop: 40,
-    textAlign: "center",
-  },
-  subTitleContainer: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 12,
-  },
-  subTitle: {
-    color: "#fff",
-    fontSize: 14,
     textAlign: "center",
   },
   image: {
@@ -205,10 +179,6 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    opacity: 0.8,
   },
   text: {
     fontSize: 22,
@@ -227,32 +197,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
   },
-  button: {
-    backgroundColor: "#F55E09",
-    padding: 10,
-    textTransform: "uppercase",
-    width: "100%",
-    alignItems: "center",
-    marginTop: 12,
-    borderRadius: 120,
-  },
   textButton: {
-    color: "#fff",
+    color: "#000",
     marginTop: 12,
     textDecorationLine: "underline",
-  },
-  buttonText: {
-    color: "#fff",
-    textTransform: "uppercase",
-    fontSize: 18,
-  },
-  buttonOutline: {
-    backgroundColor: "transparent",
-    borderWidth: 2,
-    borderColor: "#1E90FF",
-  },
-  buttonOutlineText: {
-    color: "#1E90FF",
   },
 });
 

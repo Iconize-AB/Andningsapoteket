@@ -18,12 +18,11 @@ import VerifyAccountScreen from "./src/authentication/VerifyAccountScreen";
 import AuthorizationCodeScreen from "./src/authentication/AuthorizationCodeScreen";
 import ResetAccountScreen from "./src/authentication/ResetAccountScreen";
 import DynamicSplashScreen from "./src/regular/DynamicSplashScreen";
-import SigninScreen from "./src/authentication/SigninScreen";
 import { AuthProvider, useAuth } from "./src/context/AuthContext";
 import toastConfiguration from "./src/common/ToastConfiguration";
 import CustomHeader from "./src/regular/CustomHeader";
 import UsersChoice from "./src/authentication/UsersChoice";
-
+import SigninScreen from "./src/authentication/SigninScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -287,9 +286,9 @@ function AppNavigator({ navigation }) {
     setUserToken(null);
   };
 
-  // if (!isReady) {
-  //   return <DynamicSplashScreen />;
-  // }
+  if (!isReady) {
+    return <DynamicSplashScreen />;
+  }
 
   return userToken && userDetails?.isActivated ? (
     <Root

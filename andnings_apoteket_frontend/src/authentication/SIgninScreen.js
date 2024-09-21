@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
+import { View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import Toast from "react-native-toast-message";
 import { useAuth } from "../context/AuthContext";
 import EnhancedText from "../regular/EnhancedText";
@@ -39,7 +34,7 @@ const SigninScreen = ({ navigation }) => {
       let response;
       const json = await response.json();
       if (response.ok) {
-        console.log('response', json);
+        console.log("response", json);
         signIn(json.token);
       } else {
         setFormError((prev) => ({
@@ -77,24 +72,25 @@ const SigninScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      
-        <BackIcon navigation={navigation} />
-        <View style={styles.wrapper}>
-          <EnhancedTextInput
-            value={phoneNumber}
-            onChangeText={(text) => {
-              setPhoneNumber(text);
-              setFormError((prev) => ({ ...prev, phoneNumber: "" }));
-            }}
-            placeholder="Phone Number"
-            placeholderTextColor="#A9A9A9"
-            keyboardType="phone-number"
-            customStyle={{ color: "#fff" }}
-          />
-          {formError.email !== "" && (
-            <EnhancedText style={styles.errorText}>{formError.email}</EnhancedText>
-          )}
-          {/* <PasswordField
+      <BackIcon navigation={navigation} />
+      <View style={styles.wrapper}>
+        <EnhancedTextInput
+          value={phoneNumber}
+          onChangeText={(text) => {
+            setPhoneNumber(text);
+            setFormError((prev) => ({ ...prev, phoneNumber: "" }));
+          }}
+          placeholder="Phone Number"
+          placeholderTextColor="#A9A9A9"
+          keyboardType="phone-number"
+          customStyle={{ color: "#fff" }}
+        />
+        {formError.email !== "" && (
+          <EnhancedText style={styles.errorText}>
+            {formError.email}
+          </EnhancedText>
+        )}
+        {/* <PasswordField
             value={password}
             onChangeText={(text) => {
               setPassword(text);
@@ -102,24 +98,26 @@ const SigninScreen = ({ navigation }) => {
             }}
             placeholder="Password"
           /> */}
-          {formError.password !== "" && (
-            <EnhancedText style={styles.errorText}>{formError.password}</EnhancedText>
-          )}
-          <EnhancedButton
-            onPress={handleSignIn}
-            title="Sign In"
-            size="medium"
-            type="outline"
-          />
-          <TouchableOpacity
-            style={styles.textButton}
-            onPress={() => navigation.navigate("ForgotPassword")}
-          >
-            <EnhancedText style={styles.textButton}>
-              FORGOT YOUR SECRET PASSWORD?
-            </EnhancedText>
-          </TouchableOpacity>
-        </View>
+        {formError.password !== "" && (
+          <EnhancedText style={styles.errorText}>
+            {formError.password}
+          </EnhancedText>
+        )}
+        <EnhancedButton
+          onPress={handleSignIn}
+          title="Sign In"
+          size="medium"
+          type="outline"
+        />
+        <TouchableOpacity
+          style={styles.textButton}
+          onPress={() => navigation.navigate("ForgotPassword")}
+        >
+          <EnhancedText style={styles.textButton}>
+            FORGOT YOUR SECRET PASSWORD?
+          </EnhancedText>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -159,7 +157,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   wrapper: {
-    padding: 60,
+    padding: 20,
     paddingTop: 10,
     height: "100%",
     width: "100%",

@@ -13,12 +13,23 @@ const EnhancedTextInput = ({
   customStyle = {},
   placeholderTextColor = "#A9A9A9",
 }) => {
+  // Handle input change, allowing only numbers if keyboardType is set to "numeric" or "number-pad"
+  const handleChangeText = (text) => {
+    if (keyboardType === "numeric" || keyboardType === "number-pad") {
+      // Only allow numbers
+      const numericText = text.replace(/[^0-9]/g, "");
+      onChangeText(numericText);
+    } else {
+      onChangeText(text);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <TextInput
         style={[styles.input, customStyle]}
         value={value}
-        onChangeText={onChangeText}
+        onChangeText={handleChangeText} // Use the new handler
         placeholder={placeholder}
         placeholderTextColor={placeholderTextColor}
         secureTextEntry={secureTextEntry}
@@ -34,24 +45,22 @@ const EnhancedTextInput = ({
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    marginVertical: 10,
+    marginVertical: 10, // Keeps space between inputs
   },
   input: {
     height: 50,
     width: "100%",
     color: "#fff",
-    fontSize: 16,
-    backgroundColor: colors.secondary,
-    fontFamily: "bahnschrift",
+    backgroundColor: "#000000",
+    fontFamily: "BahnSchrift",
+    borderColor: colors.border || "#fff",
     borderRadius: 10,
-    margin: 12,
+    fontSize: 16,
     borderWidth: 1,
     padding: 10,
-    borderColor: colors.border || "#fff",
   },
   errorText: {
     alignSelf: "flex-start",
-    marginRight: 12,
     marginTop: -10,
     color: "red",
   },
