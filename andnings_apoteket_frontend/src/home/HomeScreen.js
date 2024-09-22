@@ -33,15 +33,33 @@ const HomeScreen = ({ navigation }) => {
     },
   };
 
+  const exploreMoreCategories = {
+    Wind: {
+      url: "https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      title: "Wind",
+    },
+    Water: {
+      url: "https://images.pexels.com/photos/624015/pexels-photo-624015.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      title: "Water",
+    },
+    Fire: {
+      url: "https://images.pexels.com/photos/266867/pexels-photo-266867.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      title: "Fire",
+    },
+  };
+
   const overlayColors = {
     WorkOut: "rgba(245, 94, 9, 0.6)",
     WorkIn: "rgba(108, 174, 188, 0.6)",
     Recovery: "rgba(17, 85, 134, 0.6)",
     Nutrition: "rgba(70, 120, 93, 0.6)",
+    Wind: "rgba(173, 216, 230, 0.6)", // Light blue for Wind
+    Water: "rgba(0, 105, 148, 0.6)", // Deep blue for Water
+    Fire: "rgba(255, 69, 0, 0.6)", // Orange-red for Fire
   };
 
-  const renderBoxes = () => {
-    return Object.entries(imageSources).map(([key, { title, url }]) => (
+  const renderBoxes = (categories) => {
+    return Object.entries(categories).map(([key, { title, url }]) => (
       <TouchableOpacity
         key={key}
         style={styles.optionBox}
@@ -63,41 +81,63 @@ const HomeScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      {/* Top Picks for You */}
-      <View style={styles.categoryContainer}>
-        <EnhancedText style={styles.categoryTitle}>Top Picks for You</EnhancedText>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.scrollContainer}>
-          {renderBoxes()}
-        </ScrollView>
-      </View>
+    <ScrollView contentContainerStyle={styles.scrollViewContent} showsVerticalScrollIndicator={false}>
+      <View style={styles.wrapper}>
+        <View style={styles.categoryContainer}>
+          <EnhancedText style={styles.categoryTitle}>Top Picks for You</EnhancedText>
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            decelerationRate="fast"  /* Ensures smooth scrolling */
+            style={styles.scrollContainer}
+          >
+            {renderBoxes(imageSources)}
+          </ScrollView>
+        </View>
 
-      {/* Recently Viewed */}
-      <View style={styles.categoryContainer}>
-        <EnhancedText style={styles.categoryTitle}>Recently Viewed</EnhancedText>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.scrollContainer}>
-          {renderBoxes()}
-        </ScrollView>
-      </View>
+        {/* Recently Viewed */}
+        <View style={styles.categoryContainer}>
+          <EnhancedText style={styles.categoryTitle}>Recently Viewed</EnhancedText>
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            decelerationRate="fast"  /* Ensures smooth scrolling */
+            style={styles.scrollContainer}
+          >
+            {renderBoxes(imageSources)}
+          </ScrollView>
+        </View>
 
-      {/* Explore More */}
-      <View style={styles.categoryContainer}>
-        <EnhancedText style={styles.categoryTitle}>Explore More</EnhancedText>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.scrollContainer}>
-          {renderBoxes()}
-        </ScrollView>
+        {/* Explore More */}
+        <View style={styles.categoryContainer}>
+          <EnhancedText style={styles.categoryTitle}>Explore More</EnhancedText>
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            decelerationRate="fast"  /* Ensures smooth scrolling */
+            style={styles.scrollContainer}
+          >
+            {renderBoxes(exploreMoreCategories)}
+          </ScrollView>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollViewContent: {
+    paddingBottom: 220, // Add extra space at the bottom for the floating menu
+  },
   container: {
     flex: 1,
     backgroundColor: colors.background,
     paddingVertical: 20,
   },
   categoryContainer: {
+    marginBottom: 20,
+  },
+  wrapper: {
     marginBottom: 20,
   },
   categoryTitle: {
