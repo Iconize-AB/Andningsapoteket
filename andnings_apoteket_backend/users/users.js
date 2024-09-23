@@ -1,12 +1,15 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const prisma = require('@prisma/client').PrismaClient();
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 const twilio = require('twilio');
+const sgMail = require('@sendgrid/mail');
 require('dotenv').config();
 
 const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const router = express.Router();
 
@@ -79,17 +82,18 @@ router.post("/verify-code", async (req, res) => {
 });
 
 router.post('/register', async (req, res) => {
-  const { name, phoneNumber, password } = req.body;
+  const { email, password } = req.body;
+
+  console.log('email', email, password);
 
   try {
-    // Check if the phone number already exists in the database
+    // Check if the email already exists in the database
     const existingUser = await prisma.user.findUnique({
-      where: { phoneNumber: phoneNumber }, // Assuming phoneNumber field exists in your DB
+      where: { email },
     });
 
-    // If the user already exists, return an error to prevent duplicate registrations
     if (existingUser) {
-      return res.status(400).json({ error: 'Phone number already exists.' });
+      return res.status(400).json({ error: 'Email already exists.' });
     }
 
     // Hash the password before storing it in the database
@@ -98,28 +102,28 @@ router.post('/register', async (req, res) => {
     // Create the user in the database
     const user = await prisma.user.create({
       data: {
-        name,
-        phoneNumber,
+        email,
         password: hashedPassword,
-        isActivated: false,
-        emailNotification: true,
-        pushNotification: true,
-        viewedAnalyticsIntroduction: false,
+        active: false,
         subscriptionType: "freemium",
-        viewedRecoveryIntroduction: false,
-        viewedWorkInIntroduction: false,
-        viewedWorkoutIntroduction: false,
-        viewedWelcomePopup: false,
-        viewedNutritionIntroduction: false,
-        viewedReceipeListIntroduction: false,
+        profile: {
+          create: {
+            pushNotifications: true,
+            emailNotifications: true,
+            acceptedTermsAndConditions: false,
+            ratingFunction: false,
+          },
+        },
+      },
+      include: {
+        profile: true,  // Include profile data in the user object
       },
     });
 
-    const token = jwt.sign({ userId: user.id }, 'secret', {
-      expiresIn: '180d',
-    });
+    // Generate a JWT token for the user
+    const token = jwt.sign({ userId: user.id }, 'secret', { expiresIn: '180d' });
 
-    // Generate a random verification code
+    // Generate a random verification code (6-digit)
     const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
 
     // Update the user with the verification code
@@ -128,19 +132,23 @@ router.post('/register', async (req, res) => {
       data: { verificationCode },
     });
 
-    // Send the verification code via SMS using Twilio
-    await twilioClient.messages.create({
-      body: `Your verification code is: ${verificationCode}`,
-      from: twilioPhoneNumber,
-      to: phoneNumber,
-    });
+    // Send the verification code via email using SendGrid
+    const msg = {
+      to: email,
+      from: 'support@iconize-earth.com',
+      subject: 'Verify your email for Andningsapoteket',
+      text: `Your verification code is: ${verificationCode}`,
+      html: `<strong>Your verification code is: ${verificationCode}</strong>`,
+    };
 
-    // Respond to the client with success and the token
-    res.status(200).json({ message: 'Verification code sent via SMS.', token });
+    await sgMail.send(msg);
+
+    return res.status(200).json({ message: 'Verification email sent.', token });
   } catch (error) {
     console.error('Registration error:', error);
-    res.status(500).json({ error: 'User could not be created.' });
+    return res.status(500).json({ error: 'User could not be created.' });
   }
 });
+
 
 module.exports = router;

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const prisma = require('@prisma/client').PrismaClient();
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient;
 const verifyToken = require('../authentication/verifyToken'); // JWT middleware to verify users
 
 // Onboarding Flow Completion Endpoint

@@ -15,11 +15,11 @@ datasource db {
 
 model User {
   id                         Int       @id @default(autoincrement())
-  firstName                  String
-  lastName                   String
-  fullName                   String
+  firstName                  String?   // Optional field
+  lastName                   String?   // Optional field
+  fullName                   String?    // Optional field
   active                     Boolean
-  subscriptionType           String
+  subscriptionType           String?
   pushToken                  String?
   resetCode                  String?
   password                   String
@@ -30,10 +30,10 @@ model User {
   batchesFollowed            Batch[]   @relation("FollowedUsers")
   batchesFollowing           Batch[]   @relation("FollowingUsers")
   viewedOnBoarding           String[]
-  profileId                  Int?      // Keep profileId optional
-  profile                    Profile?  // No need for @relation here
-  username                   String    @unique
-  role                       String
+  profileId                  Int?      // Optional profileId
+  profile                    Profile?  // Optional relation
+  username                   String?    @unique
+  role                       String?
   createdAt                  DateTime  @default(now())
   savedSessionLists          SavedSessionList[]
   diaryEntries               DiaryEntry[]

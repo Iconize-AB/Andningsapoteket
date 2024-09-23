@@ -1,11 +1,7 @@
+// SignupScreen.js
+
 import React, { useState } from "react";
-import {
-  View,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  ImageBackground,
-} from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import EnhancedText from "../regular/EnhancedText";
@@ -14,11 +10,12 @@ import BackIcon from "../regular/BackIcon";
 import EnhancedTextInput from "../regular/EnhancedTextInput";
 import colors from "../common/colors/Colors";
 import EnhancedButton from "../regular/EnhancedButton";
+import SingleSignOn from "./SingleSignOn";
+import { Register } from "./endpoints/AuthenticationEndpoints";
 
 const SignupScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
   const [formError, setFormError] = useState({ email: "", password: "" });
 
   const handleSignUp = async () => {
@@ -36,7 +33,8 @@ const SignupScreen = ({ navigation }) => {
     }
     if (!isValid) return;
     try {
-      let response;
+      const response = await Register(email, password);
+      console.log('response', response);
       if (!response.ok) {
         Toast.show({
           type: "error",
@@ -93,41 +91,45 @@ const SignupScreen = ({ navigation }) => {
             WELCOME TO ANDNINGSAPOTEKET.
           </EnhancedText>
         </View>
+
+        {/* Email and password fields */}
         <EnhancedTextInput
           style={styles.input}
-          onChangeText={(text) => {
-            setPhoneNumber(text);
-            setFormError((prev) => ({ ...prev, phoneNumber: "" }));
-          }}
-          value={phoneNumber}
+          onChangeText={(text) => setEmail(text)}
+          value={email}
+          placeholder="Email"
           placeholderTextColor="#A9A9A9"
-          placeholder="Phone Number"
-          keyboardType="numeric"
         />
+        <EnhancedTextInput
+          style={styles.input}
+          onChangeText={(text) => setPassword(text)}
+          value={password}
+          placeholder="Password"
+          placeholderTextColor="#A9A9A9"
+          secureTextEntry={true}
+        />
+
         {formError.email !== "" && (
           <EnhancedText style={styles.errorText}>
             {formError.email}
           </EnhancedText>
         )}
-        {/* <PasswordField
-            value={password}
-            onChangeText={(text) => {
-              setPassword(text);
-              setFormError((prev) => ({ ...prev, password: "" }));
-            }}
-            placeholder="Password"
-          /> */}
         {formError.password !== "" && (
           <EnhancedText style={styles.errorText}>
             {formError.password}
           </EnhancedText>
         )}
+
         <EnhancedButton
           onPress={handleSignUp}
           title="Sign Up"
           size="medium"
           type="outline"
         />
+
+        {/* Use SingleSignOn Component */}
+        <SingleSignOn />
+
         <TouchableOpacity
           style={styles.textButton}
           onPress={() => navigation.navigate("SignIn")}
@@ -167,11 +169,6 @@ const styles = StyleSheet.create({
     marginTop: 40,
     textAlign: "center",
   },
-  image: {
-    width: "100%",
-    height: "100%",
-    position: "relative",
-  },
   wrapper: {
     padding: 60,
     paddingTop: 10,
@@ -180,17 +177,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  text: {
-    fontSize: 22,
-    marginBottom: 20,
-    color: "#fff",
-  },
   input: {
     height: 50,
     width: "100%",
     color: "#fff",
     backgroundColor: "#000000",
-    fontFamily: "BebasNeue-Regular",
     borderRadius: 10,
     fontSize: 16,
     margin: 12,

@@ -8,9 +8,11 @@ import BackIcon from "../regular/BackIcon";
 import colors from "../common/colors/Colors";
 import EnhancedTextInput from "../regular/EnhancedTextInput";
 import EnhancedButton from "../regular/EnhancedButton";
+import SingleSignOn from "./SingleSignOn";
+import { Signin } from "./endpoints/AuthenticationEndpoints";
 
 const SigninScreen = ({ navigation }) => {
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [formError, setFormError] = useState({ email: "", password: "" });
   const { signIn } = useAuth();
@@ -31,7 +33,7 @@ const SigninScreen = ({ navigation }) => {
     }
     if (!isValid) return;
     try {
-      let response;
+      const response = await Signin();
       const json = await response.json();
       if (response.ok) {
         console.log("response", json);
@@ -74,16 +76,20 @@ const SigninScreen = ({ navigation }) => {
     <View style={styles.container}>
       <BackIcon navigation={navigation} />
       <View style={styles.wrapper}>
-        <EnhancedTextInput
-          value={phoneNumber}
-          onChangeText={(text) => {
-            setPhoneNumber(text);
-            setFormError((prev) => ({ ...prev, phoneNumber: "" }));
-          }}
-          placeholder="Phone Number"
+      <EnhancedTextInput
+          style={styles.input}
+          onChangeText={(text) => setEmail(text)}
+          value={email}
+          placeholder="Email"
           placeholderTextColor="#A9A9A9"
-          keyboardType="phone-number"
-          customStyle={{ color: "#fff" }}
+        />
+        <EnhancedTextInput
+          style={styles.input}
+          onChangeText={(text) => setPassword(text)}
+          value={password}
+          placeholder="Password"
+          placeholderTextColor="#A9A9A9"
+          secureTextEntry={true}
         />
         {formError.email !== "" && (
           <EnhancedText style={styles.errorText}>
@@ -109,12 +115,14 @@ const SigninScreen = ({ navigation }) => {
           size="medium"
           type="outline"
         />
+        {/* Use SingleSignOn Component */}
+        <SingleSignOn />
         <TouchableOpacity
           style={styles.textButton}
           onPress={() => navigation.navigate("ForgotPassword")}
         >
           <EnhancedText style={styles.textButton}>
-            FORGOT YOUR SECRET PASSWORD?
+            FORGOT YOUR CREDENTIALS?
           </EnhancedText>
         </TouchableOpacity>
       </View>
@@ -157,7 +165,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   wrapper: {
-    padding: 20,
+    padding: 60,
     paddingTop: 10,
     height: "100%",
     width: "100%",
