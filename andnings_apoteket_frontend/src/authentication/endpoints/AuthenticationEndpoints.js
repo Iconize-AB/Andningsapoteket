@@ -15,7 +15,7 @@ export async function Signin(email, password) {
     return response;
   }
   
-  export async function Register(email, password) {
+  export async function Register(email, password, identityToken) {
     const response = await fetch(
       `http://localhost:3000/userRoute/register`,
       {
@@ -26,6 +26,7 @@ export async function Signin(email, password) {
         body: JSON.stringify({
           email,
           password,
+          identityToken
         }),
       }
     );
@@ -84,7 +85,7 @@ export async function Signin(email, password) {
   
   export async function VerifyAccount(email, code) {
     const response = await fetch(
-      `https://primal-backend-851afa707cbd.herokuapp.com/users/verify`,
+      `http://localhost:3000/userRoute/verify-code`,
       {
         method: "POST",
         headers: {

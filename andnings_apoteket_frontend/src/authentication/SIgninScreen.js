@@ -33,8 +33,9 @@ const SigninScreen = ({ navigation }) => {
     }
     if (!isValid) return;
     try {
-      const response = await Signin();
+      const response = await Signin(email, password);
       const json = await response.json();
+      console.log('json', json);
       if (response.ok) {
         console.log("response", json);
         signIn(json.token);

@@ -6,6 +6,8 @@ const prisma = new PrismaClient();
 const twilio = require('twilio');
 const sgMail = require('@sendgrid/mail');
 require('dotenv').config();
+const verifyAppleToken = require('../authentication/verifyApple');
+
 
 const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
@@ -13,60 +15,52 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const router = express.Router();
 
-// Step 1: Send verification code during sign-in
 router.post("/signin", async (req, res) => {
-  const { phoneNumber } = req.body;
+  const { email, password } = req.body;
 
   try {
     const user = await prisma.user.findUnique({
-      where: { phoneNumber: phoneNumber }, 
+      where: { email: email.toLowerCase() },
     });
-
     if (!user) return res.status(404).json({ error: "User not found." });
 
-    // Generate a random 6-digit code
-    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid)
+      return res.status(400).json({ error: "Invalid password." });
 
-    // Store the code in the database temporarily (expires after a while)
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { verificationCode },
+    const token = jwt.sign({ userId: user.id }, "secret", {
+      expiresIn: "180d",
     });
 
-    // Send the code to the user's phone via SMS
-    await twilioClient.messages.create({
-      body: `Your login code is: ${verificationCode}`,
-      from: twilioPhoneNumber,
-      to: phoneNumber,
-    });
-
-    res.status(200).json({ message: "Verification code sent." });
+    res.status(200).json({ token });
   } catch (error) {
-    console.error('Signin error:', error);
-    res.status(500).json({ error: "Failed to send verification code." });
+    res.status(500).json({ error: "Authentication failed." });
   }
 });
 
-// Step 2: Verify the code entered by the user
 router.post("/verify-code", async (req, res) => {
-  const { phoneNumber, verificationCode } = req.body;
+  const { email, code } = req.body;
+
+  console.log('email', email, code);
 
   try {
     const user = await prisma.user.findUnique({
-      where: { phoneNumber: phoneNumber },
+      where: { email: email },
     });
+
+    console.log('user', user);
 
     if (!user) return res.status(404).json({ error: "User not found." });
 
     // Compare the entered code with the stored code
-    if (user.verificationCode !== verificationCode) {
+    if (user.verificationCode !== code) {
       return res.status(400).json({ error: "Invalid verification code." });
     }
 
     // Clear the verification code after successful login
     await prisma.user.update({
       where: { id: user.id },
-      data: { verificationCode: null },
+      data: { verificationCode: null, active: true },
     });
 
     // Generate a JWT token for the user
@@ -82,28 +76,44 @@ router.post("/verify-code", async (req, res) => {
 });
 
 router.post('/register', async (req, res) => {
-  const { email, password } = req.body;
-
-  console.log('email', email, password);
+  const { email, password, appleIdToken } = req.body;
 
   try {
+    let emailFromApple;
+
+    if (appleIdToken) {
+      const applePayload = await verifyAppleToken(appleIdToken);
+      console.log('applePayload', applePayload);
+      if (!applePayload || !applePayload.email) {
+        return res.status(400).json({ error: 'Invalid Apple ID token.' });
+      }
+      emailFromApple = applePayload.email;
+    }
+
+    const userEmail = appleIdToken ? emailFromApple : email;
+
+    console.log('appleIdToken', appleIdToken);
+
     // Check if the email already exists in the database
     const existingUser = await prisma.user.findUnique({
-      where: { email },
+      where: { email: userEmail },
     });
 
     if (existingUser) {
       return res.status(400).json({ error: 'Email already exists.' });
     }
 
-    // Hash the password before storing it in the database
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // If not Apple sign-in, hash the password before storing it in the database
+    let hashedPassword = null;
+    if (!appleIdToken && password) {
+      hashedPassword = await bcrypt.hash(password, 10);
+    }
 
     // Create the user in the database
     const user = await prisma.user.create({
       data: {
-        email,
-        password: hashedPassword,
+        email: userEmail,
+        password: hashedPassword, // Will be null for Apple Sign-In users
         active: false,
         subscriptionType: "freemium",
         profile: {
@@ -116,7 +126,7 @@ router.post('/register', async (req, res) => {
         },
       },
       include: {
-        profile: true,  // Include profile data in the user object
+        profile: true, // Include profile data in the user object
       },
     });
 
@@ -134,7 +144,7 @@ router.post('/register', async (req, res) => {
 
     // Send the verification code via email using SendGrid
     const msg = {
-      to: email,
+      to: userEmail,
       from: 'support@iconize-earth.com',
       subject: 'Verify your email for Andningsapoteket',
       text: `Your verification code is: ${verificationCode}`,

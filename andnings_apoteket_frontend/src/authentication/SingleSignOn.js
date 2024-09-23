@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { View, StyleSheet, Button } from "react-native";
 import Toast from "react-native-toast-message";
-import * as AppleAuthentication from 'expo-apple-authentication'; // Apple sign-in
+import * as AppleAuthentication from 'expo-apple-authentication';
+import { Register } from './endpoints/AuthenticationEndpoints';
 
-const SingleSignOn = () => {
+const SingleSignOn = ({ navigation }) => {
   // Apple Sign-In handler
   const handleAppleSignIn = async () => {
     try {
@@ -13,8 +14,29 @@ const SingleSignOn = () => {
           AppleAuthentication.AppleAuthenticationScope.EMAIL,
         ],
       });
-      // Handle Apple sign-in success
-      console.log("Apple ID token:", credential.identityToken);
+
+      // Extract the Apple ID token and email
+      const { identityToken, email } = credential;
+      console.log('Apple ID token', identityToken);
+
+      // Make an API request to the backend to register with Apple ID
+      const response = await Register(email, null, identityToken); // Pass the Apple ID token
+      if (!response.ok) {
+        Toast.show({
+          type: "error",
+          text1: "Apple sign-in failed.",
+          text2: "Please try again.",
+        });
+      } else {
+        const json = await response.json();
+        await AsyncStorage.setItem("userToken", json.token);
+        Toast.show({
+          type: "success",
+          text1: "Welcome onboard!",
+          text2: "Signed in with Apple ID",
+        });
+        navigation?.navigate("VerifyAccountScreen", { email });
+      }
     } catch (error) {
       if (error.code === 'ERR_CANCELED') {
         console.log("Apple sign-in canceled.");
