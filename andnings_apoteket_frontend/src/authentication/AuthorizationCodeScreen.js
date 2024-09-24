@@ -4,6 +4,8 @@ import { CodeField, Cursor } from "react-native-confirmation-code-field";
 import Toast from "react-native-toast-message";
 import EnhancedText from "../regular/EnhancedText";
 import BackIcon from "../regular/BackIcon";
+import colors from "../common/colors/Colors";
+import { VerifyResetCode } from "./endpoints/AuthenticationEndpoints";
 
 const AuthorizationCodeScreen = ({ route, navigation }) => {
   const { email } = route.params;
@@ -11,7 +13,7 @@ const AuthorizationCodeScreen = ({ route, navigation }) => {
 
   const handleVerifyCode = async () => {
     try {
-      let response;
+      const response = await VerifyResetCode(email, code);
 
       if (response.ok) {
         Toast.show({
@@ -53,12 +55,6 @@ const AuthorizationCodeScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <ImageBackground
-        source={{
-          uri: "https://images.squarespace-cdn.com/content/v1/60191f970b559218574dd995/e61a9073-054f-46ac-9847-12fda6e9cd79/PHOTO-2022-10-21-17-02-32.jpg?format=2500w",
-        }}
-        style={styles.image}
-      >
         <BackIcon navigation={navigation} />
         <View style={styles.wrapper}>
           <View style={[styles.overlay, { backgroundColor: "#466F78" }]} />
@@ -84,7 +80,6 @@ const AuthorizationCodeScreen = ({ route, navigation }) => {
             <EnhancedText style={styles.buttonText}>Verify Code</EnhancedText>
           </Pressable>
         </View>
-      </ImageBackground>
     </View>
   );
 };
@@ -93,17 +88,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "#000",
+    backgroundColor: colors.background,
     alignItems: "center",
   },
   image: {
     width: "100%",
     height: "100%",
     position: "relative",
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    opacity: 0.8,
   },
   wrapper: {
     padding: 60,

@@ -1,5 +1,6 @@
-import React from "react";
-import { View, TextInput, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { View, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { FontAwesome5 } from "@expo/vector-icons";
 import EnhancedText from "../regular/EnhancedText";
 import colors from "../common/colors/Colors";
 
@@ -13,6 +14,8 @@ const EnhancedTextInput = ({
   customStyle = {},
   placeholderTextColor = "#A9A9A9",
 }) => {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(secureTextEntry); // Toggle for showing/hiding password
+  
   // Handle input change, allowing only numbers if keyboardType is set to "numeric" or "number-pad"
   const handleChangeText = (text) => {
     if (keyboardType === "numeric" || keyboardType === "number-pad") {
@@ -29,12 +32,24 @@ const EnhancedTextInput = ({
       <TextInput
         style={[styles.input, customStyle]}
         value={value}
-        onChangeText={handleChangeText} // Use the new handler
+        onChangeText={handleChangeText}
         placeholder={placeholder}
         placeholderTextColor={placeholderTextColor}
-        secureTextEntry={secureTextEntry}
+        secureTextEntry={secureTextEntry && isPasswordVisible}
         keyboardType={keyboardType}
       />
+      {secureTextEntry && (
+        <TouchableOpacity
+          style={styles.icon}
+          onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+        >
+          <FontAwesome5
+            name={isPasswordVisible ? "eye-slash" : "eye"}
+            size={20}
+            color="#A9A9A9"
+          />
+        </TouchableOpacity>
+      )}
       {errorMessage !== "" && (
         <EnhancedText style={styles.errorText}>{errorMessage}</EnhancedText>
       )}
@@ -45,7 +60,8 @@ const EnhancedTextInput = ({
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    marginVertical: 10, // Keeps space between inputs
+    marginVertical: 10,
+    position: "relative",
   },
   input: {
     height: 50,
@@ -57,7 +73,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     fontSize: 16,
     borderWidth: 1,
-    padding: 10,
+    paddingLeft: 10,
+    paddingRight: 40,
+  },
+  icon: {
+    position: "absolute",
+    right: 10,
+    top: 15,
+    zIndex: 1,
   },
   errorText: {
     alignSelf: "flex-start",

@@ -9,10 +9,15 @@ import {
 import Toast from "react-native-toast-message";
 import BackIcon from "../regular/BackIcon";
 import EnhancedText from "../regular/EnhancedText";
+import EnhancedTextInput from "../regular/EnhancedTextInput";
+import colors from "../common/colors/Colors";
+import EnhancedButton from "../regular/EnhancedButton";
+import { SetNewPassword } from "./endpoints/AuthenticationEndpoints";
 
 const ResetAccountScreen = ({ route, navigation }) => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const { email } = route.params;
 
   const handleUpdatePassword = async () => {
     if (newPassword !== confirmPassword) {
@@ -31,7 +36,7 @@ const ResetAccountScreen = ({ route, navigation }) => {
     }
 
     try {
-      let response;
+      const response = await SetNewPassword(email, newPassword);
       if (response.ok) {
         Toast.show({
           type: "success",
@@ -79,34 +84,31 @@ const ResetAccountScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <ImageBackground
-        source={{
-          uri: "https://images.squarespace-cdn.com/content/v1/60191f970b559218574dd995/e61a9073-054f-46ac-9847-12fda6e9cd79/PHOTO-2022-10-21-17-02-32.jpg?format=2500w",
-        }}
-        style={styles.image}
-      >
         <BackIcon navigation={navigation} />
         <View style={styles.wrapper}>
           <View style={[styles.overlay, { backgroundColor: "#466F78" }]} />
           <Text style={styles.title}>SET NEW PASSWORD</Text>
-          {/* <PasswordField
+          <EnhancedTextInput
             onChangeText={setNewPassword}
             value={newPassword}
             placeholder="New Password"
+            placeholderTextColor="#A9A9A9"
+            secureTextEntry={true}
           />
-          <PasswordField
+          <EnhancedTextInput
             onChangeText={setConfirmPassword}
             value={confirmPassword}
-            placeholder="Confirm Password"
-          /> */}
-          <TouchableOpacity
-            style={styles.button}
+            placeholder="New Password"
+            placeholderTextColor="#A9A9A9"
+            secureTextEntry={true}
+          />
+          <EnhancedButton
             onPress={handleUpdatePassword}
-          >
-            <Text style={styles.buttonText}>Update Password</Text>
-          </TouchableOpacity>
+            title="Update Password"
+            size="medium"
+            type="outline"
+          />
         </View>
-      </ImageBackground>
     </View>
   );
 };
@@ -115,11 +117,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "#000",
+    backgroundColor: colors.background,
     alignItems: "center",
   },
   title: {
-    color: "#fff",
+    color: "#000",
     fontSize: 20,
     marginBottom: 20,
     textAlign: "center",
@@ -128,10 +130,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     position: "relative",
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    opacity: 0.8,
   },
   wrapper: {
     padding: 60,

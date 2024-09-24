@@ -291,7 +291,7 @@ function AppNavigator({ navigation }) {
     return <DynamicSplashScreen />;
   }
 
-  return !userToken && !userDetails?.isActivated ? (
+  return userToken ? (
     <Root
       handleSignOut={handleSignOut}
       userDetails={userDetails}

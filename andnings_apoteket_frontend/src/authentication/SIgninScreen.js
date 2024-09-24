@@ -37,7 +37,6 @@ const SigninScreen = ({ navigation }) => {
       const json = await response.json();
       console.log('json', json);
       if (response.ok) {
-        console.log("response", json);
         signIn(json.token);
       } else {
         setFormError((prev) => ({

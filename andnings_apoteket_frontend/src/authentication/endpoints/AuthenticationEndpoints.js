@@ -35,7 +35,7 @@ export async function Signin(email, password) {
   
   export async function ResetPassword(email) {
     const response = await fetch(
-      `https://primal-backend-851afa707cbd.herokuapp.com/users/request-reset`,
+      `http://localhost:3000/userRoute/request-reset`,
       {
         method: "POST",
         headers: {
@@ -65,10 +65,27 @@ export async function Signin(email, password) {
     );
     return response;
   }
+
+  export async function SetNewPassword(email, newPassword) {
+    const response = await fetch(
+      `http://localhost:3000/userRoute/set-new-password`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          newPassword,
+        }),
+      }
+    );
+    return response;
+  }
   
   export async function VerifyResetCode(email, code) {
     const response = await fetch(
-      `https://primal-backend-851afa707cbd.herokuapp.com/users/verify-reset-code`,
+      `http://localhost:3000/userRoute/verify-reset-code`,
       {
         method: "POST",
         headers: {

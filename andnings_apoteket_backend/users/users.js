@@ -20,7 +20,7 @@ router.post("/signin", async (req, res) => {
 
   try {
     const user = await prisma.user.findUnique({
-      where: { email: email.toLowerCase() },
+      where: { email: email },
     });
     if (!user) return res.status(404).json({ error: "User not found." });
 
@@ -37,6 +37,105 @@ router.post("/signin", async (req, res) => {
     res.status(500).json({ error: "Authentication failed." });
   }
 });
+
+router.post("/request-reset", async (req, res) => {
+  const { email } = req.body;
+  console.log('email', email);
+  try {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ error: "User not found." });
+    }
+
+    const verificationCode = Math.floor(100000 + Math.random() * 900000);
+    
+    // Set expiration time to 5 minutes from now
+    const expirationTime = new Date();
+    expirationTime.setMinutes(expirationTime.getMinutes() + 5);
+    console.log('expirationTime', expirationTime);
+
+    await prisma.user.update({
+      where: { email: email.toString() },
+      data: {
+        resetCode: verificationCode.toString(),
+        resetCodeExpiry: expirationTime.toISOString(), // Ensure date is stored in ISO format
+      },
+    });
+
+    const msg = {
+      to: email,  // Use the correct email variable here
+      from: 'support@iconize-earth.com',
+      subject: 'Verify your email for Andningsapoteket',
+      text: `Your verification code is: ${verificationCode}`,
+      html: `<strong>Your verification code is: ${verificationCode}</strong>`,
+    };
+
+    await sgMail.send(msg);
+    res.status(200).json({ message: "Verification code sent." });
+  } catch (error) {
+    console.error("Request reset error:", error);
+    res.status(500).json({ error: "Failed to send verification code." });
+  }
+});
+
+router.post("/set-new-password", async (req, res) => {
+  const { email, newPassword } = req.body;
+  console.log('email', email, newPassword);
+  if (!newPassword || newPassword.length < 6) {
+    return res
+      .status(400)
+      .json({ error: "Password must be at least 6 characters long." });
+  }
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+    if (!user) {
+      return res.status(404).json({ error: "User not found." });
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await prisma.user.update({
+      where: { email: email },
+      data: { password: hashedPassword },
+    });
+    res.status(200).json({ message: "Password updated successfully." });
+  } catch (error) {
+    console.error("Failed to set new password:", error);
+    res.status(500).json({ error: "Failed to update password." });
+  }
+});
+
+router.post("/verify-reset-code", async (req, res) => {
+  const { email, code } = req.body;
+  try {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (
+      !user ||
+      !user.resetCode ||
+      new Date() > new Date(user.resetCodeExpiry)
+    ) {
+      return res.status(400).json({ error: "Invalid or expired code." });
+    }
+
+    if (user.resetCode !== code) {
+      return res.status(400).json({ error: "Incorrect code." });
+    }
+
+    await prisma.user.update({
+      where: { email: email },
+      data: {
+        resetCode: null,
+        resetCodeExpiry: null,
+      },
+    });
+
+    res.status(200).json({ message: "Code successful!" });
+  } catch (error) {
+    console.error("Verification error:", error);
+    res.status(500).json({ error: "Failed to verify code." });
+  }
+});
+
 
 router.post("/verify-code", async (req, res) => {
   const { email, code } = req.body;
@@ -90,7 +189,7 @@ router.post('/register', async (req, res) => {
       emailFromApple = applePayload.email;
     }
 
-    const userEmail = appleIdToken ? emailFromApple : email;
+    const userEmail = appleIdToken ? emailFromApple : email.toLowerCase();
 
     console.log('appleIdToken', appleIdToken);
 
@@ -98,6 +197,8 @@ router.post('/register', async (req, res) => {
     const existingUser = await prisma.user.findUnique({
       where: { email: userEmail },
     });
+
+    console.log('existingUser', existingUser);
 
     if (existingUser) {
       return res.status(400).json({ error: 'Email already exists.' });

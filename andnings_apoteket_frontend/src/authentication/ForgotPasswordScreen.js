@@ -12,12 +12,13 @@ import BackIcon from "../regular/BackIcon";
 import EnhancedText from "../regular/EnhancedText";
 import colors from "../common/colors/Colors";
 import EnhancedButton from "../regular/EnhancedButton";
+import { ResetPassword } from "./endpoints/AuthenticationEndpoints";
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
 
   const handleResetPassword = async () => {
-    let response;
+    const response = await ResetPassword(email);
     if (response.ok) {
       Toast.show({
         type: "success",

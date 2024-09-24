@@ -22,6 +22,7 @@ model User {
   subscriptionType           String?
   pushToken                  String?
   resetCode                  String?
+  resetCodeExpiry            String?
   password                   String
   email                      String    @unique
   phoneNumber                String?
