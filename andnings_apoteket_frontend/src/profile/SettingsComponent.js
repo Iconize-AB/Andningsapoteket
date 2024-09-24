@@ -25,21 +25,12 @@ const SettingsComponent = ({
   setActiveTab,
   handleSignOut,
   handleOnDelete,
-  handleInputChange,
-  handleAvatarUpdate,
-  modalVisible,
-  handleCloseModal,
-  handleSubmitUpdate,
-  awaitingVerification,
-  verificationCode,
-  setVerificationCode,
-  handleVerifyEmail,
 }) => {
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    await fetchUserProfile(); // Call the function to refresh profile data
+    await fetchUserProfile();
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
@@ -48,7 +39,7 @@ const SettingsComponent = ({
   const handleToggleNotification = async (newSetting) => {
     const token = await AsyncStorage.getItem("userToken");
     fetch(
-      "https://primal-backend-851afa707cbd.herokuapp.com/user/toggle-email-notification",
+      "http://localhost:3000/profileRoute/toggle-email-notification",
       {
         method: "PUT",
         headers: {
@@ -79,7 +70,7 @@ const SettingsComponent = ({
   const handleTogglePushNotification = async (newSetting) => {
     const token = await AsyncStorage.getItem("userToken");
     fetch(
-      "https://primal-backend-851afa707cbd.herokuapp.com/user/toggle-push-notification",
+      "http://localhost:3000/profileRoute/toggle-push-notification",
       {
         method: "PUT",
         headers: {
@@ -128,7 +119,9 @@ const SettingsComponent = ({
               avatarUri={userDetails.avatar}
             /> */}
             <View style={styles.profileBody}>
-              <EnhancedText style={styles.profileName}>{userDetails.name}</EnhancedText>
+              <EnhancedText style={styles.profileName}>
+                {userDetails.name}
+              </EnhancedText>
               <EnhancedText style={styles.profileHandle}>
                 {userDetails.email}
               </EnhancedText>
@@ -141,102 +134,10 @@ const SettingsComponent = ({
         <EnhancedText style={styles.sectionTitle}>Resources</EnhancedText>
         <View style={styles.sectionBody}>
           <View style={[styles.rowWrapper, styles.rowFirst]}>
-            <TouchableOpacity
-              onPress={() => {
-                setActiveTab("favorites");
-              }}
-              style={styles.row}
-            >
-              <EnhancedText style={styles.rowLabel}>
-                Saved sessions{" "}
-                <FontAwesome name="heart" size={15} color="red" />
-              </EnhancedText>
-
-              <View style={styles.rowSpacer} />
-
-              <EnhancedText style={styles.rowValue}>
-                {userDetails?.trainingListCount}
-              </EnhancedText>
-
-              <FeatherIcon color="#bcbcbc" name="chevron-right" size={19} />
-            </TouchableOpacity>
-          </View>
-          {/* <View style={[styles.rowWrapper]}>
-            <TouchableOpacity
-              onPress={() => {
-                setActiveTab("categories");
-              }}
-              style={styles.row}
-            >
-              <EnhancedText style={styles.rowLabel}>
-                My categories <FontAwesome name="heart" size={15} color="red" />
-              </EnhancedText>
-
-              <View style={styles.rowSpacer} />
-
-              <EnhancedText style={styles.rowValue}>
-                {userDetails?.recipeListsCount}
-              </EnhancedText>
-
-              <FeatherIcon color="#bcbcbc" name="chevron-right" size={19} />
-            </TouchableOpacity>
-          </View> */}
-          <View style={[styles.rowWrapper]}>
-            <TouchableOpacity
-              onPress={() => {
-                setActiveTab("receipes");
-              }}
-              style={styles.row}
-            >
-              <EnhancedText style={styles.rowLabel}>
-                Recipes <FontAwesome name="heart" size={15} color="red" />
-              </EnhancedText>
-
-              <View style={styles.rowSpacer} />
-
-              <EnhancedText style={styles.rowValue}>
-                {userDetails?.recipeListsCount}
-              </EnhancedText>
-
-              <FeatherIcon color="#bcbcbc" name="chevron-right" size={19} />
-            </TouchableOpacity>
-          </View>
-          {/* <View style={[styles.rowWrapper]}>
-            <TouchableOpacity
-              onPress={() => {
-                setActiveTab("analytics");
-              }}
-              style={styles.row}
-            >
-              <EnhancedText style={styles.rowLabel}>
-                Your insights{" "}
-                <FontAwesomeIcon icon={faChartPie} size={15} color="#fff" />
-              </EnhancedText>
-              <View style={styles.rowSpacer} />
-              <FeatherIcon color="#bcbcbc" name="chevron-right" size={19} />
-            </TouchableOpacity>
-          </View> */}
-          <View style={[styles.rowWrapper]}>
-            <TouchableOpacity
-              onPress={() => {
-                setActiveTab("diary");
-              }}
-              style={styles.row}
-            >
-              <EnhancedText style={styles.rowLabel}>
-                Appreciation Diary{" "}
-                <FontAwesome name="heart" size={15} color="red" />
-              </EnhancedText>
-              <View style={styles.rowSpacer} />
-              <EnhancedText style={styles.rowValue}>
-                {userDetails?.diaryEntriesCount}
-              </EnhancedText>
-              <FeatherIcon color="#bcbcbc" name="chevron-right" size={19} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.rowWrapper}>
             <View style={styles.row}>
-              <EnhancedText style={styles.rowLabel}>Email Notifications</EnhancedText>
+              <EnhancedText style={styles.rowLabel}>
+                Email Notifications
+              </EnhancedText>
               <View style={styles.rowSpacer} />
               <Switch
                 onValueChange={handleToggleNotification}
@@ -247,7 +148,9 @@ const SettingsComponent = ({
           </View>
           <View style={[styles.rowWrapper, styles.rowLast]}>
             <View style={styles.row}>
-              <EnhancedText style={styles.rowLabel}>Push Notifications</EnhancedText>
+              <EnhancedText style={styles.rowLabel}>
+                Push Notifications
+              </EnhancedText>
               <View style={styles.rowSpacer} />
               <Switch
                 onValueChange={handleTogglePushNotification}
@@ -286,7 +189,9 @@ const SettingsComponent = ({
               }
               style={styles.row}
             >
-              <EnhancedText style={styles.rowLabel}>Rate in App Store</EnhancedText>
+              <EnhancedText style={styles.rowLabel}>
+                Rate in App Store
+              </EnhancedText>
 
               <View style={styles.rowSpacer} />
 
@@ -299,7 +204,9 @@ const SettingsComponent = ({
               onPress={() => setShowTerms(true)}
               style={styles.row}
             >
-              <EnhancedText style={styles.rowLabel}>Terms and Privacy</EnhancedText>
+              <EnhancedText style={styles.rowLabel}>
+                Terms and Privacy
+              </EnhancedText>
 
               <View style={styles.rowSpacer} />
 
@@ -325,22 +232,6 @@ const SettingsComponent = ({
               </EnhancedText>
             </TouchableOpacity>
           </View>
-          <View
-            style={[
-              styles.rowWrapper,
-              styles.rowFirst,
-              styles.rowLast,
-              {
-                alignItems: "center",
-              },
-            ]}
-          >
-            <TouchableOpacity onPress={handleOnDelete} style={styles.row}>
-              <EnhancedText style={[styles.rowLabel, styles.rowLabelLogout]}>
-                Delete My Account
-              </EnhancedText>
-            </TouchableOpacity>
-          </View>
         </View>
       </View>
       {/* <EditProfileModal
@@ -354,7 +245,9 @@ const SettingsComponent = ({
         setVerificationCode={setVerificationCode}
         handleVerifyEmail={handleVerifyEmail}
       /> */}
-      <EnhancedText style={styles.contentFooter}>App Version 1.1 #50491</EnhancedText>
+      <EnhancedText style={styles.contentFooter}>
+        App Version 1.1 #50491
+      </EnhancedText>
     </ScrollView>
   );
 };

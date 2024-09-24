@@ -1,16 +1,15 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { StyleSheet, SafeAreaView, View, Modal, TouchableOpacity } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCog } from "@fortawesome/free-solid-svg-icons";
 import SettingsComponent from "./SettingsComponent";
-import { useFocusEffect } from "@react-navigation/native";
-import Title from "../regular/Title";
 import { useAuth } from "../context/AuthContext";
 import colors from "../common/colors/Colors";
 import { LoadingScreen } from "../regular/LoadingSreen";
 import Toast from "react-native-toast-message";
 import EnhancedText from "../regular/EnhancedText";
 import { FetchUserProfile } from "./endpoints/ProfileEndpoints";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ProfileScreen({ navigation, route }) {
   const [userDetails, setUserDetails] = useState({
@@ -23,18 +22,19 @@ export default function ProfileScreen({ navigation, route }) {
   const [isLoading, setIsLoading] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const { signOut } = useAuth();
-  const { modalVisible, setModalVisible } = useState(null);
-
-  // Hook to fetch the user profile (not conditionally rendered)
+  
+  // Hook to fetch the user profile
   const fetchUserProfile = useCallback(async () => {
     try {
       const token = await AsyncStorage.getItem("userToken");
+      console.log("Token:", token);  // Log the token to ensure it's correct
       if (!token) throw new Error("No token found");
-
+  
       setIsLoading(true);
-      const response = await FetchUserProfile(token);
+      const response = await FetchUserProfile(token);  
       const json = await response.json();
-
+      console.log('JSON:', json);  // Log the JSON response
+  
       if (response.ok) {
         setUserDetails({
           name: json.name,
@@ -43,23 +43,31 @@ export default function ProfileScreen({ navigation, route }) {
           emailNotification: json.emailNotification,
           pushNotification: json.pushNotification,
         });
+      } else {
+        console.error("Response error:", json);
+        Toast.show({
+          type: "error",
+          text1: "Failed to fetch profile.",
+          text2: json.error || "Please try again.",
+        });
       }
     } catch (error) {
+      console.error("FetchUserProfile error:", error);  // Log any error
       Toast.show({
         type: "error",
         text1: "Failed to fetch profile.",
-        text2: "Please try again.",
+        text2: error.message || "Please try again.",
       });
     } finally {
       setIsLoading(false);
     }
   }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      fetchUserProfile();
-    }, [fetchUserProfile])
-  );
+  
+  // Ensure the profile is fetched when the component mounts
+  useEffect(() => {
+    console.log("useEffect triggered");  // Log when useEffect is triggered
+    fetchUserProfile();
+  }, [fetchUserProfile]);  // Add fetchUserProfile as a dependency
 
   const handleSignOut = () => {
     signOut(null);
@@ -92,8 +100,6 @@ export default function ProfileScreen({ navigation, route }) {
         <View style={styles.modalContainer}>
           <SettingsComponent
             userDetails={userDetails}
-            setModalVisible={setModalVisible}
-            modalVisible={modalVisible}
             setUserDetails={setUserDetails}
             fetchUserProfile={fetchUserProfile}
             handleSignOut={handleSignOut}
