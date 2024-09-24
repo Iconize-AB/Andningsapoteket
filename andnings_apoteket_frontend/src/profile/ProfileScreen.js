@@ -10,6 +10,7 @@ import colors from "../common/colors/Colors";
 import { LoadingScreen } from "../regular/LoadingSreen";
 import Toast from "react-native-toast-message";
 import EnhancedText from "../regular/EnhancedText";
+import { FetchUserProfile } from "./endpoints/ProfileEndpoints";
 
 export default function ProfileScreen({ navigation, route }) {
   const [userDetails, setUserDetails] = useState({
@@ -31,16 +32,7 @@ export default function ProfileScreen({ navigation, route }) {
       if (!token) throw new Error("No token found");
 
       setIsLoading(true);
-      const response = await fetch(
-        "https://primal-backend-851afa707cbd.herokuapp.com/users/profile",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await FetchUserProfile(token);
       const json = await response.json();
 
       if (response.ok) {
