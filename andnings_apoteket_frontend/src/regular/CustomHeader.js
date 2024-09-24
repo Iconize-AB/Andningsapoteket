@@ -8,6 +8,7 @@ import {
   Dimensions,
 } from "react-native";
 import colors from "../common/colors/Colors";
+import logo from '../resources/iconize.png';
 
 const CustomHeader = ({ route, navigation }) => {
   const windowHeight = Dimensions.get("window").height;
@@ -35,7 +36,7 @@ const CustomHeader = ({ route, navigation }) => {
   return (
     <View style={[styles.headerContainer, { height: headerHeight }]}>
       <TouchableOpacity onPress={navigateUser}>
-        <Image style={styles.logo} />
+        <Image style={styles.logo} source={logo} />
       </TouchableOpacity>
     </View>
   );
@@ -50,9 +51,9 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   logo: {
-    width: 120,
+    width: 30,
     marginTop: 40,
-    height: 20,
+    height: 30,
   },
 });
 
