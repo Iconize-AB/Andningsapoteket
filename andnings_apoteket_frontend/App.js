@@ -12,13 +12,13 @@ import Toast from "react-native-toast-message";
 import {
   faDrumstickBite,
   faDumbbell,
+  faHome,
   faPersonRays,
   faUser,
   faWind,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import ProfileScreen from "./src/profile/ProfileScreen";
-import TermsAndConditionPopup from "./src/regular/TermsAndConditionPopup";
 import SignupScreen from "./src/authentication/SignupScreen";
 import ForgotPasswordScreen from "./src/authentication/ForgotPasswordScreen";
 import VerifyAccountScreen from "./src/authentication/VerifyAccountScreen";
@@ -37,15 +37,12 @@ const Stack = createStackNavigator();
 
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
-// Import your Custom Drawer Content (if any)
-import CustomDrawerContent from "./src/regular/CustomDrawerContent"; // Optional
+import CustomDrawerContent from "./src/regular/CustomDrawerContent";
 import { I18nextProvider } from "react-i18next";
 import i18n from "./src/i18n";
 
-// Create a Drawer Navigator
 const Drawer = createDrawerNavigator();
 
-// Create the DrawerNavigator that wraps the Root
 function DrawerNavigator({ userDetails, refreshUserProfile, handleSignOut }) {
   return (
     <Drawer.Navigator
@@ -53,11 +50,11 @@ function DrawerNavigator({ userDetails, refreshUserProfile, handleSignOut }) {
         <CustomDrawerContent
           {...props}
           userDetails={userDetails}
-          handleSignOut={handleSignOut} // Optional: handle sign-out logic
+          handleSignOut={handleSignOut}
         />
       )}
       screenOptions={{
-        headerShown: false, // We'll use the CustomHeader inside the tabs
+        headerShown: false,
       }}
     >
       <Drawer.Screen name="Root">
@@ -99,9 +96,12 @@ function Root({ userDetails, refreshUserProfile }) {
         },
         tabBarIcon: ({ focused }) => {
           let icon;
-          let iconColor = "#000";
+          let iconColor = "#000"; // Default color
 
           switch (route.name) {
+            case "Home":
+              icon = faHome;
+              break;
             case "Profile":
               icon = faUser;
               break;
@@ -127,7 +127,6 @@ function Root({ userDetails, refreshUserProfile }) {
                 position: "absolute",
                 bottom: 0,
                 top: 5,
-                backgroundColor: focused ? iconColor : null,
                 borderRadius: 25,
                 justifyContent: "center",
                 alignItems: "center",
@@ -136,16 +135,15 @@ function Root({ userDetails, refreshUserProfile }) {
               <FontAwesomeIcon
                 icon={icon}
                 size={30}
-                color={focused ? "#fff" : iconColor}
+                color={focused ? "#000" : iconColor} // Change icon color when focused
               />
             </View>
           );
         },
-        // CustomHeader for each screen with a hamburger icon to open the drawer
-        header: () => <CustomHeader navigation={navigation} />, // Include hamburger in header
+        header: () => <CustomHeader navigation={navigation} />, // Custom header
       })}
     >
-      <Tab.Screen name="Home" options={{ tabBarButton: () => null }}>
+      <Tab.Screen name="Home">
         {(props) => (
           <HomeScreen
             {...props}
@@ -160,6 +158,7 @@ function Root({ userDetails, refreshUserProfile }) {
     </Tab.Navigator>
   );
 }
+
 
 function AuthStack({}) {
   return (
