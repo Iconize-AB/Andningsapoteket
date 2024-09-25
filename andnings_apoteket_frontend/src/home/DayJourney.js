@@ -32,8 +32,7 @@ const daysData = [
 ];
 
 const DayJourney = () => {
-  const { t } = useTranslation(); // Translation hook
-
+  const { t } = useTranslation();
   return (
     <View style={styles.journeyContainer}>
       <Text style={styles.journeyTitle}>{t("start_your_journey")}</Text>
@@ -59,7 +58,6 @@ const DayJourney = () => {
 
 const styles = StyleSheet.create({
   journeyContainer: {
-    marginTop: 20,
     paddingHorizontal: 20,
   },
   journeyTitle: {
@@ -72,7 +70,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width: 250,
-    height: 350,
+    height: 250,
     marginRight: 15,
     borderRadius: 10,
     overflow: "hidden",

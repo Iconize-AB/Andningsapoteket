@@ -14,6 +14,7 @@ import colors from "../common/colors/Colors";
 import { useTranslation } from "react-i18next";
 import QuickActions from "./QuickActions";
 import DayJourney from "./DayJourney";
+import MostPlayedSessions from "./MostPlayedSessions";
 
 const HomeScreen = ({ navigation }) => {
   const navigateToOption = (option) => {
@@ -23,17 +24,20 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.scrollViewContent} showsVerticalScrollIndicator={false}>
-      {/* Header */}
       {/* Welcome Text */}
       <Text style={styles.greetingText}>Good afternoon</Text>
 
       {/* Rounded buttons for quick actions */}
+
       <QuickActions />
 
       {/* Start Your 7 Day Journey */}
       
       <DayJourney />
-          
+
+      {/* Start Your 7 Day Journey */}
+
+      <MostPlayedSessions />
     </ScrollView>
   );
 };

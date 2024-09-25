@@ -5,6 +5,8 @@
     "favorites": "Favoriter",
     "library": "Bibliotek",
     "start_your_journey": "Börja din 7-dagarsresa",
+    "most_played_sessions": "Mest spelade sessioner denna vecka",
+    "play_now": "Spela nu",
     "days": {
       "1": {
         "title": "Sovmeditationer",
@@ -12,7 +14,7 @@
         "buttonText": "Börja dag 1"
       },
       "2": {
-        "title": "Avslappningsmeditationer",
+        "title": "Avslappning",
         "description": "Avslappningens lugnande ljud ger en rofylld resa.",
         "buttonText": "Börja dag 2"
       },
@@ -23,7 +25,7 @@
       },
       "4": {
         "title": "Djup avslappning",
-        "description": "Slappna av djupt och hitta ditt inre lugn med dessa guidade meditationer.",
+        "description": "Slappna av djupt och hitta ditt inre lugn med.",
         "buttonText": "Börja dag 4"
       },
       "5": {

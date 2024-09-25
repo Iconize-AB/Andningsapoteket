@@ -4,6 +4,7 @@ const colors = {
     background: '#F4F0E5',  // Beige
     textPrimary: '#2c3e50',
     textSecondary: '#7f8c8d',
+    iconColor: '#ffffff',
     borders: "#E13314",
     disabledBackground: "#EDE9E9",
     error: '#E13314',

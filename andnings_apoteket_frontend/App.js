@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Font from "expo-font";
+import 'intl-pluralrules';
 import * as Notifications from "expo-notifications";
 import { ActivityIndicator, View } from "react-native";
 import Toast from "react-native-toast-message";
