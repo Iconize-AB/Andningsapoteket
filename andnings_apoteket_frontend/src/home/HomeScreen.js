@@ -1,188 +1,122 @@
 import React from "react";
 import {
   View,
+  Text,
   TouchableOpacity,
   StyleSheet,
-  ImageBackground,
   ScrollView,
+  Image,
+  ImageBackground,
 } from "react-native";
-import EnhancedText from "../regular/EnhancedText";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faBook, faCheckCircle, faHeart, faHeartbeat, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import colors from "../common/colors/Colors";
+import { useTranslation } from "react-i18next";
+import QuickActions from "./QuickActions";
+import DayJourney from "./DayJourney";
 
 const HomeScreen = ({ navigation }) => {
   const navigateToOption = (option) => {
     navigation?.navigate(option);
   };
-
-  const imageSources = {
-    WorkOut: {
-      url: "https://images.pexels.com/photos/6512478/pexels-photo-6512478.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      title: "Work Out",
-    },
-    WorkIn: {
-      url: "https://images.pexels.com/photos/6512478/pexels-photo-6512478.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      title: "Work In",
-    },
-    Recovery: {
-      url: "https://images.pexels.com/photos/6512478/pexels-photo-6512478.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      title: "Recovery",
-    },
-    Nutrition: {
-      url: "https://images.pexels.com/photos/6512478/pexels-photo-6512478.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      title: "Nutrition",
-    },
-  };
-
-  const exploreMoreCategories = {
-    Wind: {
-      url: "https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      title: "Wind",
-    },
-    Water: {
-      url: "https://images.pexels.com/photos/624015/pexels-photo-624015.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      title: "Water",
-    },
-    Fire: {
-      url: "https://images.pexels.com/photos/266867/pexels-photo-266867.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      title: "Fire",
-    },
-  };
-
-  const overlayColors = {
-    WorkOut: "rgba(245, 94, 9, 0.6)",
-    WorkIn: "rgba(108, 174, 188, 0.6)",
-    Recovery: "rgba(17, 85, 134, 0.6)",
-    Nutrition: "rgba(70, 120, 93, 0.6)",
-    Wind: "rgba(173, 216, 230, 0.6)", // Light blue for Wind
-    Water: "rgba(0, 105, 148, 0.6)", // Deep blue for Water
-    Fire: "rgba(255, 69, 0, 0.6)", // Orange-red for Fire
-  };
-
-  const renderBoxes = (categories) => {
-    return Object.entries(categories).map(([key, { title, url }]) => (
-      <TouchableOpacity
-        key={key}
-        style={styles.optionBox}
-        onPress={() => navigateToOption(key)}
-      >
-        <ImageBackground source={{ uri: url }} style={styles.image}>
-          <View
-            style={[
-              styles.overlay,
-              { backgroundColor: overlayColors[key] },
-            ]}
-          />
-          <View style={styles.details}>
-            <EnhancedText style={styles.optionText}>{title}</EnhancedText>
-          </View>
-        </ImageBackground>
-      </TouchableOpacity>
-    ));
-  };
+  const { t } = useTranslation();
 
   return (
     <ScrollView contentContainerStyle={styles.scrollViewContent} showsVerticalScrollIndicator={false}>
-      <View style={styles.wrapper}>
-        <View style={styles.categoryContainer}>
-          <EnhancedText style={styles.categoryTitle}>Top Picks for You</EnhancedText>
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false}
-            decelerationRate="fast"  /* Ensures smooth scrolling */
-            style={styles.scrollContainer}
-          >
-            {renderBoxes(imageSources)}
-          </ScrollView>
-        </View>
+      {/* Header */}
+      {/* Welcome Text */}
+      <Text style={styles.greetingText}>Good afternoon</Text>
 
-        {/* Recently Viewed */}
-        <View style={styles.categoryContainer}>
-          <EnhancedText style={styles.categoryTitle}>Recently Viewed</EnhancedText>
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false}
-            decelerationRate="fast"  /* Ensures smooth scrolling */
-            style={styles.scrollContainer}
-          >
-            {renderBoxes(imageSources)}
-          </ScrollView>
-        </View>
+      {/* Rounded buttons for quick actions */}
+      <QuickActions />
 
-        {/* Explore More */}
-        <View style={styles.categoryContainer}>
-          <EnhancedText style={styles.categoryTitle}>Explore More</EnhancedText>
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false}
-            decelerationRate="fast"  /* Ensures smooth scrolling */
-            style={styles.scrollContainer}
-          >
-            {renderBoxes(exploreMoreCategories)}
-          </ScrollView>
-        </View>
-      </View>
+      {/* Start Your 7 Day Journey */}
+      
+      <DayJourney />
+          
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   scrollViewContent: {
-    paddingBottom: 220, // Add extra space at the bottom for the floating menu
-  },
-  container: {
-    flex: 1,
+    paddingBottom: 120,
     backgroundColor: colors.background,
-    paddingVertical: 20,
   },
-  categoryContainer: {
-    marginBottom: 20,
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    marginTop: 20,
   },
-  wrapper: {
-    marginBottom: 20,
+  rightHeader: {
+    flexDirection: "row",
+    alignItems: "center",
   },
-  categoryTitle: {
-    fontSize: 22,
+  userIcon: {
+    marginLeft: 15,
+  },
+  greetingText: {
+    fontSize: 28,
     fontWeight: "bold",
-    color: "#ffffff",
+    color: "#000",
+    paddingHorizontal: 20,
+    marginTop: 20,
+  },
+  journeyContainer: {
+    marginTop: 20,
+    paddingHorizontal: 20,
+  },
+  journeyTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
     marginBottom: 10,
-    marginLeft: 20,
   },
-  scrollContainer: {
-    paddingLeft: 20,
+  horizontalScroll: {
+    flexDirection: "row",
   },
-  optionBox: {
-    backgroundColor: "#1E90FF",
-    width: 200,
-    height: 150,
+  card: {
+    width: 250,
+    marginRight: 15,
     borderRadius: 10,
     overflow: "hidden",
-    marginRight: 15,
   },
-  image: {
+  cardImage: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-end",
     alignItems: "center",
+  },
+  cardOverlay: {
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    padding: 20,
     width: "100%",
-    height: "100%",
   },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    opacity: 0.6,
+  cardDayText: {
+    fontSize: 14,
+    color: "#fff",
   },
-  details: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  optionText: {
-    fontSize: 20,
-    color: "#ffffff",
+  cardTitle: {
+    fontSize: 18,
     fontWeight: "bold",
-    textAlign: "center",
+    color: "#fff",
+    marginTop: 10,
+  },
+  cardSubtitle: {
+    fontSize: 14,
+    color: "#fff",
+    marginTop: 10,
+  },
+  cardButton: {
+    backgroundColor: "#0066FF",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginTop: 15,
+  },
+  cardButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
   },
 });
 

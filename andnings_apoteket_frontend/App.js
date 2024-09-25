@@ -8,10 +8,16 @@ import * as Font from "expo-font";
 import * as Notifications from "expo-notifications";
 import { ActivityIndicator, View } from "react-native";
 import Toast from "react-native-toast-message";
-import { faDrumstickBite, faDumbbell, faPersonRays, faUser, faWind } from "@fortawesome/free-solid-svg-icons";
+import {
+  faDrumstickBite,
+  faDumbbell,
+  faPersonRays,
+  faUser,
+  faWind,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import ProfileScreen from './src/profile/ProfileScreen';
-import TermsAndConditionPopup from './src/regular/TermsAndConditionPopup';
+import ProfileScreen from "./src/profile/ProfileScreen";
+import TermsAndConditionPopup from "./src/regular/TermsAndConditionPopup";
 import SignupScreen from "./src/authentication/SignupScreen";
 import ForgotPasswordScreen from "./src/authentication/ForgotPasswordScreen";
 import VerifyAccountScreen from "./src/authentication/VerifyAccountScreen";
@@ -28,16 +34,49 @@ import HomeScreen from "./src/home/HomeScreen";
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
+import { createDrawerNavigator } from "@react-navigation/drawer";
+
+// Import your Custom Drawer Content (if any)
+import CustomDrawerContent from "./src/regular/CustomDrawerContent"; // Optional
+import { I18nextProvider } from "react-i18next";
+import i18n from "./src/i18n";
+
+// Create a Drawer Navigator
+const Drawer = createDrawerNavigator();
+
+// Create the DrawerNavigator that wraps the Root
+function DrawerNavigator({ userDetails, refreshUserProfile, handleSignOut }) {
+  return (
+    <Drawer.Navigator
+      drawerContent={(props) => (
+        <CustomDrawerContent
+          {...props}
+          userDetails={userDetails}
+          handleSignOut={handleSignOut} // Optional: handle sign-out logic
+        />
+      )}
+      screenOptions={{
+        headerShown: false, // We'll use the CustomHeader inside the tabs
+      }}
+    >
+      <Drawer.Screen name="Root">
+        {(props) => (
+          <Root
+            {...props}
+            userDetails={userDetails}
+            refreshUserProfile={refreshUserProfile}
+          />
+        )}
+      </Drawer.Screen>
+    </Drawer.Navigator>
+  );
+}
+
 function Root({ userDetails, refreshUserProfile }) {
-  const [accepted, setAccepted] = useState(false);
-  
-  // if (!userDetails?.acceptedTermsAndCondition && !accepted) {
-  //   return <TermsAndConditionPopup setAccepted={setAccepted} />;
-  // }
   return (
     <Tab.Navigator
       initialRouteName="Home"
-      screenOptions={({ route }) => ({
+      screenOptions={({ route, navigation }) => ({
         tabBarShowLabel: false,
         tabBarStyle: {
           position: "absolute",
@@ -101,9 +140,8 @@ function Root({ userDetails, refreshUserProfile }) {
             </View>
           );
         },
-        header: ({ navigation }) => {
-          return <CustomHeader navigation={navigation} route={route} />;
-        },
+        // CustomHeader for each screen with a hamburger icon to open the drawer
+        header: () => <CustomHeader navigation={navigation} />, // Include hamburger in header
       })}
     >
       <Tab.Screen name="Home" options={{ tabBarButton: () => null }}>
@@ -141,11 +179,11 @@ function AuthStack({}) {
         name="VerifyAccountScreen"
         component={VerifyAccountScreen}
       />
-      <Stack.Screen name="AuthorizationCode" component={AuthorizationCodeScreen} />
       <Stack.Screen
-        name="ResetPasswordScreen"
-        component={ResetAccountScreen}
+        name="AuthorizationCode"
+        component={AuthorizationCodeScreen}
       />
+      <Stack.Screen name="ResetPasswordScreen" component={ResetAccountScreen} />
     </Stack.Navigator>
   );
 }
@@ -173,94 +211,14 @@ function AuthStack({}) {
 function AppNavigator({ navigation }) {
   const [isReady, setIsReady] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
-  const {
-    userToken,
-    setUserToken,
-    userDetails,
-    refreshUserProfile,
-  } = useAuth();
-
-  // async function registerForPushNotificationsAsync() {
-  //   const { status: existingStatus } =
-  //     await Notifications.getPermissionsAsync();
-  //   let finalStatus = existingStatus;
-
-  //   if (existingStatus !== "granted") {
-  //     const { status } = await Notifications.requestPermissionsAsync();
-  //     finalStatus = status;
-  //   }
-
-  //   if (finalStatus !== "granted") {
-  //     return;
-  //   }
-
-  //   try {
-  //     console.log("Attempting to get Expo push token...");
-  //     const devicePushTokenResponse =
-  //       await Notifications.getDevicePushTokenAsync();
-  //     const expoPushTokenResponse = await Notifications.getExpoPushTokenAsync({
-  //       projectId: "45a0cb03-81f5-4151-9f2b-668c400472ea",
-  //       devicePushToken: devicePushTokenResponse,
-  //     });
-  //     const token = expoPushTokenResponse.data;
-
-  //     if (!token) {
-  //       console.error("Failed to get push token");
-  //       return;
-  //     }
-
-  //     await AsyncStorage.setItem("pushToken", token);
-
-  //     if (userDetails && userDetails.userInfoId) {
-  //       await sendPushTokenToBackend(userDetails.userInfoId, token);
-  //     } else {
-  //       console.error("User details not available");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error getting push token:", error);
-  //   }
-
-  //   return token;
-  // }
-
-  // useEffect(() => {
-  //   if (userToken && userDetails) {
-  //     registerForPushNotificationsAsync();
-  //   }
-  // }, [userToken, userPushEnabled, userDetails]);
-
-  // useEffect(() => {
-  //   const registerNotifications = async () => {
-  //     if (userDetails?.id) {
-  //       const token = await registerForPushNotificationsAsync(userDetails.id);
-  //       console.log("Push Token:", token);
-  //     }
-  //   };
-
-  //   registerNotifications();
-
-  //   const subscription = Notifications.addNotificationReceivedListener(
-  //     (notification) => {
-  //       console.log("Notification received:", notification);
-  //     }
-  //   );
-
-  //   return () => subscription.remove();
-  // }, [userDetails]);
-
-  useEffect(() => {
-    if (userToken) {
-      console.log("userToken8", userToken);
-    } else {
-      console.log("userToken8", userToken);
-    }
-  }, [userToken, navigation]);
+  const { userToken, setUserToken, userDetails, refreshUserProfile } =
+    useAuth();
 
   useEffect(() => {
     async function initApp() {
       try {
         await Font.loadAsync({
-          "BahnSchrift": require("./src/fonts/bahnschrift.ttf"),
+          BahnSchrift: require("./src/fonts/bahnschrift.ttf"),
         });
         const token = await AsyncStorage.getItem("userToken");
         setUserToken(token);
@@ -292,10 +250,10 @@ function AppNavigator({ navigation }) {
   }
 
   return userToken ? (
-    <Root
-      handleSignOut={handleSignOut}
+    <DrawerNavigator
       userDetails={userDetails}
       refreshUserProfile={refreshUserProfile}
+      handleSignOut={handleSignOut} // Pass sign-out function
     />
   ) : (
     <AuthStack />
@@ -304,12 +262,14 @@ function AppNavigator({ navigation }) {
 
 function App() {
   return (
-    <AuthProvider>
+    <I18nextProvider i18n={i18n}>
+      <AuthProvider>
         <NavigationContainer>
           <AppNavigator />
           <Toast config={toastConfiguration} />
         </NavigationContainer>
-    </AuthProvider>
+      </AuthProvider>
+    </I18nextProvider>
   );
 }
 

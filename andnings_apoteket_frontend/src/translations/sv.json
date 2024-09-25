@@ -1,0 +1,41 @@
+{
+    "greeting": "God eftermiddag",
+    "build_habit": "Bygg en vana",
+    "condition": "Tillstånd",
+    "favorites": "Favoriter",
+    "library": "Bibliotek",
+    "start_your_journey": "Börja din 7-dagarsresa",
+    "days": {
+      "1": {
+        "title": "Sovmeditationer",
+        "description": "Upplev guidad meditation, flytta fokus och lugna sinnet.",
+        "buttonText": "Börja dag 1"
+      },
+      "2": {
+        "title": "Avslappningsmeditationer",
+        "description": "Avslappningens lugnande ljud ger en rofylld resa.",
+        "buttonText": "Börja dag 2"
+      },
+      "3": {
+        "title": "Stresslindring",
+        "description": "Minska stress med lugnande övningar och medveten andning.",
+        "buttonText": "Börja dag 3"
+      },
+      "4": {
+        "title": "Djup avslappning",
+        "description": "Slappna av djupt och hitta ditt inre lugn med dessa guidade meditationer.",
+        "buttonText": "Börja dag 4"
+      },
+      "5": {
+        "title": "Fokusmeditation",
+        "description": "Förbättra ditt fokus och din koncentration med mindfulness.",
+        "buttonText": "Börja dag 5"
+      },
+      "6": {
+        "title": "Medveten andning",
+        "description": "Öva medveten andning för att främja lugn och balans.",
+        "buttonText": "Börja dag 6"
+      }
+    }
+  }
+  

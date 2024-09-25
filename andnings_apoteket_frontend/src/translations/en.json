@@ -1,0 +1,41 @@
+{
+    "greeting": "Good afternoon",
+    "build_habit": "Build a habit",
+    "condition": "Condition",
+    "favorites": "Favorites",
+    "library": "Library",
+    "start_your_journey": "Start Your 6 Day Journey",
+    "days": {
+      "1": {
+        "title": "Sleep Meditations",
+        "description": "Immerse yourself in guided meditation, redirecting focus and quieting the mind.",
+        "buttonText": "Start Day 1"
+      },
+      "2": {
+        "title": "Relaxing Meditations",
+        "description": "The soothing sounds of relaxation provide a calming journey.",
+        "buttonText": "Start Day 2"
+      },
+      "3": {
+        "title": "Stress Relief",
+        "description": "Reduce stress with calming exercises and mindful breathing.",
+        "buttonText": "Start Day 3"
+      },
+      "4": {
+        "title": "Deep Relaxation",
+        "description": "Relax deeply and find your inner peace with these guided meditations.",
+        "buttonText": "Start Day 4"
+      },
+      "5": {
+        "title": "Focus Meditation",
+        "description": "Enhance your focus and improve your concentration with mindfulness.",
+        "buttonText": "Start Day 5"
+      },
+      "6": {
+        "title": "Mindful Breathing",
+        "description": "Practice mindful breathing to promote calmness and balance.",
+        "buttonText": "Start Day 6"
+      }
+    }
+  }
+  
