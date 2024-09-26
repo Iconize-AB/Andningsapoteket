@@ -41,16 +41,22 @@ import CustomDrawerContent from "./src/regular/CustomDrawerContent";
 import { I18nextProvider } from "react-i18next";
 import i18n from "./src/i18n";
 import BreathWorkListScreen from "./src/regular/BreathworkListScreen";
+import TermsAndConditionPopup from "./src/regular/TermsAndConditionPopup";
 
 const Drawer = createDrawerNavigator();
 
 function DrawerNavigator({ userDetails, refreshUserProfile, handleSignOut }) {
+  const [showTerms, setShowTerms] = useState(false);
+  if (showTerms) {
+    return <TermsAndConditionPopup onClose={() => setShowTerms(false)} />;
+  }
   return (
     <Drawer.Navigator
       drawerContent={(props) => (
         <CustomDrawerContent
           {...props}
           userDetails={userDetails}
+          setShowTerms={setShowTerms}
           handleSignOut={handleSignOut}
         />
       )}

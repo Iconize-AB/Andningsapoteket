@@ -1,50 +1,85 @@
-// src/components/CustomDrawerContent.js
-import React from "react";
+import React, { useState } from "react"; // Import useState
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faBell, faCog, faSignOutAlt, faUser, faSmile, faUsers, faNewspaper, faHeart } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBell,
+  faCog,
+  faSignOutAlt,
+  faUser,
+  faSmile,
+  faUsers,
+  faNewspaper,
+  faHeart,
+} from "@fortawesome/free-solid-svg-icons";
 import colors from "../common/colors/Colors";
 
-const CustomDrawerContent = ({ navigation, userDetails, handleSignOut }) => {
+const CustomDrawerContent = ({ navigation, userDetails, handleSignOut, setShowTerms }) => {
   return (
     <View style={styles.container}>
       {/* Profile Section */}
-      <TouchableOpacity style={styles.profileSection} onPress={() => navigation.navigate("Profile")}>
-        <Image
-          style={styles.profileImage}
-        />
+      <TouchableOpacity
+        style={styles.profileSection}
+        onPress={() => navigation.navigate("Profile")}
+      >
+        <Image style={styles.profileImage} />
         <Text style={styles.userName}>{userDetails?.name || "Guest"}</Text>
         <Text style={styles.viewProfileText}>View profile</Text>
       </TouchableOpacity>
 
       {/* Navigation Options */}
       <View style={styles.menuSection}>
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("SignUp")}>
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => navigation.navigate("SignUp")}
+        >
           <FontAwesomeIcon icon={faUser} size={24} color={colors.iconColor} />
           <Text style={styles.menuText}>Sign up</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("CheckIn")}>
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => navigation.navigate("CheckIn")}
+        >
           <FontAwesomeIcon icon={faSmile} size={24} color={colors.iconColor} />
           <Text style={styles.menuText}>Check-in</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Notifications")}>
+        {/* This triggers the Terms & Conditions popup */}
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => {
+            setShowTerms(true);
+            navigation.closeDrawer();
+          }}
+        >
           <FontAwesomeIcon icon={faBell} size={24} color={colors.iconColor} />
-          <Text style={styles.menuText}>Notifications</Text>
+          <Text style={styles.menuText}>Terms & Conditions</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Friends")}>
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => navigation.navigate("Friends")}
+        >
           <FontAwesomeIcon icon={faUsers} size={24} color={colors.iconColor} />
           <Text style={styles.menuText}>Friends & Teachers</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("News")}>
-          <FontAwesomeIcon icon={faNewspaper} size={24} color={colors.iconColor} />
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => navigation.navigate("News")}
+        >
+          <FontAwesomeIcon
+            icon={faNewspaper}
+            size={24}
+            color={colors.iconColor}
+          />
           <Text style={styles.menuText}>News</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Share")}>
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => navigation.navigate("Share")}
+        >
           <FontAwesomeIcon icon={faHeart} size={24} color={colors.iconColor} />
           <Text style={styles.menuText}>Share Andningsapoteket</Text>
         </TouchableOpacity>
@@ -52,14 +87,21 @@ const CustomDrawerContent = ({ navigation, userDetails, handleSignOut }) => {
 
       {/* Bottom Section */}
       <View style={styles.bottomSection}>
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Settings")}>
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => navigation.navigate("Settings")}
+        >
           <FontAwesomeIcon icon={faCog} size={24} color={colors.iconColor} />
           <Text style={styles.menuText}>Settings</Text>
         </TouchableOpacity>
 
         {/* Sign Out Button */}
         <TouchableOpacity style={styles.menuItem} onPress={handleSignOut}>
-          <FontAwesomeIcon icon={faSignOutAlt} size={24} color={colors.iconColor} />
+          <FontAwesomeIcon
+            icon={faSignOutAlt}
+            size={24}
+            color={colors.iconColor}
+          />
           <Text style={styles.menuText}>Sign Out</Text>
         </TouchableOpacity>
       </View>

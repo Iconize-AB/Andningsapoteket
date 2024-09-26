@@ -129,61 +129,6 @@ const SettingsComponent = ({
         </View>
       </View>
       <View style={styles.section}>
-        <EnhancedText style={styles.sectionTitle}>Help</EnhancedText>
-        <View style={styles.sectionBody}>
-          <View style={[styles.rowWrapper, styles.rowFirst]}>
-            <TouchableOpacity onPress={contactUsEmail} style={styles.row}>
-              <EnhancedText style={styles.rowLabel}>Contact Us</EnhancedText>
-
-              <View style={styles.rowSpacer} />
-
-              <FeatherIcon color="#bcbcbc" name="chevron-right" size={19} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.rowWrapper}>
-            <TouchableOpacity onPress={contactUsEmail} style={styles.row}>
-              <EnhancedText style={styles.rowLabel}>Report Bug</EnhancedText>
-
-              <View style={styles.rowSpacer} />
-
-              <FeatherIcon color="#bcbcbc" name="chevron-right" size={19} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.rowWrapper}>
-            <TouchableOpacity
-              onPress={() =>
-                Linking.openURL("https://iconize.spce.com/s/Iconize")
-              }
-              style={styles.row}
-            >
-              <EnhancedText style={styles.rowLabel}>
-                Rate in App Store
-              </EnhancedText>
-
-              <View style={styles.rowSpacer} />
-
-              <FeatherIcon color="#bcbcbc" name="chevron-right" size={19} />
-            </TouchableOpacity>
-          </View>
-
-          <View style={[styles.rowWrapper, styles.rowLast]}>
-            <TouchableOpacity
-              onPress={() => setShowTerms(true)}
-              style={styles.row}
-            >
-              <EnhancedText style={styles.rowLabel}>
-                Terms and Privacy
-              </EnhancedText>
-
-              <View style={styles.rowSpacer} />
-
-              <FeatherIcon color="#bcbcbc" name="chevron-right" size={19} />
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-
-      <View style={styles.section}>
         <View style={[styles.sectionBody, styles.lastRow]}>
           <View
             style={[
@@ -193,11 +138,6 @@ const SettingsComponent = ({
               { alignItems: "center" },
             ]}
           >
-            <TouchableOpacity onPress={handleSignOut} style={styles.row}>
-              <EnhancedText style={[styles.rowLabel, styles.rowLabelLogout]}>
-                Log Out
-              </EnhancedText>
-            </TouchableOpacity>
             <TouchableOpacity onPress={handleOnDelete} style={styles.row}>
               <EnhancedText style={[styles.rowLabel, styles.rowLabelLogout]}>
                 Delete my account
