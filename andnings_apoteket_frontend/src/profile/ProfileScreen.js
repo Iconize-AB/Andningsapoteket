@@ -29,7 +29,6 @@ export default function ProfileScreen({ navigation, route }) {
   const fetchUserProfile = useCallback(async () => {
     try {
       const token = await AsyncStorage.getItem("userToken");
-      console.log("Token:", token);
       if (!token) throw new Error("No token found");
   
       setIsLoading(true);
@@ -41,7 +40,7 @@ export default function ProfileScreen({ navigation, route }) {
           email: json.email,
           id: json.id,
           avatar: json.profile.profileImageUrl,
-          emailNotification: json.profile.emailNotification,
+          emailNotification: json.profile.emailNotifications,
           pushNotification: json.profile.pushNotifications,
         });
       } else {
