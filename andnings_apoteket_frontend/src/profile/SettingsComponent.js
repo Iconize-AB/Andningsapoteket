@@ -14,6 +14,7 @@ import Toast from "react-native-toast-message";
 import { FontAwesome } from "@expo/vector-icons";
 import EnhancedText from "../regular/EnhancedText";
 import { contactUsEmail } from "../common/Validation";
+import { pushNotificationSettingsChange } from "./endpoints/SettingsEndpoints";
 
 const SettingsComponent = ({
   userDetails,
@@ -69,33 +70,16 @@ const SettingsComponent = ({
 
   const handleTogglePushNotification = async (newSetting) => {
     const token = await AsyncStorage.getItem("userToken");
-    fetch(
-      "http://localhost:3000/profileRoute/toggle-push-notification",
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ pushNotification: newSetting }),
-      }
-    )
-      .then((response) => response.json())
-      .then(() => {
-        Toast.show({
-          type: "success",
-          text1: "Your settings have been saved.",
-          icon: "heart",
-        });
-        setUserDetails({ ...userDetails, pushNotification: newSetting });
-      })
-      .catch((error) => {
-        Toast.show({
-          type: "error",
-          text1: "Sorry, friend. The technology failed us.",
-          text2: "Please try again 🙏",
-        });
+    const response = await pushNotificationSettingsChange(token, newSetting);
+    if (response.ok) {
+      setUserDetails({ ...userDetails, pushNotification: newSetting });
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "Sorry, friend. We failed to update your push notification!",
+        text2: " Please try again 🙏",
       });
+    }
   };
 
   const toggleEditMode = () => {

@@ -35,15 +35,14 @@ export default function ProfileScreen({ navigation, route }) {
       setIsLoading(true);
       const response = await FetchUserProfile(token);  
       const json = await response.json();
-  
       if (response.ok) {
         setUserDetails({
           name: json.name,
           email: json.email,
           id: json.id,
-          avatar: json.profileImageUrl,
-          emailNotification: json.emailNotification,
-          pushNotification: json.pushNotification,
+          avatar: json.profile.profileImageUrl,
+          emailNotification: json.profile.emailNotification,
+          pushNotification: json.profile.pushNotifications,
         });
       } else {
         console.error("Response error:", json);
