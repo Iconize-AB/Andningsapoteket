@@ -30,7 +30,10 @@ const VerifyAccountScreen = ({ route, navigation }) => {
           },
           text2Style: { color: "#466F78" },
         });
-        navigation?.navigate('Root', { screen: 'Home' });
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'MainTabs', state: { routes: [{ name: 'Home' }] } }],
+        });
       } else {
         Toast.show({
           type: "error",

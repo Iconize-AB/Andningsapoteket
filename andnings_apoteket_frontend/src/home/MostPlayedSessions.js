@@ -1,25 +1,24 @@
 // src/components/MostPlayedSessions.js
 import React from "react";
 import { View, Text, ImageBackground, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
-import colors from "../common/colors/Colors";
 import { useTranslation } from "react-i18next";
 
 const mostPlayedSessionsData = [
   {
     id: 1,
-    title: "Morning Yoga",
+    title: "Morgon breathwork",
     description: "Start your day with a calm mind and relaxed body.",
     imageUrl: "https://img.freepik.com/free-vector/open-air-yoga-class_23-2148653272.jpg",
   },
   {
     id: 2,
-    title: "Mindfulness Meditation",
+    title: "Lugn Breathwork",
     description: "Focus on your breath and stay present in the moment.",
     imageUrl: "https://media.istockphoto.com/id/1388130815/vector/woman-meditating-with-mindfulness-imagination-in-nature-and-flowers-concept-illustration-for.jpg?s=612x612&w=0&k=20&c=CSLJFtUgD6Gfr5d_Z7j7xFMngfchMGOU5H4nggv3Nis=",
   },
   {
     id: 3,
-    title: "Guided Relaxation",
+    title: "Guidad Breathwork",
     description: "Release tension and experience a state of relaxation.",
     imageUrl: "https://media.istockphoto.com/id/1299679815/vector/relaxed-male-character-in-home-clothes-and-slippers-sitting-in-comfortable-chair-yawning-man.jpg?s=612x612&w=0&k=20&c=s4OxVgFYYadB1g48qKQuRlGxcZMXqaKVLrCTcMntO1w=",
   },

@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { StyleSheet, SafeAreaView, View, Modal, TouchableOpacity } from "react-native";
+import { StyleSheet, SafeAreaView, View, Modal, TouchableOpacity, Alert } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCog } from "@fortawesome/free-solid-svg-icons";
 import SettingsComponent from "./SettingsComponent";
@@ -10,8 +10,11 @@ import Toast from "react-native-toast-message";
 import EnhancedText from "../regular/EnhancedText";
 import { FetchUserProfile } from "./endpoints/ProfileEndpoints";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { DeleteUser } from "../authentication/endpoints/AuthenticationEndpoints";
+import { useTranslation } from "react-i18next";
 
 export default function ProfileScreen({ navigation, route }) {
+  const { t } = useTranslation();
   const [userDetails, setUserDetails] = useState({
     name: "",
     email: "",
@@ -23,22 +26,21 @@ export default function ProfileScreen({ navigation, route }) {
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const { signOut } = useAuth();
   
-  // Hook to fetch the user profile
   const fetchUserProfile = useCallback(async () => {
     try {
       const token = await AsyncStorage.getItem("userToken");
-      console.log("Token:", token);  // Log the token to ensure it's correct
+      console.log("Token:", token);
       if (!token) throw new Error("No token found");
   
       setIsLoading(true);
       const response = await FetchUserProfile(token);  
       const json = await response.json();
-      console.log('JSON:', json);  // Log the JSON response
   
       if (response.ok) {
         setUserDetails({
           name: json.name,
           email: json.email,
+          id: json.id,
           avatar: json.profileImageUrl,
           emailNotification: json.emailNotification,
           pushNotification: json.pushNotification,
@@ -52,7 +54,7 @@ export default function ProfileScreen({ navigation, route }) {
         });
       }
     } catch (error) {
-      console.error("FetchUserProfile error:", error);  // Log any error
+      console.error("FetchUserProfile error:", error);
       Toast.show({
         type: "error",
         text1: "Failed to fetch profile.",
@@ -63,11 +65,75 @@ export default function ProfileScreen({ navigation, route }) {
     }
   }, []);
   
-  // Ensure the profile is fetched when the component mounts
   useEffect(() => {
-    console.log("useEffect triggered");  // Log when useEffect is triggered
     fetchUserProfile();
-  }, [fetchUserProfile]);  // Add fetchUserProfile as a dependency
+  }, [fetchUserProfile]);
+
+  const handleOnDelete = async () => {
+    Alert.alert(
+      t("alert.title"),
+      t("alert.message"),
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          onPress: async () => {
+            try {
+              const token = await AsyncStorage.getItem("userToken");
+              console.log('user', userDetails.id);
+              const response = await DeleteUser(token, userDetails.id);
+              if (response.ok) {
+                Toast.show({
+                  type: "success",
+                  text1: "Your account has been deleted.",
+                  icon: "heart",
+                  text1Style: {
+                    color: "#466F78",
+                  },
+                  text2Style: {
+                    color: "#466F78",
+                  },
+                  backgroundColor: "#000",
+                });
+                handleSignOut();
+              } else {
+                Toast.show({
+                  type: "error",
+                  text1: "Sorry, friend. The technology failed us.",
+                  text2: "Please try again 🙏",
+                  text1Style: {
+                    color: "#466F78",
+                  },
+                  text2Style: {
+                    color: "#466F78",
+                  },
+                  backgroundColor: "#000",
+                });
+              }
+            } catch (error) {
+              Toast.show({
+                type: "error",
+                text1: "Sorry, friend. The technology failed us.",
+                text2: "Please try again 🙏",
+                text1Style: {
+                  color: "#466F78",
+                },
+                text2Style: {
+                  color: "#466F78",
+                },
+                backgroundColor: "#000",
+              });
+            }
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
 
   const handleSignOut = () => {
     signOut(null);
@@ -101,6 +167,7 @@ export default function ProfileScreen({ navigation, route }) {
           <SettingsComponent
             userDetails={userDetails}
             setUserDetails={setUserDetails}
+            handleOnDelete={handleOnDelete}
             fetchUserProfile={fetchUserProfile}
             handleSignOut={handleSignOut}
           />

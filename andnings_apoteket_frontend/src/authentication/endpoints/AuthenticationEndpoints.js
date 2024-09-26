@@ -49,9 +49,10 @@ export async function Signin(email, password) {
     return response;
   }
   
-  export async function DeleteUser(token, userInfoId) {
+  export async function DeleteUser(token, userId) {
+    console.log('##token', token, userId);
     const response = await fetch(
-      `https://primal-backend-851afa707cbd.herokuapp.com/users/delete`,
+      `http://localhost:3000/userRoute/delete-user`,
       {
         method: "DELETE",
         headers: {
@@ -59,7 +60,7 @@ export async function Signin(email, password) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userInfoId,
+          userId,
         }),
       }
     );

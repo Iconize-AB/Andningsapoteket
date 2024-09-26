@@ -1,43 +1,46 @@
 {
-    "greeting": "God eftermiddag",
-    "build_habit": "Bygg en vana",
-    "condition": "Tillstånd",
-    "favorites": "Favoriter",
-    "library": "Bibliotek",
-    "start_your_journey": "Börja din 7-dagarsresa",
-    "most_played_sessions": "Mest spelade sessioner denna vecka",
-    "play_now": "Spela nu",
-    "days": {
-      "1": {
-        "title": "Sovmeditationer",
-        "description": "Upplev guidad meditation, flytta fokus och lugna sinnet.",
-        "buttonText": "Börja dag 1"
-      },
-      "2": {
-        "title": "Avslappning",
-        "description": "Avslappningens lugnande ljud ger en rofylld resa.",
-        "buttonText": "Börja dag 2"
-      },
-      "3": {
-        "title": "Stresslindring",
-        "description": "Minska stress med lugnande övningar och medveten andning.",
-        "buttonText": "Börja dag 3"
-      },
-      "4": {
-        "title": "Djup avslappning",
-        "description": "Slappna av djupt och hitta ditt inre lugn med.",
-        "buttonText": "Börja dag 4"
-      },
-      "5": {
-        "title": "Fokusmeditation",
-        "description": "Förbättra ditt fokus och din koncentration med mindfulness.",
-        "buttonText": "Börja dag 5"
-      },
-      "6": {
-        "title": "Medveten andning",
-        "description": "Öva medveten andning för att främja lugn och balans.",
-        "buttonText": "Börja dag 6"
-      }
+  "greeting": "God eftermiddag",
+  "build_habit": "Bygg en vana",
+  "condition": "Tillstånd",
+  "favorites": "Favoriter",
+  "library": "Bibliotek",
+  "start_your_journey": "Börja din 7-dagarsresa",
+  "most_played_sessions": "Mest spelade sessioner denna vecka",
+  "play_now": "Spela nu",
+  "alert": {
+    "title": "Är du säker?",
+    "message": "Är du säker på att du vill radera ditt konto? Denna åtgärd kan inte ångras."
+  },
+  "days": {
+    "1": {
+      "title": "Morgon breathwork",
+      "description": "Upplev guidad breathwork, flytta fokus och lugna sinnet.",
+      "buttonText": "Börja dag 1"
+    },
+    "2": {
+      "title": "Avslappning",
+      "description": "Avslappningens lugnande ljud ger en rofylld resa.",
+      "buttonText": "Börja dag 2"
+    },
+    "3": {
+      "title": "Stresslindring",
+      "description": "Minska stress med lugnande övningar och medvetenhet.",
+      "buttonText": "Börja dag 3"
+    },
+    "4": {
+      "title": "Djup avslappning",
+      "description": "Slappna av djupt och hitta ditt inre lugn med.",
+      "buttonText": "Börja dag 4"
+    },
+    "5": {
+      "title": "Fokusmeditation",
+      "description": "Förbättra ditt fokus och din koncentration med mindfulness.",
+      "buttonText": "Börja dag 5"
+    },
+    "6": {
+      "title": "Medveten andning",
+      "description": "Öva medveten andning för att främja lugn och balans.",
+      "buttonText": "Börja dag 6"
     }
   }
-  
+}

@@ -15,6 +15,8 @@ import { useTranslation } from "react-i18next";
 import QuickActions from "./QuickActions";
 import DayJourney from "./DayJourney";
 import MostPlayedSessions from "./MostPlayedSessions";
+import FeatureGrid from "./FeatureGrid";
+import EnhancedText from "../regular/EnhancedText";
 
 const HomeScreen = ({ navigation }) => {
   const navigateToOption = (option) => {
@@ -25,7 +27,10 @@ const HomeScreen = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={styles.scrollViewContent} showsVerticalScrollIndicator={false}>
       {/* Welcome Text */}
-      <Text style={styles.greetingText}>Good afternoon</Text>
+      <EnhancedText style={styles.greetingText}>Good afternoon</EnhancedText>
+
+      {/* Feature Grid */}
+      <FeatureGrid navigation={navigation} />
 
       {/* Rounded buttons for quick actions */}
 

@@ -40,6 +40,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import CustomDrawerContent from "./src/regular/CustomDrawerContent";
 import { I18nextProvider } from "react-i18next";
 import i18n from "./src/i18n";
+import BreathWorkListScreen from "./src/regular/BreathworkListScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -57,7 +58,7 @@ function DrawerNavigator({ userDetails, refreshUserProfile, handleSignOut }) {
         headerShown: false,
       }}
     >
-      <Drawer.Screen name="Root">
+      <Drawer.Screen name="MainTabs">
         {(props) => (
           <Root
             {...props}
@@ -154,6 +155,11 @@ function Root({ userDetails, refreshUserProfile }) {
       </Tab.Screen>
       <Tab.Screen name="Profile">
         {(props) => <ProfileScreen {...props} />}
+      </Tab.Screen>
+      <Tab.Screen name="BreathworkList" options={{ tabBarButton: () => null }}>
+        {(props) => (
+          <BreathWorkListScreen {...props} />
+        )}
       </Tab.Screen>
     </Tab.Navigator>
   );

@@ -231,6 +231,11 @@ const SettingsComponent = ({
                 Log Out
               </EnhancedText>
             </TouchableOpacity>
+            <TouchableOpacity onPress={handleOnDelete} style={styles.row}>
+              <EnhancedText style={[styles.rowLabel, styles.rowLabelLogout]}>
+                Delete my account
+              </EnhancedText>
+            </TouchableOpacity>
           </View>
         </View>
       </View>

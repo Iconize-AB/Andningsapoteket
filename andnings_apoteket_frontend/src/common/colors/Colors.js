@@ -5,6 +5,7 @@ const colors = {
     textPrimary: '#2c3e50',
     textSecondary: '#7f8c8d',
     iconColor: '#ffffff',
+    iconColorSecondary: "#000000",
     borders: "#E13314",
     disabledBackground: "#EDE9E9",
     error: '#E13314',
