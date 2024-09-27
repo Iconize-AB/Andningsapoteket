@@ -1,36 +1,30 @@
 import React from "react";
-import {
-  StyleSheet,
-  ScrollView,
-} from "react-native";
+import { StyleSheet, ScrollView } from "react-native";
 import colors from "../common/colors/Colors";
 import { useTranslation } from "react-i18next";
-import QuickActions from "./QuickActions";
-import DayJourney from "./DayJourney";
-import MostPlayedSessions from "./MostPlayedSessions";
 import EnhancedText from "../regular/EnhancedText";
+import MostPlayedSessions from "../home/MostPlayedSessions";
+import ConditionGrid from "./ConditionGrid";
 
-const HomeScreen = ({ navigation }) => {
+const ConditionScreen = ({ navigation }) => {
   const navigateToOption = (option) => {
     navigation?.navigate(option);
   };
   const { t } = useTranslation();
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollViewContent} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      contentContainerStyle={styles.scrollViewContent}
+      showsVerticalScrollIndicator={false}
+    >
       {/* Welcome Text */}
-      <EnhancedText style={styles.greetingText}>Good afternoon</EnhancedText>
+      <EnhancedText style={styles.greetingText}>
+        Change your condition
+      </EnhancedText>
 
-      {/* Rounded buttons for quick actions */}
-
-      <QuickActions navigation={navigation} />
-
-      {/* Start Your 7 Day Journey */}
-      
-      <DayJourney />
-
+      {/* Feature grid */}
+      <ConditionGrid navigation={navigation} />
       {/* Most played sessions */}
-
       <MostPlayedSessions />
     </ScrollView>
   );
@@ -62,4 +56,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default ConditionScreen;

@@ -42,6 +42,7 @@ import { I18nextProvider } from "react-i18next";
 import i18n from "./src/i18n";
 import BreathWorkListScreen from "./src/regular/BreathworkListScreen";
 import TermsAndConditionPopup from "./src/regular/TermsAndConditionPopup";
+import ConditionScreen from "./src/condition/ConditionScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -165,6 +166,11 @@ function Root({ userDetails, refreshUserProfile }) {
       <Tab.Screen name="BreathworkList" options={{ tabBarButton: () => null }}>
         {(props) => (
           <BreathWorkListScreen {...props} />
+        )}
+      </Tab.Screen>
+      <Tab.Screen name="Feature" options={{ tabBarButton: () => null }}>
+        {(props) => (
+          <ConditionScreen {...props} />
         )}
       </Tab.Screen>
     </Tab.Navigator>

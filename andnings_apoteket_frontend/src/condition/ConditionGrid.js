@@ -1,4 +1,4 @@
-// src/components/FeatureGrid.js
+// src/components/ConditionGrid.js
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -38,7 +38,7 @@ const allFeatures = [
 
 const visibleFeatures = allFeatures.slice(0, 3);
 
-const FeatureGrid = ({ navigation }) => {
+const ConditionGrid = ({ navigation }) => {
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
 
@@ -50,6 +50,7 @@ const FeatureGrid = ({ navigation }) => {
 
   const navigateToOption = (option) => {
     // Navigate to VideoListScreen and pass the selected option
+    console.log('navigateToOption');
     navigation?.navigate('BreathworkList', { feature: option });
   };
 
@@ -129,8 +130,8 @@ const styles = StyleSheet.create({
   },
   collapseButtonText: {
     fontSize: 16,
-    color: colors.primary, // You can customize this color
+    color: colors.primary,
   },
 });
 
-export default FeatureGrid;
+export default ConditionGrid;
