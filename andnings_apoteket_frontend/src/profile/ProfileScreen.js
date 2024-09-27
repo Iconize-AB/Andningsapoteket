@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { StyleSheet, SafeAreaView, View, Modal, TouchableOpacity, Alert } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faCog } from "@fortawesome/free-solid-svg-icons";
+import { faClose, faCog } from "@fortawesome/free-solid-svg-icons";
 import SettingsComponent from "./SettingsComponent";
 import { useAuth } from "../context/AuthContext";
 import colors from "../common/colors/Colors";
@@ -36,7 +36,7 @@ export default function ProfileScreen({ navigation, route }) {
       const json = await response.json();
       if (response.ok) {
         setUserDetails({
-          name: json.name,
+          fullName: json.fullName,
           email: json.email,
           id: json.id,
           avatar: json.profile.profileImageUrl,
@@ -162,6 +162,9 @@ export default function ProfileScreen({ navigation, route }) {
         onRequestClose={toggleSettingsModal}
       >
         <View style={styles.modalContainer}>
+          <TouchableOpacity style={styles.closeButton} onPress={toggleSettingsModal}>
+            <FontAwesomeIcon icon={faClose} size={24} color="#000" />
+          </TouchableOpacity>
           <SettingsComponent
             userDetails={userDetails}
             setUserDetails={setUserDetails}
@@ -169,9 +172,6 @@ export default function ProfileScreen({ navigation, route }) {
             fetchUserProfile={fetchUserProfile}
             handleSignOut={handleSignOut}
           />
-          <TouchableOpacity style={styles.closeButton} onPress={toggleSettingsModal}>
-            <FontAwesomeIcon icon={faCog} size={24} color="#fff" />
-          </TouchableOpacity>
         </View>
       </Modal>
     </SafeAreaView>
@@ -200,7 +200,8 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: "absolute",
-    top: 20,
+    zIndex: 999,
+    top: 60,
     right: 20,
   },
 });

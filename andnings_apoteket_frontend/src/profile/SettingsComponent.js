@@ -3,31 +3,34 @@ import {
   StyleSheet,
   View,
   ScrollView,
+  TextInput,
   TouchableOpacity,
   Switch,
-  Linking,
 } from "react-native";
 import { RefreshControl } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import FeatherIcon from "react-native-vector-icons/Feather";
 import Toast from "react-native-toast-message";
-import { FontAwesome } from "@expo/vector-icons";
 import EnhancedText from "../regular/EnhancedText";
-import { contactUsEmail } from "../common/Validation";
-import { emailNotificationSettingsChange, pushNotificationSettingsChange } from "./endpoints/SettingsEndpoints";
+import {
+  emailNotificationSettingsChange,
+  pushNotificationSettingsChange,
+} from "./endpoints/SettingsEndpoints";
+import EnhancedTextInput from "../regular/EnhancedTextInput";
+import { ChangeUserDetails } from "./endpoints/ProfileEndpoints";
+import colors from "../common/colors/Colors";
 
 const SettingsComponent = ({
   userDetails,
   setUserDetails,
-  setOriginalUserDetails,
   fetchUserProfile,
-  setModalVisible,
-  setShowTerms,
-  setActiveTab,
-  handleSignOut,
   handleOnDelete,
 }) => {
   const [refreshing, setRefreshing] = useState(false);
+  const [fullName, setFullName] = useState(userDetails.fullName || "");
+  const [email, setEmail] = useState(userDetails.email || "");
+  const [password, setPassword] = useState("");
+  const [awaitingVerification, setAwaitingVerification] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -65,9 +68,48 @@ const SettingsComponent = ({
     }
   };
 
-  const toggleEditMode = () => {
-    setModalVisible(true);
-    setOriginalUserDetails(userDetails);
+  const handleVerifyEmail = async () => {
+    // Logic to verify email with the verification code
+    Toast.show({
+      type: "success",
+      text1: "Email verified successfully!",
+    });
+    setAwaitingVerification(false);
+  };
+
+  const handleSaveChanges = async () => {
+    const token = await AsyncStorage.getItem("userToken");
+    const updatedUserDetails = {
+      ...userDetails,
+      fullName: fullName,
+      email: email,
+    };
+    try {
+      const response = await ChangeUserDetails(token, updatedUserDetails);
+      const json = await response.json();
+      if (response.ok && json.emailUpdated) {
+        setAwaitingVerification(true);
+        Toast.show({
+          type: "info",
+          icon: "heart",
+          text1: "You need to verify your email address.",
+        });
+      } else if (response.ok) {
+        Toast.show({
+          type: "success",
+          text1: "Your profile has been updated.",
+          icon: "heart",
+        });
+      } else {
+        throw new Error(json.error || "Could not update profile");
+      }
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Sorry, friend. The technology failed us.",
+        text2: "Please try again 🙏",
+      });
+    }
   };
 
   return (
@@ -77,57 +119,106 @@ const SettingsComponent = ({
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      <View style={[styles.section, { paddingTop: 16 }]}>
-        <EnhancedText style={styles.sectionTitle}>Account details</EnhancedText>
-        <View style={styles.sectionBody}>
-          <TouchableOpacity onPress={toggleEditMode} style={styles.profile}>
-            {/* <Avatar
-              onChange={handleAvatarUpdate}
-              avatarUri={userDetails.avatar}
-            /> */}
-            <View style={styles.profileBody}>
-              <EnhancedText style={styles.profileName}>
-                {userDetails.name}
-              </EnhancedText>
-              <EnhancedText style={styles.profileHandle}>
-                {userDetails.email}
-              </EnhancedText>
-            </View>
-            <FeatherIcon color="#fff" name="chevron-right" size={22} />
+      {awaitingVerification ? (
+        <View style={styles.section}>
+          <EnhancedText style={styles.sectionTitle}>
+            Enter Verification Code
+          </EnhancedText>
+          <TextInput
+            style={styles.input}
+            value={verificationCode}
+            onChangeText={setVerificationCode}
+            placeholder="Verification Code"
+            keyboardType="number-pad"
+          />
+          <TouchableOpacity
+            style={styles.buttonSave}
+            onPress={handleVerifyEmail}
+          >
+            <EnhancedText style={styles.buttonText}>Verify</EnhancedText>
           </TouchableOpacity>
         </View>
-      </View>
-      <View style={styles.section}>
-        <EnhancedText style={styles.sectionTitle}>Resources</EnhancedText>
-        <View style={styles.sectionBody}>
-          <View style={[styles.rowWrapper, styles.rowFirst]}>
-            <View style={styles.row}>
-              <EnhancedText style={styles.rowLabel}>
-                Email Notifications
-              </EnhancedText>
-              <View style={styles.rowSpacer} />
-              <Switch
-                onValueChange={handleToggleEmailNotification}
-                style={{ transform: [{ scaleX: 0.95 }, { scaleY: 0.95 }] }}
-                value={userDetails.emailNotification}
-              />
+      ) : (
+        <>
+          <View style={[styles.section, { paddingTop: 16 }]}>
+            <EnhancedText style={styles.sectionTitle}>
+              Account details
+            </EnhancedText>
+            <View style={styles.sectionBody}>
+              <View style={styles.rowInput}>
+                <EnhancedText style={styles.rowLabel}>Name</EnhancedText>
+                <EnhancedTextInput
+                  style={styles.input}
+                  value={fullName}
+                  onChangeText={setFullName}
+                  placeholder="Name"
+                />
+              </View>
+
+              <View style={styles.rowInput}>
+                <EnhancedText style={styles.rowLabel}>Email</EnhancedText>
+                <EnhancedTextInput
+                  style={styles.input}
+                  value={email}
+                  onChangeText={setEmail}
+                  placeholder="Email"
+                  keyboardType="email-address"
+                />
+              </View>
+
+              <View style={styles.rowInput}>
+                <EnhancedText style={styles.rowLabel}>Password</EnhancedText>
+                <EnhancedTextInput
+                  style={styles.input}
+                  value={password}
+                  onChangeText={setPassword}
+                  placeholder="New Password"
+                  secureTextEntry
+                />
+              </View>
+            </View>
+            <TouchableOpacity
+              style={styles.buttonSave}
+              onPress={handleSaveChanges}
+            >
+              <EnhancedText style={styles.buttonText}>Save Changes</EnhancedText>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.section}>
+            <EnhancedText style={styles.sectionTitle}>Notifications</EnhancedText>
+            <View style={styles.sectionBody}>
+              <View style={[styles.rowWrapper, styles.rowFirst]}>
+                <View style={styles.row}>
+                  <EnhancedText style={styles.rowLabel}>
+                    Email Notifications
+                  </EnhancedText>
+                  <View style={styles.rowSpacer} />
+                  <Switch
+                    onValueChange={handleToggleEmailNotification}
+                    style={{ transform: [{ scaleX: 0.95 }, { scaleY: 0.95 }] }}
+                    value={userDetails.emailNotification}
+                  />
+                </View>
+              </View>
+              <View style={[styles.rowWrapper, styles.rowLast]}>
+                <View style={styles.row}>
+                  <EnhancedText style={styles.rowLabel}>
+                    Push Notifications
+                  </EnhancedText>
+                  <View style={styles.rowSpacer} />
+                  <Switch
+                    onValueChange={handleTogglePushNotification}
+                    style={{ transform: [{ scaleX: 0.95 }, { scaleY: 0.95 }] }}
+                    value={userDetails.pushNotification}
+                  />
+                </View>
+              </View>
             </View>
           </View>
-          <View style={[styles.rowWrapper, styles.rowLast]}>
-            <View style={styles.row}>
-              <EnhancedText style={styles.rowLabel}>
-                Push Notifications
-              </EnhancedText>
-              <View style={styles.rowSpacer} />
-              <Switch
-                onValueChange={handleTogglePushNotification}
-                style={{ transform: [{ scaleX: 0.95 }, { scaleY: 0.95 }] }}
-                value={userDetails.pushNotification}
-              />
-            </View>
-          </View>
-        </View>
-      </View>
+        </>
+      )}
+
       <View style={styles.section}>
         <View style={[styles.sectionBody, styles.lastRow]}>
           <View
@@ -146,17 +237,6 @@ const SettingsComponent = ({
           </View>
         </View>
       </View>
-      {/* <EditProfileModal
-        visible={modalVisible}
-        userDetails={userDetails}
-        onChange={handleInputChange}
-        onClose={handleCloseModal}
-        onSave={handleSubmitUpdate}
-        awaitingVerification={awaitingVerification}
-        verificationCode={verificationCode}
-        setVerificationCode={setVerificationCode}
-        handleVerifyEmail={handleVerifyEmail}
-      /> */}
       <EnhancedText style={styles.contentFooter}>
         App Version 1.1 #50491
       </EnhancedText>
@@ -167,13 +247,7 @@ const SettingsComponent = ({
 const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 16,
-  },
-  contentFooter: {
-    marginTop: 24,
-    fontSize: 16,
-    fontWeight: "500",
-    textAlign: "center",
-    color: "#a69f9f",
+    marginTop: 60,
   },
   section: {
     paddingVertical: 12,
@@ -189,84 +263,70 @@ const styles = StyleSheet.create({
   },
   sectionBody: {
     borderRadius: 12,
+    padding: 16,
+    backgroundColor: colors.background,
     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
     elevation: 2,
   },
-  profile: {
-    padding: 12,
-    backgroundColor: "#000",
-    borderColor: "#fff",
-    borderWidth: 1,
-    borderRadius: 12,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
-  },
-  profileBody: {
-    marginRight: "auto",
-  },
-  profileName: {
-    fontSize: 16,
-    fontWeight: "600",
-    maxWidth: "10px",
-    overflow: "hidden",
-    color: "#ffffff",
-  },
-  profileHandle: {
-    marginTop: 2,
-    fontSize: 16,
-    fontWeight: "400",
-    color: "#ffffff",
+  rowInput: {
+    marginBottom: 12,
+    display: "flex",
   },
   row: {
-    height: 44,
-    width: "100%",
+    marginBottom: 12,
+    display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-start",
-    paddingRight: 12,
-  },
-  rowWrapper: {
-    paddingLeft: 16,
-    backgroundColor: "#000",
-    borderTopWidth: 1,
-    borderWidth: 1,
-    borderColor: "#fff",
-  },
-  rowFirst: {
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
+    justifyContent: "space-between",
   },
   rowLabel: {
     fontSize: 16,
     letterSpacing: 0.24,
-    color: "#fff",
+    color: "#000",
+    marginBottom: 0,
   },
   rowSpacer: {
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
+    display: "none",
   },
-  rowValue: {
+  input: {
+    width: "100%",
+    height: 40,
+    borderColor: "#ccc",
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+  },
+  buttonSave: {
+    backgroundColor: "#466F78",
+    padding: 10,
+    borderRadius: 8,
+    marginTop: 10,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  rowWrapper: {
+    paddingLeft: 16,
+    borderTopWidth: 1,
+    borderWidth: 1,
+    borderColor: "#fff",
+  },
+  contentFooter: {
+    marginTop: 24,
     fontSize: 16,
     fontWeight: "500",
-    color: "#ababab",
-    marginRight: 4,
-  },
-  rowLast: {
-    borderBottomLeftRadius: 12,
-    borderBottomRightRadius: 12,
+    textAlign: "center",
+    color: "#a69f9f",
   },
   rowLabelLogout: {
-    width: "100%",
-    textAlign: "center",
-    fontWeight: "600",
+    fontSize: 16,
     color: "#dc2626",
   },
 });
