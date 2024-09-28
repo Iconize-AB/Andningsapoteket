@@ -12,7 +12,9 @@ import Toast from "react-native-toast-message";
 import {
   faDrumstickBite,
   faDumbbell,
+  faGlobe,
   faHome,
+  faList,
   faPersonRays,
   faUser,
   faWind,
@@ -43,6 +45,9 @@ import i18n from "./src/i18n";
 import BreathWorkListScreen from "./src/regular/BreathworkListScreen";
 import TermsAndConditionPopup from "./src/regular/TermsAndConditionPopup";
 import ConditionScreen from "./src/condition/ConditionScreen";
+import CreatedListScreen from "./src/favorites/CreatedListScreen";
+import CategoryScreen from "./src/categories/CategoryScreen";
+import EnhancedText from "./src/regular/EnhancedText";
 
 const Drawer = createDrawerNavigator();
 
@@ -82,8 +87,8 @@ function Root({ userDetails, refreshUserProfile }) {
   return (
     <Tab.Navigator
       initialRouteName="Home"
-      screenOptions={({ route, navigation }) => ({
-        tabBarShowLabel: false,
+      screenOptions={({ route }) => ({
+        tabBarShowLabel: false, // Ensure labels are shown
         tabBarStyle: {
           position: "absolute",
           bottom: 40,
@@ -104,33 +109,32 @@ function Root({ userDetails, refreshUserProfile }) {
         },
         tabBarIcon: ({ focused }) => {
           let icon;
-          let iconColor = "#000"; // Default color
+          let label;
+          let iconColor = focused ? "#000" : "#888"; // Darker when focused
 
           switch (route.name) {
             case "Home":
-              icon = faHome;
+              icon = faGlobe;
+              label = "Explore";
               break;
-            case "Profile":
-              icon = faUser;
-              break;
-            case "WorkOut":
-              icon = faDumbbell;
-              break;
-            case "WorkIn":
+            case "Categories":
               icon = faWind;
+              label = "Journeys";
               break;
-            case "Recovery":
+            case "Favorites":
+              icon = faList;
+              label = "Favorites";
+              break;
+            case "Condition":
               icon = faPersonRays;
-              break;
-            case "Nutrition":
-              icon = faDrumstickBite;
+              label = "Condition";
               break;
           }
 
           return (
             <View
               style={{
-                width: 50,
+                width: 60,
                 height: 50,
                 position: "absolute",
                 bottom: 0,
@@ -142,13 +146,21 @@ function Root({ userDetails, refreshUserProfile }) {
             >
               <FontAwesomeIcon
                 icon={icon}
-                size={30}
-                color={focused ? "#000" : iconColor} // Change icon color when focused
+                size={25}
+                color={iconColor}
               />
+              <EnhancedText
+                style={{
+                  fontSize: 12,
+                  color: iconColor,
+                  marginTop: 5,
+                }}
+              >
+                {label}
+              </EnhancedText>
             </View>
           );
         },
-        header: () => <CustomHeader navigation={navigation} />, // Custom header
       })}
     >
       <Tab.Screen name="Home">
@@ -160,23 +172,18 @@ function Root({ userDetails, refreshUserProfile }) {
           />
         )}
       </Tab.Screen>
-      <Tab.Screen name="Profile">
-        {(props) => <ProfileScreen {...props} />}
+      <Tab.Screen name="Categories">
+        {(props) => <CategoryScreen {...props} />}
       </Tab.Screen>
-      <Tab.Screen name="BreathworkList" options={{ tabBarButton: () => null }}>
-        {(props) => (
-          <BreathWorkListScreen {...props} />
-        )}
+      <Tab.Screen name="Favorites">
+        {(props) => <CreatedListScreen {...props} />}
       </Tab.Screen>
-      <Tab.Screen name="Feature" options={{ tabBarButton: () => null }}>
-        {(props) => (
-          <ConditionScreen {...props} />
-        )}
+      <Tab.Screen name="Condition">
+        {(props) => <ConditionScreen {...props} />}
       </Tab.Screen>
     </Tab.Navigator>
   );
 }
-
 
 function AuthStack({}) {
   return (

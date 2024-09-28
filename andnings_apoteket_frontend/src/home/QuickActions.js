@@ -11,20 +11,25 @@ import {
 import { useTranslation } from "react-i18next";
 import colors from "../common/colors/Colors";
 
-const QuickActions = ({ navigation }) => {
+const QuickActions = ({ navigateToOption }) => {
   const { t } = useTranslation();
 
   return (
     <View style={styles.quickActionsContainer}>
-      <TouchableOpacity style={styles.actionButton}>
+      <TouchableOpacity
+        style={styles.actionButton}
+      >
         <FontAwesomeIcon
           icon={faCheckCircle}
           size={20}
           color={colors.iconColor}
         />
-        <Text style={styles.actionText}>{t("build_habit")}</Text>
+        <Text style={styles.actionText}>{t("breathwork_library")}</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.actionButton} onPress={() => navigation?.navigate("Feature")}>
+      <TouchableOpacity
+        style={styles.actionButton}
+        onPress={() => navigateToOption("Condition")}
+      >
         <FontAwesomeIcon
           icon={faHeartbeat}
           size={20}
@@ -32,13 +37,16 @@ const QuickActions = ({ navigation }) => {
         />
         <Text style={styles.actionText}>{t("condition")}</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.actionButton}>
+      <TouchableOpacity
+        style={styles.actionButton}
+        onPress={() => navigateToOption("Favorites")}
+      >
         <FontAwesomeIcon icon={faHeart} size={20} color={colors.iconColor} />
         <Text style={styles.actionText}>{t("favorites")}</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.actionButton}>
+      <TouchableOpacity style={styles.actionButton} onPress={() => navigateToOption("Categories")}>
         <FontAwesomeIcon icon={faBook} size={20} color={colors.iconColor} />
-        <Text style={styles.actionText}>{t("library")}</Text>
+        <Text style={styles.actionText}>{t("breatwork_journeys")}</Text>
       </TouchableOpacity>
     </View>
   );

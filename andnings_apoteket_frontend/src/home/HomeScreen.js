@@ -23,15 +23,15 @@ const HomeScreen = ({ navigation }) => {
 
       {/* Rounded buttons for quick actions */}
 
-      <QuickActions navigation={navigation} />
+      <QuickActions navigateToOption={navigateToOption} />
 
       {/* Start Your 7 Day Journey */}
       
-      <DayJourney />
+      <DayJourney navigateToOption={navigateToOption} />
 
       {/* Most played sessions */}
 
-      <MostPlayedSessions />
+      <MostPlayedSessions navigateToOption={navigateToOption} />
     </ScrollView>
   );
 };
