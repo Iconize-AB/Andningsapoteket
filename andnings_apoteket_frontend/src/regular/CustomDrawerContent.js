@@ -12,8 +12,10 @@ import {
   faHeart,
 } from "@fortawesome/free-solid-svg-icons";
 import colors from "../common/colors/Colors";
+import { useTranslation } from "react-i18next";
 
 const CustomDrawerContent = ({ navigation, userDetails, handleSignOut, setShowTerms }) => {
+  const { t } = useTranslation();
   return (
     <View style={styles.container}>
       {/* Profile Section */}
@@ -22,8 +24,8 @@ const CustomDrawerContent = ({ navigation, userDetails, handleSignOut, setShowTe
         onPress={() => navigation.navigate("Profile")}
       >
         <Image style={styles.profileImage} />
-        <Text style={styles.userName}>{userDetails?.name || "Guest"}</Text>
-        <Text style={styles.viewProfileText}>View profile</Text>
+        <Text style={styles.userName}>{t(userDetails?.name || "guest")}</Text>
+        <Text style={styles.viewProfileText}>{t("view_profile")}</Text>
       </TouchableOpacity>
 
       {/* Navigation Options */}
@@ -33,7 +35,7 @@ const CustomDrawerContent = ({ navigation, userDetails, handleSignOut, setShowTe
           onPress={() => navigation.navigate("SignUp")}
         >
           <FontAwesomeIcon icon={faUser} size={24} color={colors.iconColor} />
-          <Text style={styles.menuText}>Sign up</Text>
+          <Text style={styles.menuText}>{t("sign_up")}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -41,7 +43,7 @@ const CustomDrawerContent = ({ navigation, userDetails, handleSignOut, setShowTe
           onPress={() => navigation.navigate("CheckIn")}
         >
           <FontAwesomeIcon icon={faSmile} size={24} color={colors.iconColor} />
-          <Text style={styles.menuText}>Check-in</Text>
+          <Text style={styles.menuText}>{t("check_in")}</Text>
         </TouchableOpacity>
 
         {/* This triggers the Terms & Conditions popup */}
@@ -53,7 +55,7 @@ const CustomDrawerContent = ({ navigation, userDetails, handleSignOut, setShowTe
           }}
         >
           <FontAwesomeIcon icon={faBell} size={24} color={colors.iconColor} />
-          <Text style={styles.menuText}>Terms & Conditions</Text>
+          <Text style={styles.menuText}>{t("terms_and_condition")}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -63,7 +65,6 @@ const CustomDrawerContent = ({ navigation, userDetails, handleSignOut, setShowTe
           <FontAwesomeIcon icon={faUsers} size={24} color={colors.iconColor} />
           <Text style={styles.menuText}>Friends & Teachers</Text>
         </TouchableOpacity>
-
         <TouchableOpacity
           style={styles.menuItem}
           onPress={() => navigation.navigate("News")}
@@ -73,7 +74,7 @@ const CustomDrawerContent = ({ navigation, userDetails, handleSignOut, setShowTe
             size={24}
             color={colors.iconColor}
           />
-          <Text style={styles.menuText}>News</Text>
+          <Text style={styles.menuText}>{t("news")}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -81,7 +82,7 @@ const CustomDrawerContent = ({ navigation, userDetails, handleSignOut, setShowTe
           onPress={() => navigation.navigate("Share")}
         >
           <FontAwesomeIcon icon={faHeart} size={24} color={colors.iconColor} />
-          <Text style={styles.menuText}>Share Andningsapoteket</Text>
+          <Text style={styles.menuText}>{t("share_andningsapoteket")}</Text>
         </TouchableOpacity>
       </View>
 
@@ -92,7 +93,7 @@ const CustomDrawerContent = ({ navigation, userDetails, handleSignOut, setShowTe
           onPress={() => navigation.navigate("Settings")}
         >
           <FontAwesomeIcon icon={faCog} size={24} color={colors.iconColor} />
-          <Text style={styles.menuText}>Settings</Text>
+          <Text style={styles.menuText}>{t("settings")}</Text>
         </TouchableOpacity>
 
         {/* Sign Out Button */}
@@ -102,7 +103,7 @@ const CustomDrawerContent = ({ navigation, userDetails, handleSignOut, setShowTe
             size={24}
             color={colors.iconColor}
           />
-          <Text style={styles.menuText}>Sign Out</Text>
+          <Text style={styles.menuText}>{t("sign_out")}</Text>
         </TouchableOpacity>
       </View>
     </View>

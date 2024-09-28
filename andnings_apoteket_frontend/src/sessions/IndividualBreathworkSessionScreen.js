@@ -3,17 +3,20 @@ import { View, StyleSheet, TouchableOpacity, Image, Modal } from "react-native";
 import { Video } from "expo-av";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
-  faHeart,
   faPlayCircle,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import colors from "../common/colors/Colors";
 import EnhancedText from "../regular/EnhancedText";
 import EnhancedButton from "../regular/EnhancedButton";
+import testImage from "../resources/test_image.jpg";
+import { useTranslation } from "react-i18next";
 
 const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
   const { selectedVideo } = route.params;
   const [isPlaying, setIsPlaying] = useState(false);
+  const [expanded, setExpanded] = useState(false); // State to track "Read More"
+  const { t } = useTranslation();
 
   const handlePlay = () => {
     setIsPlaying(true);
@@ -27,6 +30,10 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
     navigation.goBack(); // Close the screen or go back
   };
 
+  const toggleReadMore = () => {
+    setExpanded(!expanded); // Toggle the expanded state
+  };
+
   return (
     <View style={styles.container}>
       {/* Video Preview */}
@@ -34,10 +41,7 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
         onPress={handlePlay}
         style={styles.videoPreviewContainer}
       >
-        <Image
-          source={{ uri: selectedVideo.imageUrl }}
-          style={styles.previewImage}
-        />
+        <Image source={testImage} style={styles.previewImage} />
         <View style={styles.playIcon}>
           <FontAwesomeIcon icon={faPlayCircle} size={50} color="#fff" />
         </View>
@@ -48,12 +52,23 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
         <EnhancedText style={styles.videoTitle}>
           {selectedVideo.title}
         </EnhancedText>
+
+        {/* Description with Read More/Read Less */}
         <EnhancedText style={styles.videoDescription}>
-          {selectedVideo.description}
+          {expanded
+            ? selectedVideo.description // Full description when expanded
+            : `${selectedVideo.description.slice(0, 100)}...`} {/* Truncated description */}
         </EnhancedText>
 
+        {/* Read More/Read Less button */}
+        <TouchableOpacity onPress={toggleReadMore}>
+          <EnhancedText style={styles.readMoreText}>
+            {expanded ? t("Read Less") : t("Read More")}
+          </EnhancedText>
+        </TouchableOpacity>
+
         {/* Add to Saved Sessions */}
-        <EnhancedButton title="Save to Sessions" size="medium" type="outline" />
+        <EnhancedButton title={t("save_to_list")} size="medium" type="outline" />
       </View>
 
       {/* Video Play Modal */}
@@ -134,8 +149,14 @@ const styles = StyleSheet.create({
   videoDescription: {
     fontSize: 16,
     color: "#666",
-    marginBottom: 25,
+    marginBottom: 10,
     textAlign: "center",
+  },
+  readMoreText: {
+    fontSize: 16,
+    color: colors.primary,
+    textAlign: "center",
+    marginBottom: 25,
   },
   favoriteButton: {
     backgroundColor: "#f1f1f1",

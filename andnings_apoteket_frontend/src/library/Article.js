@@ -1,32 +1,43 @@
 import React from "react";
-import { View, StyleSheet, TouchableOpacity, Modal, ScrollView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Modal,
+  ScrollView,
+} from "react-native";
 import { useTranslation } from "react-i18next";
 import EnhancedText from "../regular/EnhancedText";
+import EnhancedButton from "../regular/EnhancedButton";
 
 const Article = ({ modalVisible, setModalVisible, selectedArticle }) => {
-  const { t } = useTranslation(); 
+  const { t } = useTranslation();
   return (
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalView}>
-            <ScrollView>
-              <EnhancedText style={styles.modalTitle}>{selectedArticle?.title}</EnhancedText>
-              <EnhancedText style={styles.modalContent}>{selectedArticle?.content}</EnhancedText>
-            </ScrollView>
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => setModalVisible(false)}
-            >
-              <EnhancedText style={styles.closeButtonText}>{t("Close")}</EnhancedText>
-            </TouchableOpacity>
-          </View>
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={() => setModalVisible(false)}
+    >
+      <View style={styles.modalContainer}>
+        <View style={styles.modalView}>
+          <ScrollView>
+            <EnhancedText style={styles.modalTitle}>
+              {selectedArticle?.title}
+            </EnhancedText>
+            <EnhancedText style={styles.modalContent}>
+              {selectedArticle?.content}
+            </EnhancedText>
+          </ScrollView>
+          <EnhancedButton
+            title={t("close")}
+            size="medium"
+            onPress={() => setModalVisible(false)}
+            type="outline"
+          />
         </View>
-      </Modal>
+      </View>
+    </Modal>
   );
 };
 

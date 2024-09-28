@@ -5,7 +5,6 @@ import {
   TextInput,
   FlatList,
   TouchableOpacity,
-  Modal,
   ScrollView,
 } from "react-native";
 import colors from "../common/colors/Colors";
@@ -49,12 +48,43 @@ const LibraryScreen = () => {
       content: "This is the content of the Breathwork for Athletes article.",
       category: "Fitness",
     },
+    {
+      id: 6,
+      title: "Breathwork for Athletes",
+      content: "This is the content of the Breathwork for Athletes article.",
+      category: "Fitness",
+    },
+    {
+      id: 7,
+      title: "Breathwork for Athletes",
+      content: "This is the content of the Breathwork for Athletes article.",
+      category: "General",
+    },
+    {
+      id: 8,
+      title: "Breathwork for Athletes",
+      content: "This is the content of the Breathwork for Athletes article.",
+      category: "Worldwide",
+    },
+    {
+      id: 9,
+      title: "Breathwork for Athletes",
+      content: "This is the content of the Breathwork for Athletes article.",
+      category: "Industry",
+    },
+    {
+      id: 10,
+      title: "Breathwork for Athletes",
+      content: "This is the content of the Breathwork for Athletes article.",
+      category: "Science",
+    },
   ];
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("All");
   const [selectedArticle, setSelectedArticle] = useState(null); // To store the selected article for the modal
   const [modalVisible, setModalVisible] = useState(false);
+  const [expanded, setExpanded] = useState(false); // State to track if "Show More" is toggled
 
   // Extract unique categories from the articles array
   const categories = [
@@ -78,6 +108,14 @@ const LibraryScreen = () => {
     setModalVisible(true);
   };
 
+  // Function to toggle "Show More" and "Show Less"
+  const handleToggleMore = () => {
+    setExpanded(!expanded);
+  };
+
+  // Only show the first few categories unless "expanded" is true
+  const categoriesToRender = expanded ? categories : categories.slice(0, 3);
+
   return (
     <View style={styles.container}>
       {/* Title */}
@@ -93,7 +131,7 @@ const LibraryScreen = () => {
 
       {/* Filter Section */}
       <View style={styles.filterContainer}>
-        {categories.map((category) => (
+        {categoriesToRender.map((category) => (
           <TouchableOpacity
             key={category}
             style={[
@@ -107,6 +145,13 @@ const LibraryScreen = () => {
             </EnhancedText>
           </TouchableOpacity>
         ))}
+
+        {/* "Show More" or "Show Less" Button */}
+        <TouchableOpacity style={styles.filterButton} onPress={handleToggleMore}>
+          <EnhancedText style={styles.filterButtonText}>
+            {expanded ? t("Show Less") : t("Show More")}
+          </EnhancedText>
+        </TouchableOpacity>
       </View>
 
       {/* Article List */}
@@ -131,6 +176,7 @@ const LibraryScreen = () => {
             {t("No articles found")}
           </EnhancedText>
         }
+        showsVerticalScrollIndicator={false} // Disable vertical scrollbar here
       />
       {/* Article Modal */}
       <Article
@@ -146,6 +192,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    marginBottom: 100,
     backgroundColor: colors.background,
   },
   title: {
@@ -169,11 +216,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   filterButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    backgroundColor: "#fff",
-    borderRadius: 20,
-    marginBottom: 10,
+    width: "23%",
+    height: 40,
+    backgroundColor: "#FFF",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 10,
+    marginVertical: 10,
   },
   filterButtonActive: {
     backgroundColor: colors.secondary,

@@ -3,27 +3,30 @@ import { View, Text, ImageBackground, ScrollView, StyleSheet, TouchableOpacity }
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import EnhancedText from "../regular/EnhancedText";
+import colors from "../common/colors/Colors";
+import EnhancedButton from "../regular/EnhancedButton";
+import testImage from "../resources/test_image.jpg";
 
 const mostPlayedSessionsData = [
   {
     id: 1,
     title: "Morgon breathwork",
     description: "Start your day with a calm mind and relaxed body.",
-    imageUrl: "https://img.freepik.com/free-vector/open-air-yoga-class_23-2148653272.jpg",
+    imageUrl: testImage,
     videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
   },
   {
     id: 2,
     title: "Lugn Breathwork",
     description: "Focus on your breath and stay present in the moment.",
-    imageUrl: "https://media.istockphoto.com/id/1388130815/vector/woman-meditating-with-mindfulness-imagination-in-nature-and-flowers-concept-illustration-for.jpg?s=612x612&w=0&k=20&c=CSLJFtUgD6Gfr5d_Z7j7xFMngfchMGOU5H4nggv3Nis=",
+    imageUrl: testImage,
     videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
   },
   {
     id: 3,
     title: "Guidad Breathwork",
     description: "Release tension and experience a state of relaxation.",
-    imageUrl: "https://media.istockphoto.com/id/1299679815/vector/relaxed-male-character-in-home-clothes-and-slippers-sitting-in-comfortable-chair-yawning-man.jpg?s=612x612&w=0&k=20&c=s4OxVgFYYadB1g48qKQuRlGxcZMXqaKVLrCTcMntO1w=",
+    imageUrl: testImage,
     videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
   },
 ];
@@ -42,15 +45,13 @@ const MostPlayedSessions = () => {
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
         {mostPlayedSessionsData.map((session) => (
           <View key={session.id} style={styles.card}>
-            <ImageBackground source={{ uri: session.imageUrl }} style={styles.cardImage}>
+            <View style={styles.cardImage}>
               <View style={styles.cardOverlay}>
                 <EnhancedText style={styles.cardTitle}>{session.title}</EnhancedText>
                 <EnhancedText style={styles.cardSubtitle}>{session.description}</EnhancedText>
-                <TouchableOpacity style={styles.cardButton} onPress={() => handlePlayNow(session)}>
-                  <EnhancedText style={styles.cardButtonText}>{t("play_now")}</EnhancedText>
-                </TouchableOpacity>
+                <EnhancedButton size="small" title={t("play_now")} onPress={() => handlePlayNow(session)} />
               </View>
-            </ImageBackground>
+            </View>
           </View>
         ))}
       </ScrollView>
@@ -61,7 +62,7 @@ const MostPlayedSessions = () => {
 const styles = StyleSheet.create({
   mostPlayedContainer: {
     marginTop: 20,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
   },
   mostPlayedTitle: {
     fontSize: 18,
@@ -83,7 +84,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   cardOverlay: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: colors.secondary,
     padding: 20,
     width: "100%",
   },

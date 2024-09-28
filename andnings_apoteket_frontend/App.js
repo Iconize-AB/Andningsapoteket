@@ -50,6 +50,7 @@ import CategoryScreen from "./src/categories/CategoryScreen";
 import LibraryScreen from "./src/library/LibraryScreen";
 import colors from "./src/common/colors/Colors";
 import IndividualBreathworkSessionScreen from "./src/sessions/IndividualBreathworkSessionScreen";
+import JourneyOverviewScreen from "./src/challenge/JourneyOverviewScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -181,6 +182,16 @@ function Root({ userDetails, refreshUserProfile, navigation }) {
           <IndividualBreathworkSessionScreen {...props} />
         )}
       </Tab.Screen>
+      <Tab.Screen name="JourneyOverviewScreen" options={{ tabBarButton: () => null }}>
+        {(props) => (
+          <JourneyOverviewScreen {...props} />
+        )}
+      </Tab.Screen>
+      <Tab.Screen name="Profile" options={{ tabBarButton: () => null }}>
+        {(props) => (
+          <ProfileScreen {...props} />
+        )}
+      </Tab.Screen>
       <Tab.Screen name="Condition">
         {(props) => <ConditionScreen {...props} />}
       </Tab.Screen>
@@ -307,9 +318,10 @@ function App() {
 const styles = {
   homeIconContainer: {
     position: "absolute",
-    bottom: 20,
+    bottom: 30,
     justifyContent: "center",
     alignItems: "center",
+    zIndex: 1,
   },
   homeIcon: {
     width: 60,
