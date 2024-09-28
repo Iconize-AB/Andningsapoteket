@@ -18,6 +18,7 @@ const QuickActions = ({ navigateToOption }) => {
     <View style={styles.quickActionsContainer}>
       <TouchableOpacity
         style={styles.actionButton}
+        onPress={() => navigateToOption("Library")}
       >
         <FontAwesomeIcon
           icon={faCheckCircle}

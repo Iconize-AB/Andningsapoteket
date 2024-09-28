@@ -47,15 +47,18 @@ import TermsAndConditionPopup from "./src/regular/TermsAndConditionPopup";
 import ConditionScreen from "./src/condition/ConditionScreen";
 import CreatedListScreen from "./src/favorites/CreatedListScreen";
 import CategoryScreen from "./src/categories/CategoryScreen";
-import EnhancedText from "./src/regular/EnhancedText";
+import LibraryScreen from "./src/library/LibraryScreen";
+import colors from "./src/common/colors/Colors";
 
 const Drawer = createDrawerNavigator();
 
 function DrawerNavigator({ userDetails, refreshUserProfile, handleSignOut }) {
   const [showTerms, setShowTerms] = useState(false);
+  
   if (showTerms) {
     return <TermsAndConditionPopup onClose={() => setShowTerms(false)} />;
   }
+
   return (
     <Drawer.Navigator
       drawerContent={(props) => (
@@ -67,7 +70,7 @@ function DrawerNavigator({ userDetails, refreshUserProfile, handleSignOut }) {
         />
       )}
       screenOptions={{
-        headerShown: false,
+        headerShown: false, // Ensure no default header shows in drawer
       }}
     >
       <Drawer.Screen name="MainTabs">
@@ -83,25 +86,24 @@ function DrawerNavigator({ userDetails, refreshUserProfile, handleSignOut }) {
   );
 }
 
-function Root({ userDetails, refreshUserProfile }) {
+function Root({ userDetails, refreshUserProfile, navigation }) {
   return (
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={({ route }) => ({
-        tabBarShowLabel: false, // Ensure labels are shown
+        tabBarShowLabel: false,
         tabBarStyle: {
           position: "absolute",
           bottom: 40,
-          left: 0,
-          right: 0,
+          left: 20,
+          right: 20,
           elevation: 5,
           backgroundColor: "#FFFFFF",
-          borderRadius: 15,
-          height: 60,
-          marginLeft: 10,
-          marginRight: 10,
-          alignItems: "center",
+          borderRadius: 30, // Rounded navigation bar
+          height: 65,
+          paddingBottom: 0,
           justifyContent: "center",
+          alignItems: "center",
           shadowColor: "#000",
           shadowOffset: { width: 0, height: 10 },
           shadowOpacity: 0.1,
@@ -109,60 +111,56 @@ function Root({ userDetails, refreshUserProfile }) {
         },
         tabBarIcon: ({ focused }) => {
           let icon;
-          let label;
-          let iconColor = focused ? "#000" : "#888"; // Darker when focused
+          let iconColor = focused ? colors.primary : "#888";
+          let isHome = route.name === "Home";
 
+          // Icons for different routes
           switch (route.name) {
             case "Home":
               icon = faGlobe;
-              label = "Explore";
               break;
             case "Categories":
               icon = faWind;
-              label = "Journeys";
               break;
             case "Favorites":
               icon = faList;
-              label = "Favorites";
               break;
             case "Condition":
               icon = faPersonRays;
-              label = "Condition";
+              break;
+            case "Library":
+              icon = faWind;
               break;
           }
 
-          return (
-            <View
-              style={{
-                width: 60,
-                height: 50,
-                position: "absolute",
-                bottom: 0,
-                top: 5,
-                borderRadius: 25,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <FontAwesomeIcon
-                icon={icon}
-                size={25}
-                color={iconColor}
-              />
-              <EnhancedText
-                style={{
-                  fontSize: 12,
-                  color: iconColor,
-                  marginTop: 5,
-                }}
-              >
-                {label}
-              </EnhancedText>
-            </View>
-          );
+          // Special style for Home icon
+          if (isHome) {
+            return (
+              <View style={styles.homeIconContainer}>
+                <View
+                  style={[
+                    styles.homeIcon,
+                    focused && styles.homeIconFocused, // Apply focused style
+                  ]}
+                >
+                  <FontAwesomeIcon icon={icon} size={30} color={focused ? "#ffffff" : "#000"} />
+                </View>
+              </View>
+            );
+          }
+
+          // Normal icons for other tabs
+          return <FontAwesomeIcon icon={icon} size={25} color={iconColor} />;
         },
+        header: () => <CustomHeader navigation={navigation} />,
       })}
     >
+      <Tab.Screen name="Categories">
+        {(props) => <CategoryScreen {...props} />}
+      </Tab.Screen>
+      <Tab.Screen name="Favorites">
+        {(props) => <CreatedListScreen {...props} />}
+      </Tab.Screen>
       <Tab.Screen name="Home">
         {(props) => (
           <HomeScreen
@@ -172,14 +170,16 @@ function Root({ userDetails, refreshUserProfile }) {
           />
         )}
       </Tab.Screen>
-      <Tab.Screen name="Categories">
-        {(props) => <CategoryScreen {...props} />}
-      </Tab.Screen>
-      <Tab.Screen name="Favorites">
-        {(props) => <CreatedListScreen {...props} />}
+      <Tab.Screen name="BreathworkList" options={{ tabBarButton: () => null }}>
+        {(props) => (
+          <BreathWorkListScreen {...props} />
+        )}
       </Tab.Screen>
       <Tab.Screen name="Condition">
         {(props) => <ConditionScreen {...props} />}
+      </Tab.Screen>
+      <Tab.Screen name="Library">
+        {(props) => <LibraryScreen {...props} />}
       </Tab.Screen>
     </Tab.Navigator>
   );
@@ -297,5 +297,33 @@ function App() {
     </I18nextProvider>
   );
 }
+
+const styles = {
+  homeIconContainer: {
+    position: "absolute",
+    bottom: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  homeIcon: {
+    width: 60,
+    height: 60,
+    borderRadius: 35,
+    backgroundColor: "#f1f1f1",
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 5,
+  },
+  homeIconFocused: {
+    backgroundColor: colors.primary,
+    shadowColor: "#4A90E2",
+    shadowOpacity: 0.6,
+    shadowRadius: 10,
+  },
+};
 
 export default App;
