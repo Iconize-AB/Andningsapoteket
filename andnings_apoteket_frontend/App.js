@@ -49,6 +49,7 @@ import CreatedListScreen from "./src/favorites/CreatedListScreen";
 import CategoryScreen from "./src/categories/CategoryScreen";
 import LibraryScreen from "./src/library/LibraryScreen";
 import colors from "./src/common/colors/Colors";
+import IndividualBreathworkSessionScreen from "./src/sessions/IndividualBreathworkSessionScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -173,6 +174,11 @@ function Root({ userDetails, refreshUserProfile, navigation }) {
       <Tab.Screen name="BreathworkList" options={{ tabBarButton: () => null }}>
         {(props) => (
           <BreathWorkListScreen {...props} />
+        )}
+      </Tab.Screen>
+      <Tab.Screen name="IndividualBreathworkSession" options={{ tabBarButton: () => null }}>
+        {(props) => (
+          <IndividualBreathworkSessionScreen {...props} />
         )}
       </Tab.Screen>
       <Tab.Screen name="Condition">
