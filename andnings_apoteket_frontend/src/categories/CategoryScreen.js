@@ -4,15 +4,19 @@ import { useTranslation } from "react-i18next";
 import CategoryGrid from "./CategoryGrid";
 import colors from "../common/colors/Colors";
 
-const CategoryScreen = () => {
+const CategoryScreen = ({ navigation }) => {
   const { t } = useTranslation();
+
+  const onPressCategory = (selectedCategory) => {
+    navigation.navigate("SelectedCategory", { category: selectedCategory })
+  }
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{t("recommended_sessions")}</Text>
       
       {/* Render the grid without horizontal scroll */}
-      <CategoryGrid />
+      <CategoryGrid onPressCategory={onPressCategory} />
     </View>
   );
 };

@@ -72,9 +72,9 @@ const DayJourney = ({ navigateToOption }) => {
                   {t(`days.${dayItem.day}.description`)}
                 </EnhancedText>
                 <EnhancedButton
-                  title={dayItem.day === 1 ? t("Start") : t("Explore")} // Conditional button text
                   onPress={() => navigateToOption("JourneyOverviewScreen")}
-                  size="small"
+                  title={dayItem.day === 1 ? t("Start") : t("Explore")} // Conditional button text
+                  size="medium"
                   type="solid"
                 />
               </View>

@@ -6,6 +6,7 @@ import EnhancedText from "../regular/EnhancedText";
 import colors from "../common/colors/Colors";
 import EnhancedButton from "../regular/EnhancedButton";
 import testImage from "../resources/test_image.jpg";
+import VideoItem from "../regular/VideoItem";
 
 const mostPlayedSessionsData = [
   {
@@ -44,15 +45,7 @@ const MostPlayedSessions = () => {
       <EnhancedText style={styles.mostPlayedTitle}>{t("most_played_sessions")}</EnhancedText>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
         {mostPlayedSessionsData.map((session) => (
-          <View key={session.id} style={styles.card}>
-            <View style={styles.cardImage}>
-              <View style={styles.cardOverlay}>
-                <EnhancedText style={styles.cardTitle}>{session.title}</EnhancedText>
-                <EnhancedText style={styles.cardSubtitle}>{session.description}</EnhancedText>
-                <EnhancedButton size="small" title={t("play_now")} onPress={() => handlePlayNow(session)} />
-              </View>
-            </View>
-          </View>
+          <VideoItem session={session} handlePlayNow={handlePlayNow}  />
         ))}
       </ScrollView>
     </View>
@@ -71,43 +64,6 @@ const styles = StyleSheet.create({
   },
   horizontalScroll: {
     flexDirection: "row",
-  },
-  card: {
-    width: 250,
-    marginRight: 15,
-    borderRadius: 10,
-    overflow: "hidden",
-  },
-  cardImage: {
-    flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
-  },
-  cardOverlay: {
-    backgroundColor: colors.secondary,
-    padding: 20,
-    width: "100%",
-  },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#fff",
-    marginBottom: 10,
-  },
-  cardSubtitle: {
-    fontSize: 14,
-    color: "#fff",
-  },
-  cardButton: {
-    backgroundColor: "#0066FF",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginTop: 15,
-  },
-  cardButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
   },
 });
 

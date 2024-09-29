@@ -5,18 +5,14 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Font from "expo-font";
-import 'intl-pluralrules';
+import "intl-pluralrules";
 import * as Notifications from "expo-notifications";
 import { ActivityIndicator, View } from "react-native";
 import Toast from "react-native-toast-message";
 import {
-  faDrumstickBite,
-  faDumbbell,
   faGlobe,
-  faHome,
   faList,
   faPersonRays,
-  faUser,
   faWind,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -51,12 +47,13 @@ import LibraryScreen from "./src/library/LibraryScreen";
 import colors from "./src/common/colors/Colors";
 import IndividualBreathworkSessionScreen from "./src/sessions/IndividualBreathworkSessionScreen";
 import JourneyOverviewScreen from "./src/challenge/JourneyOverviewScreen";
+import SelectedCategoryScreen from "./src/categories/SelectedCategoryScreen";
 
 const Drawer = createDrawerNavigator();
 
 function DrawerNavigator({ userDetails, refreshUserProfile, handleSignOut }) {
   const [showTerms, setShowTerms] = useState(false);
-  
+
   if (showTerms) {
     return <TermsAndConditionPopup onClose={() => setShowTerms(false)} />;
   }
@@ -145,7 +142,11 @@ function Root({ userDetails, refreshUserProfile, navigation }) {
                     focused && styles.homeIconFocused, // Apply focused style
                   ]}
                 >
-                  <FontAwesomeIcon icon={icon} size={30} color={focused ? "#ffffff" : "#000"} />
+                  <FontAwesomeIcon
+                    icon={icon}
+                    size={30}
+                    color={focused ? "#ffffff" : "#000"}
+                  />
                 </View>
               </View>
             );
@@ -154,7 +155,7 @@ function Root({ userDetails, refreshUserProfile, navigation }) {
           // Normal icons for other tabs
           return <FontAwesomeIcon icon={icon} size={25} color={iconColor} />;
         },
-        header: () => <CustomHeader navigation={navigation} />,
+        header: () => <CustomHeader navigation={navigation} route={route} />,
       })}
     >
       <Tab.Screen name="Categories">
@@ -173,24 +174,28 @@ function Root({ userDetails, refreshUserProfile, navigation }) {
         )}
       </Tab.Screen>
       <Tab.Screen name="BreathworkList" options={{ tabBarButton: () => null }}>
-        {(props) => (
-          <BreathWorkListScreen {...props} />
-        )}
+        {(props) => <BreathWorkListScreen {...props} />}
       </Tab.Screen>
-      <Tab.Screen name="IndividualBreathworkSession" options={{ tabBarButton: () => null }}>
-        {(props) => (
-          <IndividualBreathworkSessionScreen {...props} />
-        )}
+      <Tab.Screen
+        name="IndividualBreathworkSession"
+        options={{ tabBarButton: () => null }}
+      >
+        {(props) => <IndividualBreathworkSessionScreen {...props} />}
       </Tab.Screen>
-      <Tab.Screen name="JourneyOverviewScreen" options={{ tabBarButton: () => null }}>
-        {(props) => (
-          <JourneyOverviewScreen {...props} />
-        )}
+      <Tab.Screen
+        name="JourneyOverviewScreen"
+        options={{ tabBarButton: () => null }}
+      >
+        {(props) => <JourneyOverviewScreen {...props} />}
+      </Tab.Screen>
+      <Tab.Screen
+        name="SelectedCategory"
+        options={{ tabBarButton: () => null }}
+      >
+        {(props) => <SelectedCategoryScreen {...props} />}
       </Tab.Screen>
       <Tab.Screen name="Profile" options={{ tabBarButton: () => null }}>
-        {(props) => (
-          <ProfileScreen {...props} />
-        )}
+        {(props) => <ProfileScreen {...props} />}
       </Tab.Screen>
       <Tab.Screen name="Condition">
         {(props) => <ConditionScreen {...props} />}
@@ -206,11 +211,7 @@ function AuthStack({}) {
   return (
     <Stack.Navigator
       screenOptions={({ navigation, route }) => ({
-        headerShown: true,
-        header: () => {
-          const backgroundColor = "#000000";
-          return <CustomHeader backgroundColor={backgroundColor} />;
-        },
+        headerShown: false,
       })}
     >
       <Stack.Screen name="UserChoose" component={UsersChoice} />

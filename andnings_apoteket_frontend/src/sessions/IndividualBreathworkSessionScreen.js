@@ -1,11 +1,16 @@
 import React, { useState } from "react";
-import { View, StyleSheet, TouchableOpacity, Image, Modal } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Modal,
+  Animated,
+  ScrollView,
+} from "react-native";
 import { Video } from "expo-av";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import {
-  faPlayCircle,
-  faTimes,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPlayCircle, faTimes, faHeart } from "@fortawesome/free-solid-svg-icons";
 import colors from "../common/colors/Colors";
 import EnhancedText from "../regular/EnhancedText";
 import EnhancedButton from "../regular/EnhancedButton";
@@ -16,6 +21,8 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
   const { selectedVideo } = route.params;
   const [isPlaying, setIsPlaying] = useState(false);
   const [expanded, setExpanded] = useState(false); // State to track "Read More"
+  const [isSaved, setIsSaved] = useState(false); // State for save animation
+  const fadeAnim = useState(new Animated.Value(0))[0]; // Animation for Read More
   const { t } = useTranslation();
 
   const handlePlay = () => {
@@ -23,27 +30,38 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
   };
 
   const handleCloseModal = () => {
-    setIsPlaying(false); // Stop playing
+    setIsPlaying(false);
   };
 
   const handleGoBack = () => {
-    navigation.goBack(); // Close the screen or go back
+    navigation.goBack();
   };
 
   const toggleReadMore = () => {
-    setExpanded(!expanded); // Toggle the expanded state
+    setExpanded(!expanded);
+    Animated.timing(fadeAnim, {
+      toValue: expanded ? 0 : 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleSaveSession = () => {
+    setIsSaved(!isSaved);
+    // Trigger a save action here if necessary
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       {/* Video Preview */}
       <TouchableOpacity
         onPress={handlePlay}
         style={styles.videoPreviewContainer}
+        activeOpacity={0.8}
       >
         <Image source={testImage} style={styles.previewImage} />
         <View style={styles.playIcon}>
-          <FontAwesomeIcon icon={faPlayCircle} size={50} color="#fff" />
+          <FontAwesomeIcon icon={faPlayCircle} size={60} color="#fff" />
         </View>
       </TouchableOpacity>
 
@@ -56,26 +74,29 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
         {/* Description with Read More/Read Less */}
         <EnhancedText style={styles.videoDescription}>
           {expanded
-            ? selectedVideo.description // Full description when expanded
-            : `${selectedVideo.description.slice(0, 100)}...`} {/* Truncated description */}
+            ? selectedVideo.description
+            : `${selectedVideo.description.slice(0, 100)}...`}
         </EnhancedText>
-
-        {/* Read More/Read Less button */}
         <TouchableOpacity onPress={toggleReadMore}>
           <EnhancedText style={styles.readMoreText}>
             {expanded ? t("Read Less") : t("Read More")}
           </EnhancedText>
         </TouchableOpacity>
-
         {/* Add to Saved Sessions */}
-        <EnhancedButton title={t("save_to_list")} size="medium" type="outline" />
+          <EnhancedButton
+            icon={faHeart}
+            onPress={handleSaveSession}
+            title={t(isSaved ? "Saved" : "Save to List")}
+            size="medium"
+          />
       </View>
 
       {/* Video Play Modal */}
       <Modal
         visible={isPlaying}
-        animationType="slide"
+        animationType="fade"
         onRequestClose={handleCloseModal}
+        transparent={true}
       >
         <View style={styles.modalContentContainer}>
           <TouchableOpacity
@@ -96,13 +117,13 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
           />
         </View>
       </Modal>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: colors.background,
     paddingHorizontal: 20,
     paddingTop: 60,
@@ -113,22 +134,25 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 20,
+    borderRadius: 20,
+    overflow: "hidden",
+    position: "relative",
   },
   previewImage: {
     width: "100%",
     height: "100%",
     borderRadius: 12,
+    transform: [{ scale: 1 }],
   },
   playIcon: {
     position: "absolute",
-    justifyContent: "center",
-    alignItems: "center",
     top: "50%",
     left: "50%",
-    transform: [{ translateX: -25 }, { translateY: -25 }],
+    transform: [{ translateX: -30 }, { translateY: -30 }],
+    opacity: 0.8,
   },
   infoContainer: {
-    padding: 25, // More padding for a spacious look
+    padding: 25,
     backgroundColor: "#fff",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -136,11 +160,10 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    elevation: 2,
-    width: "100%",
+    elevation: 3,
   },
   videoTitle: {
-    fontSize: 24, // Larger title font size
+    fontSize: 24,
     fontWeight: "bold",
     color: "#333",
     marginBottom: 15,
@@ -158,21 +181,24 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 25,
   },
-  favoriteButton: {
+  saveButton: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "#f1f1f1",
     padding: 12,
     borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
+    elevation: 3,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
-    elevation: 2,
+    marginVertical: 15,
   },
-  favoriteButtonText: {
+  saveButtonText: {
     fontSize: 16,
     color: "#333",
+    marginLeft: 10,
   },
   modalContentContainer: {
     flex: 1,

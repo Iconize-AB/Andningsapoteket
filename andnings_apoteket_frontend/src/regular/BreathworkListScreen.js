@@ -38,7 +38,6 @@ const BreathWorkListScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <EnhancedText style={styles.title}>Videos for {feature}</EnhancedText>
       <FlatList
         data={videos}
         renderItem={renderVideoItem}

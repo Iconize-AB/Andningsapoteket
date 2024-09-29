@@ -1,13 +1,12 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import colors from "../common/colors/Colors";
 
 const CategoryGrid = ({ onPressCategory }) => {
   const categories = [
-    { id: 1, name: "Eld" },
-    { id: 2, name: "Vind" },
-    { id: 3, name: "Jord" },
-    { id: 4, name: "Vatten" },
+    { id: 1, name: "Fire" },
+    { id: 2, name: "Wind" },
+    { id: 3, name: "Earth" },
+    { id: 4, name: "Water" },
   ];
 
   return (
