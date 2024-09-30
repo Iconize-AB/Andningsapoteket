@@ -1,162 +1,141 @@
-import React, { useState } from "react"; // Import useState
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import {
-  faBell,
-  faCog,
-  faSignOutAlt,
-  faUser,
-  faSmile,
-  faUsers,
-  faNewspaper,
-  faHeart,
-} from "@fortawesome/free-solid-svg-icons";
-import colors from "../common/colors/Colors";
-import { useTranslation } from "react-i18next";
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { DrawerContentScrollView } from '@react-navigation/drawer';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faUser, faChevronDown, faChevronUp, faSignOutAlt, faFileAlt, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+import Svg, { Path } from 'react-native-svg';
 
-const CustomDrawerContent = ({ navigation, userDetails, handleSignOut, setShowTerms }) => {
-  const { t } = useTranslation();
+// Custom Drawer Content Component
+const CustomDrawerContent = (props) => {
+  const [isProfileExpanded, setIsProfileExpanded] = useState(false);
+
   return (
-    <View style={styles.container}>
-      {/* Profile Section */}
-      <TouchableOpacity
-        style={styles.profileSection}
-        onPress={() => navigation.navigate("Profile")}
-      >
-        <Image style={styles.profileImage} />
-        <Text style={styles.userName}>{t(userDetails?.name || "guest")}</Text>
-        <Text style={styles.viewProfileText}>{t("view_profile")}</Text>
+    <DrawerContentScrollView {...props} contentContainerStyle={styles.drawerContainer}>
+      <View style={styles.header}>
+        <Text style={styles.username}>Philip</Text>
+      </View>
+
+      {/* Menu Items */}
+      <TouchableOpacity style={styles.drawerItem}>
+        <FontAwesomeIcon icon={faCheckCircle} size={18} color="#FFF" />
+        <Text style={styles.itemText}>Checka in</Text>
       </TouchableOpacity>
 
-      {/* Navigation Options */}
-      <View style={styles.menuSection}>
-        <TouchableOpacity
-          style={styles.menuItem}
-          onPress={() => navigation.navigate("SignUp")}
-        >
-          <FontAwesomeIcon icon={faUser} size={24} color={colors.iconColor} />
-          <Text style={styles.menuText}>{t("sign_up")}</Text>
-        </TouchableOpacity>
+      <TouchableOpacity style={styles.drawerItem}>
+        <FontAwesomeIcon icon={faFileAlt} size={18} color="#FFF" />
+        <Text style={styles.itemText}>Allmänna villkor</Text>
+      </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.menuItem}
-          onPress={() => navigation.navigate("CheckIn")}
-        >
-          <FontAwesomeIcon icon={faSmile} size={24} color={colors.iconColor} />
-          <Text style={styles.menuText}>{t("check_in")}</Text>
-        </TouchableOpacity>
+      {/* Profile Section with Submenu */}
+      <TouchableOpacity
+        style={[styles.drawerItem, styles.expandableItem]}
+        onPress={() => setIsProfileExpanded(!isProfileExpanded)}
+      >
+        <FontAwesomeIcon icon={faUser} size={18} color="#FFF" />
+        <Text style={styles.itemText}>Profil</Text>
+        <FontAwesomeIcon icon={isProfileExpanded ? faChevronUp : faChevronDown} size={18} color="#FFF" />
+      </TouchableOpacity>
 
-        {/* This triggers the Terms & Conditions popup */}
-        <TouchableOpacity
-          style={styles.menuItem}
-          onPress={() => {
-            setShowTerms(true);
-            navigation.closeDrawer();
-          }}
-        >
-          <FontAwesomeIcon icon={faBell} size={24} color={colors.iconColor} />
-          <Text style={styles.menuText}>{t("terms_and_condition")}</Text>
-        </TouchableOpacity>
+      {isProfileExpanded && (
+        <View style={styles.subMenu}>
+          {/* Custom SVG Curved Line */}
+          <Svg height="120" width="40" style={styles.curvedLine}>
+            <Path
+              d="M20 0 C10 20, 10 40, 20 60 C30 80, 30 100, 20 120"
+              stroke="#FFFFFF"
+              strokeWidth="2"
+              fill="none"
+            />
+          </Svg>
 
-        <TouchableOpacity
-          style={styles.menuItem}
-          onPress={() => navigation.navigate("Friends")}
-        >
-          <FontAwesomeIcon icon={faUsers} size={24} color={colors.iconColor} />
-          <Text style={styles.menuText}>Friends & Teachers</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.menuItem}
-          onPress={() => navigation.navigate("News")}
-        >
-          <FontAwesomeIcon
-            icon={faNewspaper}
-            size={24}
-            color={colors.iconColor}
-          />
-          <Text style={styles.menuText}>{t("news")}</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.subMenuItem}>
+            <Text style={styles.subMenuText}>Inställningar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.subMenuItem}>
+            <Text style={styles.subMenuText}>Svenska</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.subMenuItem}>
+            <Text style={styles.subMenuText}>Notifikationer</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.subMenuItem}>
+            <Text style={styles.subMenuText}>Prenumeration</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
-        <TouchableOpacity
-          style={styles.menuItem}
-          onPress={() => navigation.navigate("Share")}
-        >
-          <FontAwesomeIcon icon={faHeart} size={24} color={colors.iconColor} />
-          <Text style={styles.menuText}>{t("share_andningsapoteket")}</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity style={styles.drawerItem}>
+        <FontAwesomeIcon icon={faFileAlt} size={18} color="#FFF" />
+        <Text style={styles.itemText}>Nya sessions</Text>
+      </TouchableOpacity>
 
-      {/* Bottom Section */}
-      <View style={styles.bottomSection}>
-        <TouchableOpacity
-          style={styles.menuItem}
-          onPress={() => navigation.navigate("Settings")}
-        >
-          <FontAwesomeIcon icon={faCog} size={24} color={colors.iconColor} />
-          <Text style={styles.menuText}>{t("settings")}</Text>
-        </TouchableOpacity>
+      <View style={styles.divider} />
 
-        {/* Sign Out Button */}
-        <TouchableOpacity style={styles.menuItem} onPress={handleSignOut}>
-          <FontAwesomeIcon
-            icon={faSignOutAlt}
-            size={24}
-            color={colors.iconColor}
-          />
-          <Text style={styles.menuText}>{t("sign_out")}</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+      <TouchableOpacity style={styles.drawerItem}>
+        <FontAwesomeIcon icon={faFileAlt} size={18} color="#FFF" />
+        <Text style={styles.itemText}>Dela andningsapoteket</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.drawerItem} onPress={() => props.navigation.navigate('LogOut')}>
+        <FontAwesomeIcon icon={faSignOutAlt} size={18} color="#FFF" />
+        <Text style={styles.itemText}>Logga ut</Text>
+      </TouchableOpacity>
+    </DrawerContentScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  drawerContainer: {
     flex: 1,
+    backgroundColor: '#1E4A61', // Darker blue background as per image
+    paddingTop: 0,
+  },
+  header: {
     padding: 20,
-    backgroundColor: colors.background,
+    backgroundColor: '#1E4A61', // Header background color
+    alignItems: 'center',
   },
-  profileSection: {
-    alignItems: "center",
-    marginBottom: 20,
-    paddingTop: 40,
+  username: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#FFF',
+    marginBottom: 10,
   },
-  profileImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: colors.iconColor,
-  },
-  userName: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#000",
-    marginTop: 10,
-  },
-  viewProfileText: {
-    fontSize: 14,
-    color: colors.primary,
-    marginTop: 5,
-  },
-  menuSection: {
-    flex: 1,
-  },
-  menuItem: {
-    flexDirection: "row",
-    alignItems: "center",
+  drawerItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingVertical: 15,
+    paddingHorizontal: 20,
+    marginVertical: 2,
   },
-  menuText: {
-    marginLeft: 15,
+  itemText: {
+    marginLeft: 10,
     fontSize: 16,
-    color: "#000",
+    color: '#FFF',
   },
-  premiumText: {
-    color: colors.secondary,
-    fontStyle: "italic",
+  expandableItem: {
+    justifyContent: 'space-between',
   },
-  bottomSection: {
-    marginBottom: 20,
+  subMenu: {
+    marginLeft: 40, // Submenu indentation
+    marginTop: -10,  // Adjust margin for proper spacing
+  },
+  subMenuItem: {
+    paddingVertical: 8,
+  },
+  subMenuText: {
+    fontSize: 14,
+    color: '#B0C4DE', // Lighter color for submenu
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#B0C4DE', // Divider color
+    marginVertical: 15,
+    marginLeft: 20,
+  },
+  curvedLine: {
+    position: 'absolute',
+    left: -40, // Position it to the left of the submenu
+    top: 5,
   },
 });
 

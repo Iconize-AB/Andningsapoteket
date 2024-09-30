@@ -22,11 +22,11 @@ import { useTranslation } from "react-i18next";
 import EnhancedText from "../regular/EnhancedText";
 
 const allFeatures = [
-  { icon: faClock, label: "Timer", id: "timer" },
-  { icon: faSun, label: "Mornings", id: "mornings" },
+  { icon: faClock, label: "Depressed", id: "depressed" },
+  { icon: faSun, label: "Sad", id: "sad" },
   { icon: faMoon, label: "Sleep", id: "sleep" },
-  { icon: faSmile, label: "Check In", id: "check_in" },
-  { icon: faMusic, label: "Music", id: "music" },
+  { icon: faSmile, label: "Stressed", id: "stressed" },
+  { icon: faMusic, label: "Tired", id: "tired" },
   { icon: faMusic, label: "Yoga", id: "yoga" },
   { icon: faBook, label: "Journal", id: "journal" },
   { icon: faLeaf, label: "Breathe", id: "breathe" },
@@ -63,7 +63,7 @@ const ConditionGrid = ({ navigation }) => {
           <TouchableOpacity
             key={index}
             style={styles.gridItem}
-            onPress={() => navigateToOption(feature.id)}
+            onPress={() => navigateToOption(feature.label)}
           >
             <FontAwesomeIcon
               icon={feature.icon}

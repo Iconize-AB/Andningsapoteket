@@ -111,9 +111,7 @@ function Root({ userDetails, refreshUserProfile, navigation }) {
         tabBarIcon: ({ focused }) => {
           let icon;
           let iconColor = focused ? colors.primary : "#888";
-          let isHome = route.name === "Home";
 
-          // Icons for different routes
           switch (route.name) {
             case "Home":
               icon = faGlobe;
@@ -132,27 +130,26 @@ function Root({ userDetails, refreshUserProfile, navigation }) {
               break;
           }
 
-          // Special style for Home icon
-          if (isHome) {
+          // Special style for any focused tab (curved effect)
+          if (focused) {
             return (
-              <View style={styles.homeIconContainer}>
+              <View style={styles.selectedTabContainer}>
                 <View
                   style={[
-                    styles.homeIcon,
-                    focused && styles.homeIconFocused, // Apply focused style
+                    styles.selectedTabIcon, // Curved effect for focused tab
                   ]}
                 >
                   <FontAwesomeIcon
                     icon={icon}
                     size={30}
-                    color={focused ? "#ffffff" : "#000"}
+                    color={"#ffffff"}
                   />
                 </View>
               </View>
             );
           }
 
-          // Normal icons for other tabs
+          // Normal icons for non-selected tabs
           return <FontAwesomeIcon icon={icon} size={25} color={iconColor} />;
         },
         header: () => <CustomHeader navigation={navigation} route={route} />,
@@ -317,32 +314,43 @@ function App() {
 }
 
 const styles = {
-  homeIconContainer: {
+  // Style for the entire tab bar
+  tabBarStyle: {
     position: "absolute",
-    bottom: 30,
+    bottom: 20, // Adjust positioning as necessary
+    left: 20,
+    right: 20,
+    elevation: 5,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 30,
+    height: 65,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+  },
+  // Container for the selected tab to apply the curved effect
+  selectedTabContainer: {
+    position: "absolute",
+    bottom: 30, // Raised higher than other icons
     justifyContent: "center",
     alignItems: "center",
-    zIndex: 1,
+    zIndex: 1, // Elevate the selected tab
   },
-  homeIcon: {
+  selectedTabIcon: {
     width: 60,
     height: 60,
-    borderRadius: 35,
-    backgroundColor: "#f1f1f1",
+    borderRadius: 35, // Circular icon for the selected tab
+    backgroundColor: colors.primary, // Primary color for the active tab
     justifyContent: "center",
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
     shadowRadius: 6,
-    elevation: 5,
-  },
-  homeIconFocused: {
-    backgroundColor: colors.primary,
-    shadowColor: "#4A90E2",
-    shadowOpacity: 0.6,
-    shadowRadius: 10,
+    elevation: 5, // Elevation for shadow effect
   },
 };
+
 
 export default App;

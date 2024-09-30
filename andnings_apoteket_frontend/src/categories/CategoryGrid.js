@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import colors from "../common/colors/Colors";
 
 const CategoryGrid = ({ onPressCategory }) => {
   const categories = [
@@ -34,7 +35,7 @@ const styles = StyleSheet.create({
   categoryBox: {
     width: "45%", // Two boxes per row
     aspectRatio: 1, // Make the boxes square
-    backgroundColor: "#e0e0e0", // Light grey background for each box
+    backgroundColor: colors.secondary,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
   categoryText: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#333",
+    color: "#fff",
   },
 });
 

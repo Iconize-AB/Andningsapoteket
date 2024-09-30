@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { useTranslation } from "react-i18next";
 import CategoryGrid from "./CategoryGrid";
 import colors from "../common/colors/Colors";
+import MostPlayedJourneys from "./MostPlayedJourneys";
 
 const CategoryScreen = ({ navigation }) => {
   const { t } = useTranslation();
@@ -17,6 +18,10 @@ const CategoryScreen = ({ navigation }) => {
       
       {/* Render the grid without horizontal scroll */}
       <CategoryGrid onPressCategory={onPressCategory} />
+      <View>
+        {/* Render the grid without horizontal scroll */}
+      <MostPlayedJourneys />
+      </View>
     </View>
   );
 };

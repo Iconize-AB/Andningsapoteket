@@ -5,6 +5,7 @@ import EnhancedText from "../regular/EnhancedText";
 import colors from "../common/colors/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import VideoItem from "../regular/VideoItem";
+import NoData from "../regular/NoData";
 
 const SelectedCategoryScreen = ({ navigation, route }) => {
   const { category } = route.params;
@@ -35,6 +36,14 @@ const SelectedCategoryScreen = ({ navigation, route }) => {
   const renderVideoItem = ({ item }) => (
     <VideoItem session={item} key={item.id} size="small" handlePlayNow={() => navigation.navigate("VideoDetail", { video: item })} />
   );
+
+  if (videos.length === 0) {
+    return (
+      <View style={styles.container}>
+        <NoData />
+      </View>
+    )
+  }
 
   return (
     <View style={styles.container}>
