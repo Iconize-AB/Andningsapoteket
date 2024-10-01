@@ -3,16 +3,15 @@ import {
   StyleSheet,
   ScrollView,
   View,
-  TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
 import colors from "../common/colors/Colors";
 import { useTranslation } from "react-i18next";
 import EnhancedText from "../regular/EnhancedText";
 import RecommendedSessions from "../recommendations/RecommendedSessions";
-import FeatherIcon from "react-native-vector-icons/Feather";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FetchUserPlaylists } from "../sessions/endpoints/BreatworkSessionActionsEndpoints";
+import PlaylistItem from "./PlaylistItem"; // Import the new PlaylistItem component
 
 const CreatedPlayListsScreen = ({ navigation }) => {
   const { t } = useTranslation();
@@ -61,27 +60,15 @@ const CreatedPlayListsScreen = ({ navigation }) => {
       <View style={styles.listContainer}>
         {playlists.length > 0 ? (
           playlists.map((list, index) => (
-            <TouchableOpacity
+            <PlaylistItem
               key={index}
-              style={styles.listItem}
+              playlist={list}
               onPress={() =>
                 navigation.navigate("BreathworkPlaylistDetails", {
                   playlist: list,
                 })
               }
-            >
-              <View style={styles.listContent}>
-                <View>
-                  <EnhancedText style={styles.listTitle}>
-                    {list.name}
-                  </EnhancedText>
-                  <EnhancedText style={styles.listDescription}>
-                    {list.description}
-                  </EnhancedText>
-                </View>
-                <FeatherIcon name="chevron-right" size={24} color="#ccc" />
-              </View>
-            </TouchableOpacity>
+            />
           ))
         ) : (
           <EnhancedText style={styles.noPlaylistsText}>
@@ -111,36 +98,6 @@ const styles = StyleSheet.create({
   listContainer: {
     paddingHorizontal: 20,
     marginTop: 20,
-  },
-  listItem: {
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    marginBottom: 15,
-    padding: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  listContent: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "100%",
-  },
-  listTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
-  },
-  listDescription: {
-    fontSize: 14,
-    color: "#666",
-    marginTop: 5,
   },
   noPlaylistsText: {
     textAlign: "center",
