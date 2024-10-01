@@ -32,7 +32,7 @@ const DynamicSplashScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F4F0E5",
+    backgroundColor: "#000",
     justifyContent: "center",
     alignItems: "center",
     position: "relative",

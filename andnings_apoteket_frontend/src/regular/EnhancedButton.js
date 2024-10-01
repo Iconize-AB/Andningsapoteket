@@ -116,6 +116,8 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flexDirection: "row", // To align icon and text in a row
+    display: "flex",
+    gap: 16,
     justifyContent: "center",
     alignItems: "center",
   },

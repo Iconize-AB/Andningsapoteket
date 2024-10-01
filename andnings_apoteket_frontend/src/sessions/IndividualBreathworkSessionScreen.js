@@ -18,20 +18,30 @@ import {
 import colors from "../common/colors/Colors";
 import EnhancedText from "../regular/EnhancedText";
 import EnhancedButton from "../regular/EnhancedButton";
-import testImage from "../resources/test_image.jpg";
 import { useTranslation } from "react-i18next";
 import AddToPlaylistModel from "../playlists/PlaylistModel";
 import { AddVideoToPlaylist } from "./endpoints/BreatworkSessionActionsEndpoints";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import BottomSlider from "./BottomSlider";
+import SessionInfo from "./SessionInfo";
 
 const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
   const { selectedVideo } = route.params;
   const [isPlaying, setIsPlaying] = useState(false);
-  const [expanded, setExpanded] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [isMoreVisible, setIsMoreVisible] = useState(false);
   const [listName, setListName] = useState("");
   const { t } = useTranslation();
+
+  const categories = [
+    "Sleep",
+    "Restful Sleep",
+    "Deep Sleep",
+    "Breathing",
+    "Progressive Muscle Relaxation",
+    "Parasympathetic Nervous System",
+  ];
 
   const handlePlay = () => {
     setIsPlaying(true);
@@ -41,13 +51,15 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
     setIsPlaying(false);
   };
 
-  const toggleReadMore = () => {
-    setExpanded(!expanded);
-  };
-
-  const handleSaveSession = () => {
+  const handleSaveSession = async () => {
+    setIsMoreVisible(false);
     setModalVisible(true);
   };
+
+  const handleSaveSessionToLibrary = () => {
+    return;
+  }
+
 
   const saveVideoToList = async () => {
     const token = await AsyncStorage.getItem("userToken");
@@ -55,21 +67,24 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
       Alert.alert("Error", "Please enter a valid list name");
       return;
     }
-    console.log("token", token); // Check if token is being fetched correctly
     let response = await AddVideoToPlaylist(
       token,
       listName,
       null,
       selectedVideo.id
     );
-    console.log("test", response); // Check if the function is being called and API response is logged
     if (response.status === 200) {
       Alert.alert("Success", "Video saved to list");
       setIsSaved(true);
     }
-
     setModalVisible(false);
   };
+
+  const toggleMoreOptions = () => {
+    setIsMoreVisible(!isMoreVisible);
+  };
+
+  console.log("selectedVideo", selectedVideo);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -79,7 +94,7 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
         style={styles.videoPreviewContainer}
         activeOpacity={0.8}
       >
-        <Image source={testImage} style={styles.previewImage} />
+        <Image source={selectedVideo?.url} style={styles.previewImage} />
         <View style={styles.playIcon}>
           <FontAwesomeIcon icon={faPlayCircle} size={60} color="#fff" />
         </View>
@@ -87,30 +102,44 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
 
       {/* Video Information */}
       <View style={styles.infoContainer}>
-        <EnhancedText style={styles.videoTitle}>
-          {selectedVideo.title}
-        </EnhancedText>
-
-        {/* Description with Read More/Read Less */}
-        <EnhancedText style={styles.videoDescription}>
-          {expanded
-            ? selectedVideo.description
-            : `${selectedVideo.description.slice(0, 100)}...`}
-        </EnhancedText>
-        <TouchableOpacity onPress={toggleReadMore}>
-          <EnhancedText style={styles.readMoreText}>
-            {expanded ? t("Read Less") : t("Read More")}
+        <View style={styles.modalHeader}>
+          <EnhancedText style={styles.modalTitle}>
+            Morgon breathwork
           </EnhancedText>
-        </TouchableOpacity>
-
+          <TouchableOpacity
+            style={styles.moreButton}
+            onPress={toggleMoreOptions}
+          >
+            <EnhancedText style={styles.threeDotsIcon}>•••</EnhancedText>
+          </TouchableOpacity>
+        </View>
+        
+        <SessionInfo selectedVideo={selectedVideo} />
         {/* Add to Saved Sessions */}
         <EnhancedButton
           icon={faHeart}
-          onPress={handleSaveSession}
-          title={t(isSaved ? "Saved" : "Save to List")}
+          onPress={handleSaveSessionToLibrary}
+          title={t(isSaved ? "Saved to library" : "Save to library")}
           size="medium"
         />
+
+        {/* Categories Section */}
+        <View style={styles.relatedTopicsContainer}>
+          <EnhancedText style={styles.relatedTopicsTitle}>
+            {t("related_topic")}
+          </EnhancedText>
+          <View style={styles.tagsContainer}>
+            {categories.map((category, index) => (
+              <View key={index} style={styles.tag}>
+                <EnhancedText style={styles.tagText}>{category}</EnhancedText>
+              </View>
+            ))}
+          </View>
+        </View>
       </View>
+
+      {/* Bottom Slider for More Options */}
+      <BottomSlider isVisible={isMoreVisible} onClose={toggleMoreOptions} handleSaveSession={handleSaveSession} />
 
       {/* Modal for entering the list name */}
       <AddToPlaylistModel
@@ -120,6 +149,7 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
         listName={listName}
         modalVisible={modalVisible}
       />
+
       {/* Video Play Modal */}
       <Modal
         visible={isPlaying}
@@ -155,7 +185,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: colors.background,
     paddingHorizontal: 20,
-    paddingTop: 60,
+    paddingTop: 0, // Adjust padding to align the top image
   },
   videoPreviewContainer: {
     width: "100%",
@@ -185,11 +215,41 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+    marginBottom: 200,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 3,
+  },
+  modalHeader: {
+    flexDirection: "row",
+    display: "flex",
+    justifyContent: "space-between", // Space between title and button
+    alignItems: "center", // Align items in the center vertically
+    paddingBottom: 15,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    flex: 1, // This makes sure the title takes up the available space
+  },
+  moreButton: {
+    width: 40, // Width and height to make it circular
+    height: 40,
+    backgroundColor: "#1E6B96", // Blue background color
+    borderRadius: 20, // Full circular button
+    justifyContent: "center", // Center the dots vertically and horizontally
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 5, // For Android shadow
+  },
+  threeDotsIcon: {
+    fontSize: 18, // Size for the dots
+    color: "#fff", // White color for the dots
   },
   videoTitle: {
     fontSize: 24,
@@ -198,17 +258,29 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: "center",
   },
-  videoDescription: {
-    fontSize: 16,
-    color: "#666",
-    marginBottom: 10,
-    textAlign: "center",
+  relatedTopicsContainer: {
+    marginTop: 20,
   },
-  readMoreText: {
-    fontSize: 16,
-    color: colors.primary,
-    textAlign: "center",
-    marginBottom: 25,
+  relatedTopicsTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  tagsContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  tag: {
+    backgroundColor: "#f1f1f1",
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 15,
+    marginRight: 10,
+    marginBottom: 10,
+  },
+  tagText: {
+    fontSize: 14,
+    color: "#333",
   },
   modalContentContainer: {
     flex: 1,

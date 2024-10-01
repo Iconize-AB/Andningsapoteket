@@ -42,18 +42,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginTop: 20,
   },
-  journeyContainer: {
-    marginTop: 20,
-    paddingHorizontal: 20,
-  },
-  journeyTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  horizontalScroll: {
-    flexDirection: "row",
-  },
 });
 
 export default ConditionScreen;

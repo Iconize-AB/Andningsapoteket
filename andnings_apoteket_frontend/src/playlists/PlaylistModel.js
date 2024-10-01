@@ -9,7 +9,7 @@ const AddToPlaylistModel = ({
   saveVideoToList,
   modalVisible,
   listName,
-  setListName
+  setListName,
 }) => {
   const { t } = useTranslation();
   return (
@@ -29,16 +29,18 @@ const AddToPlaylistModel = ({
             value={listName}
             onChangeText={setListName}
           />
-          <EnhancedButton
-            title={t("Save")}
-            onPress={saveVideoToList}
-            size="medium"
-          />
-          <EnhancedButton
-            title={t("Cancel")}
-            onPress={() => setModalVisible(false)}
-            size="medium"
-          />
+          <View style={styles.actionButtons}>
+            <EnhancedButton
+              title={t("Save")}
+              onPress={saveVideoToList}
+              size="medium"
+            />
+            <EnhancedButton
+              title={t("Cancel")}
+              onPress={() => setModalVisible(false)}
+              size="medium"
+            />
+          </View>
         </View>
       </View>
     </Modal>
@@ -58,6 +60,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     width: "80%",
+  },
+  actionButtons: {
+    display: "flex",
+    gap: 16,
+    flexDirection: "row",
   },
   modalTitle: {
     fontSize: 20,

@@ -29,17 +29,17 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-between", // Evenly distribute the boxes
-    paddingHorizontal: 10, // Smaller horizontal padding
+    justifyContent: "center",
   },
   categoryBox: {
-    width: "45%", // Two boxes per row
-    aspectRatio: 1, // Make the boxes square
+    width: "40%", // Slightly smaller width to keep spacing even
+    aspectRatio: 1, // Keep the boxes square
     backgroundColor: colors.secondary,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
     marginBottom: 20, // Space between rows
+    marginHorizontal: 10, // Space between items
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
