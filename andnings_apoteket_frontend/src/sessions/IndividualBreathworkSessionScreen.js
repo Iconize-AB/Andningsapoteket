@@ -24,12 +24,14 @@ import { AddVideoToPlaylist } from "./endpoints/BreatworkSessionActionsEndpoints
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import BottomSlider from "./BottomSlider";
 import SessionInfo from "./SessionInfo";
+import { TrackGlobalWatchedSessionEvent } from "../events/TrackEventsEndpoints";
 
 const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
   const { selectedVideo } = route.params;
   const [isPlaying, setIsPlaying] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [sessionStats, setSessionStats] = useState(selectedVideo?.totalWatches);
   const [isMoreVisible, setIsMoreVisible] = useState(false);
   const [listName, setListName] = useState("");
   const { t } = useTranslation();
@@ -43,8 +45,32 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
     "Parasympathetic Nervous System",
   ];
 
-  const handlePlay = () => {
-    setIsPlaying(true);
+  const handlePlay = async () => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+  
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
+  
+      const response = await TrackGlobalWatchedSessionEvent(token, selectedVideo.id);
+
+      const data = await response.json();
+  
+      if (response.status === 200) {
+        if (data?.totalWatches) {
+          setSessionStats(data.totalWatches)
+        }
+        console.log("Watch session successfully tracked");
+      } else {
+        console.log("Watch session failed to be tracked");
+      }
+  
+      setIsPlaying(true);
+    } catch (error) {
+      console.error("Error tracking watch session:", error);
+    }
   };
 
   const handleCloseModal = () => {
@@ -84,8 +110,6 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
     setIsMoreVisible(!isMoreVisible);
   };
 
-  console.log("selectedVideo", selectedVideo);
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Video Preview */}
@@ -114,7 +138,7 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
           </TouchableOpacity>
         </View>
         
-        <SessionInfo selectedVideo={selectedVideo} />
+        <SessionInfo selectedVideo={selectedVideo} sessionStats={sessionStats} />
         {/* Add to Saved Sessions */}
         <EnhancedButton
           icon={faHeart}

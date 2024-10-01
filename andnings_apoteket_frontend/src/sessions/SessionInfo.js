@@ -4,7 +4,7 @@ import EnhancedText from "../regular/EnhancedText";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faHeadphonesAlt, faHeart } from "@fortawesome/free-solid-svg-icons";
 
-const SessionInfo = ({ selectedVideo }) => {
+const SessionInfo = ({ selectedVideo, sessionStats }) => {
   return (
     <View style={styles.videoInfo}>
       <View style={styles.videoInfoRow}>
@@ -18,11 +18,11 @@ const SessionInfo = ({ selectedVideo }) => {
       <View style={styles.statsRow}>
         <View style={styles.stat}>
           <FontAwesomeIcon icon={faHeart} style={styles.statIcon} />
-          <EnhancedText style={styles.statText}>24.234 Favorits</EnhancedText>
+          <EnhancedText style={styles.statText}>24.234 Libraries</EnhancedText>
         </View>
         <View style={styles.stat}>
           <FontAwesomeIcon icon={faHeadphonesAlt} style={styles.statIcon} />
-          <EnhancedText style={styles.statText}>34.234 Listenings</EnhancedText>
+          <EnhancedText style={styles.statText}>{sessionStats} Listenings</EnhancedText>
         </View>
       </View>
     </View>

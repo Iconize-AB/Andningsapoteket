@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, ImageBackground, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
@@ -7,34 +7,34 @@ import colors from "../common/colors/Colors";
 import EnhancedButton from "../regular/EnhancedButton";
 import testImage from "../resources/test_image.jpg";
 import VideoItem from "../regular/VideoItem";
-
-const mostPlayedSessionsData = [
-  {
-    id: 1,
-    title: "Morgon breathwork",
-    description: "Start your day with a calm mind and relaxed body.",
-    imageUrl: testImage,
-    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
-  },
-  {
-    id: 2,
-    title: "Lugn Breathwork",
-    description: "Focus on your breath and stay present in the moment.",
-    imageUrl: testImage,
-    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
-  },
-  {
-    id: 3,
-    title: "Guidad Breathwork",
-    description: "Release tension and experience a state of relaxation.",
-    imageUrl: testImage,
-    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4"
-  },
-];
+import { GetMostPlayedSessions } from "./endpoints/OverallSessionEndpoints";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const MostPlayedSessions = () => {
   const { t } = useTranslation();
   const navigation = useNavigation();
+  const [mostPlayedSessions, setMostPlayedSessions] = useState([]);
+
+  useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        const token = await AsyncStorage.getItem("userToken");
+        const response = await GetMostPlayedSessions(token);
+        console.log('response', response);
+        if (response.ok) {
+          const data = await response.json();
+          setMostPlayedSessions(data?.videos);
+        } else {
+          console.log('Error fetching breathwork sessions:', response.statusText);
+        }
+      } catch (error) {
+        console.error("Failed to fetch breathwork sessions", error);
+      }
+    };
+    fetchVideos();
+  }, []);
+
+  console.log('mostPlayedSessions', mostPlayedSessions);
 
   const handlePlayNow = (session) => {
     navigation.navigate("IndividualBreathworkSession", { selectedVideo: session });
@@ -44,7 +44,7 @@ const MostPlayedSessions = () => {
     <View style={styles.mostPlayedContainer}>
       <EnhancedText style={styles.mostPlayedTitle}>{t("most_played_sessions")}</EnhancedText>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
-        {mostPlayedSessionsData.map((session) => (
+        {mostPlayedSessions.map((session) => (
           <VideoItem session={session} handlePlayNow={handlePlayNow}  />
         ))}
       </ScrollView>
