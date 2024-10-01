@@ -5,24 +5,32 @@ import {
   TouchableOpacity,
   Image,
   Modal,
-  Animated,
   ScrollView,
+  Alert,
 } from "react-native";
 import { Video } from "expo-av";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faPlayCircle, faTimes, faHeart } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlayCircle,
+  faTimes,
+  faHeart,
+} from "@fortawesome/free-solid-svg-icons";
 import colors from "../common/colors/Colors";
 import EnhancedText from "../regular/EnhancedText";
 import EnhancedButton from "../regular/EnhancedButton";
 import testImage from "../resources/test_image.jpg";
 import { useTranslation } from "react-i18next";
+import AddToPlaylistModel from "../playlists/PlaylistModel";
+import { AddVideoToPlaylist } from "./endpoints/BreatworkSessionActionsEndpoints";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
   const { selectedVideo } = route.params;
   const [isPlaying, setIsPlaying] = useState(false);
-  const [expanded, setExpanded] = useState(false); // State to track "Read More"
-  const [isSaved, setIsSaved] = useState(false); // State for save animation
-  const fadeAnim = useState(new Animated.Value(0))[0]; // Animation for Read More
+  const [expanded, setExpanded] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [listName, setListName] = useState("");
   const { t } = useTranslation();
 
   const handlePlay = () => {
@@ -33,22 +41,34 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
     setIsPlaying(false);
   };
 
-  const handleGoBack = () => {
-    navigation.goBack();
-  };
-
   const toggleReadMore = () => {
     setExpanded(!expanded);
-    Animated.timing(fadeAnim, {
-      toValue: expanded ? 0 : 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
   };
 
   const handleSaveSession = () => {
-    setIsSaved(!isSaved);
-    // Trigger a save action here if necessary
+    setModalVisible(true);
+  };
+
+  const saveVideoToList = async () => {
+    const token = await AsyncStorage.getItem("userToken");
+    if (listName.trim() === "") {
+      Alert.alert("Error", "Please enter a valid list name");
+      return;
+    }
+    console.log("token", token); // Check if token is being fetched correctly
+    let response = await AddVideoToPlaylist(
+      token,
+      listName,
+      null,
+      selectedVideo.id
+    );
+    console.log("test", response); // Check if the function is being called and API response is logged
+    if (response.status === 200) {
+      Alert.alert("Success", "Video saved to list");
+      setIsSaved(true);
+    }
+
+    setModalVisible(false);
   };
 
   return (
@@ -82,15 +102,24 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
             {expanded ? t("Read Less") : t("Read More")}
           </EnhancedText>
         </TouchableOpacity>
+
         {/* Add to Saved Sessions */}
-          <EnhancedButton
-            icon={faHeart}
-            onPress={handleSaveSession}
-            title={t(isSaved ? "Saved" : "Save to List")}
-            size="medium"
-          />
+        <EnhancedButton
+          icon={faHeart}
+          onPress={handleSaveSession}
+          title={t(isSaved ? "Saved" : "Save to List")}
+          size="medium"
+        />
       </View>
 
+      {/* Modal for entering the list name */}
+      <AddToPlaylistModel
+        setModalVisible={setModalVisible}
+        saveVideoToList={saveVideoToList}
+        setListName={setListName}
+        listName={listName}
+        modalVisible={modalVisible}
+      />
       {/* Video Play Modal */}
       <Modal
         visible={isPlaying}
@@ -180,25 +209,6 @@ const styles = StyleSheet.create({
     color: colors.primary,
     textAlign: "center",
     marginBottom: 25,
-  },
-  saveButton: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#f1f1f1",
-    padding: 12,
-    borderRadius: 8,
-    elevation: 3,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    marginVertical: 15,
-  },
-  saveButtonText: {
-    fontSize: 16,
-    color: "#333",
-    marginLeft: 10,
   },
   modalContentContainer: {
     flex: 1,

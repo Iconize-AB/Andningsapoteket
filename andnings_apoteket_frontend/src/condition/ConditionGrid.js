@@ -48,10 +48,9 @@ const ConditionGrid = ({ navigation }) => {
 
   const featuresToRender = expanded ? allFeatures : visibleFeatures;
 
-  const navigateToOption = (option) => {
-    // Navigate to VideoListScreen and pass the selected option
-    console.log('navigateToOption');
-    navigation?.navigate('BreathworkList', { feature: option });
+  const navigateToOption = (condition) => {
+    // Navigate to VideoListScreen and pass the selected condition
+    navigation?.navigate('BreathworkList', { condition: condition });
   };
 
   return (

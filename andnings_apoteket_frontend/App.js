@@ -41,13 +41,14 @@ import i18n from "./src/i18n";
 import BreathWorkListScreen from "./src/regular/BreathworkListScreen";
 import TermsAndConditionPopup from "./src/regular/TermsAndConditionPopup";
 import ConditionScreen from "./src/condition/ConditionScreen";
-import CreatedListScreen from "./src/favorites/CreatedListScreen";
+import CreatedPlayListsScreen from "./src/favorites/CreatedPlayListsScreen";
 import CategoryScreen from "./src/categories/CategoryScreen";
 import LibraryScreen from "./src/library/LibraryScreen";
 import colors from "./src/common/colors/Colors";
 import IndividualBreathworkSessionScreen from "./src/sessions/IndividualBreathworkSessionScreen";
 import JourneyOverviewScreen from "./src/challenge/JourneyOverviewScreen";
 import SelectedCategoryScreen from "./src/categories/SelectedCategoryScreen";
+import BreathworkPlaylistDetails from "./src/favorites/BreathworkPlaylistDetails";
 
 const Drawer = createDrawerNavigator();
 
@@ -159,7 +160,7 @@ function Root({ userDetails, refreshUserProfile, navigation }) {
         {(props) => <CategoryScreen {...props} />}
       </Tab.Screen>
       <Tab.Screen name="Favorites">
-        {(props) => <CreatedListScreen {...props} />}
+        {(props) => <CreatedPlayListsScreen {...props} />}
       </Tab.Screen>
       <Tab.Screen name="Home">
         {(props) => (
@@ -178,6 +179,12 @@ function Root({ userDetails, refreshUserProfile, navigation }) {
         options={{ tabBarButton: () => null }}
       >
         {(props) => <IndividualBreathworkSessionScreen {...props} />}
+      </Tab.Screen>
+      <Tab.Screen
+        name="BreathworkPlaylistDetails"
+        options={{ tabBarButton: () => null }}
+      >
+        {(props) => <BreathworkPlaylistDetails {...props} />}
       </Tab.Screen>
       <Tab.Screen
         name="JourneyOverviewScreen"
