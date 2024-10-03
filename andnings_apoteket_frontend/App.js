@@ -266,6 +266,8 @@ function AppNavigator({ navigation }) {
       try {
         await Font.loadAsync({
           BahnSchrift: require("./src/fonts/bahnschrift.ttf"),
+          HelveticaNeueBold: require("./src/fonts/HelveticaNeueBold.ttf"),
+          HelveticaNeueRegular: require("./src/fonts/HelveticaNeueRegular.ttf")
         });
         const token = await AsyncStorage.getItem("userToken");
         setUserToken(token);

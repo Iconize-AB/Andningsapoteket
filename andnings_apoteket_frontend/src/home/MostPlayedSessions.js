@@ -34,8 +34,6 @@ const MostPlayedSessions = () => {
     fetchVideos();
   }, []);
 
-  console.log('mostPlayedSessions', mostPlayedSessions);
-
   const handlePlayNow = (session) => {
     navigation.navigate("IndividualBreathworkSession", { selectedVideo: session });
   };

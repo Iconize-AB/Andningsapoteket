@@ -1,5 +1,5 @@
 const colors = {
-    primary: '#03638C',  // Blue
+    primary: '#02384E',  // Blue
     secondary: '#03502F',  // Green
     background: '#F4F0E5',  // Beige
     textPrimary: '#2c3e50',

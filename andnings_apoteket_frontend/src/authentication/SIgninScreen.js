@@ -74,58 +74,65 @@ const SigninScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.content}>
+        <EnhancedText style={styles.title} weight="bold">Sign in</EnhancedText>
+        <EnhancedText style={styles.subTitle}>
+          Enter your credentials to access your account
+        </EnhancedText>
+      </View>
       <BackIcon navigation={navigation} />
       <View style={styles.wrapper}>
-      <EnhancedTextInput
-          style={styles.input}
-          onChangeText={(text) => setEmail(text)}
-          value={email}
-          placeholder="Email"
-          placeholderTextColor="#A9A9A9"
-        />
-        <EnhancedTextInput
-          style={styles.input}
-          onChangeText={(text) => setPassword(text)}
-          value={password}
-          placeholder="Password"
-          placeholderTextColor="#A9A9A9"
-          secureTextEntry={true}
-        />
+        {/* Social sign-in buttons */}
+        <SingleSignOn />
+        <View style={styles.inputWrapper}>
+          {/* Email input */}
+          <EnhancedTextInput
+            style={styles.input}
+            onChangeText={(text) => setEmail(text)}
+            value={email}
+            placeholder="Email"
+            placeholderTextColor="#fff"
+          />
+
+          {/* Password input */}
+          <EnhancedTextInput
+            style={styles.input}
+            onChangeText={(text) => setPassword(text)}
+            value={password}
+            placeholder="Password"
+            placeholderTextColor="#fff"
+            secureTextEntry={true}
+          />
+        </View>
+
         {formError.email !== "" && (
           <EnhancedText style={styles.errorText}>
             {formError.email}
           </EnhancedText>
         )}
-        {/* <PasswordField
-            value={password}
-            onChangeText={(text) => {
-              setPassword(text);
-              setFormError((prev) => ({ ...prev, password: "" }));
-            }}
-            placeholder="Password"
-          /> */}
         {formError.password !== "" && (
           <EnhancedText style={styles.errorText}>
             {formError.password}
           </EnhancedText>
         )}
+
+        {/* Register Button */}
         <EnhancedButton
           onPress={handleSignIn}
           title="Sign In"
-          size="medium"
+          size="large"
           type="outline"
         />
-        {/* Use SingleSignOn Component */}
-        <SingleSignOn />
-        <TouchableOpacity
-          style={styles.textButton}
-          onPress={() => navigation.navigate("ForgotPassword")}
-        >
-          <EnhancedText style={styles.textButton}>
-            FORGOT YOUR CREDENTIALS?
-          </EnhancedText>
-        </TouchableOpacity>
       </View>
+      {/* Sign up link */}
+      <TouchableOpacity
+        style={styles.textButton}
+        onPress={() => navigation.navigate("SignUp")}
+      >
+        <EnhancedText style={styles.textButton}>
+          Don't have an account? Sign up
+        </EnhancedText>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -134,90 +141,68 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: colors.background,
-    alignItems: "center",
+    backgroundColor: colors.primary,
   },
-  titleContainer: {
-    display: "flex",
-    flexDirection: "column",
-    alignContent: "center",
-    marginBottom: 20,
+  button: {
+    fontWeight: "bold"
   },
-  title: {
-    color: "#fff",
-    fontSize: 30,
-    marginBottom: 10,
-    textAlign: "center",
-  },
-  subTitleContainer: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 12,
-  },
-  subTitle: {
-    color: "#fff",
-    fontSize: 14,
-    textAlign: "center",
-  },
-  image: {
-    width: "100%",
-    height: "100%",
-    position: "relative",
+  content: {
+    marginLeft: 20,
   },
   wrapper: {
-    padding: 60,
-    paddingTop: 10,
-    height: "100%",
     width: "100%",
     alignItems: "center",
-    justifyContent: "center",
   },
-  text: {
-    fontSize: 22,
-    marginBottom: 20,
+  inputWrapper: {
+    padding: 20,
+    width: "100%",
+    alignItems: "center",
+  },
+  title: {
+    fontSize: 24,
     color: "#fff",
+    marginBottom: 20,
+  },
+  subTitle: {
+    fontSize: 16,
+    color: "#A9A9A9",
+    marginBottom: 20,
   },
   input: {
     height: 50,
     width: "100%",
+    backgroundColor: "#000",
     color: "#fff",
-    fontSize: 16,
-    backgroundColor: "#000000",
-    fontFamily: "bahnschrift",
+    padding: 10,
     borderRadius: 10,
-    margin: 12,
     borderWidth: 1,
-    padding: 10,
+    marginBottom: 12,
   },
-  button: {
-    backgroundColor: "#F55E09",
-    padding: 10,
-    textTransform: "uppercase",
-    width: "100%",
+  errorText: {
+    color: "red",
+    marginBottom: 10,
+  },
+  checkboxContainer: {
+    flexDirection: "row",
     alignItems: "center",
-    marginTop: 12,
-    borderRadius: 120,
+    marginBottom: 20,
+  },
+  checkbox: {
+    marginRight: 8,
+  },
+  checkboxLabel: {
+    color: "#fff",
+  },
+  linkText: {
+    textDecorationLine: "underline",
+    color: "#1E90FF",
   },
   textButton: {
-    color: "#000",
-    marginTop: 12,
-    textDecorationLine: "underline",
-    position: "absolute",
-    bottom: 20,
-    alignItems: "center",
-  },
-  buttonText: {
     color: "#fff",
-    textTransform: "uppercase",
-    fontSize: 18,
-  },
-  buttonOutline: {
-    backgroundColor: "transparent",
-    borderWidth: 2,
-    borderColor: "#1E90FF",
-  },
-  buttonOutlineText: {
-    color: "#1E90FF",
+    marginLeft: 20,
+    marginTop: 40,
+    textDecorationLine: "underline",
+    bottom: 20,
   },
 });
 

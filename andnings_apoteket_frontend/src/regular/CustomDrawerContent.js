@@ -5,9 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faUser, faChevronDown, faChevronUp, faSignOutAlt, faFileAlt, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import Svg, { Path } from 'react-native-svg';
 
-// Custom Drawer Content Component
 const CustomDrawerContent = (props) => {
   const [isProfileExpanded, setIsProfileExpanded] = useState(false);
+  const [isLanguageExpanded, setIsLanguageExpanded] = useState(false);  // State to control the language dropdown
 
   return (
     <DrawerContentScrollView {...props} contentContainerStyle={styles.drawerContainer}>
@@ -31,8 +31,10 @@ const CustomDrawerContent = (props) => {
         style={[styles.drawerItem, styles.expandableItem]}
         onPress={() => setIsProfileExpanded(!isProfileExpanded)}
       >
-        <FontAwesomeIcon icon={faUser} size={18} color="#FFF" />
-        <Text style={styles.itemText}>Profil</Text>
+        <View style={styles.expandableWrapper}>
+          <FontAwesomeIcon icon={faUser} size={18} color="#FFF" />
+          <Text style={styles.itemText}>Profil</Text>
+        </View>
         <FontAwesomeIcon icon={isProfileExpanded ? faChevronUp : faChevronDown} size={18} color="#FFF" />
       </TouchableOpacity>
 
@@ -51,9 +53,27 @@ const CustomDrawerContent = (props) => {
           <TouchableOpacity style={styles.subMenuItem}>
             <Text style={styles.subMenuText}>Inställningar</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.subMenuItem}>
+
+          {/* Language Section with Dropdown */}
+          <TouchableOpacity
+            style={[styles.subMenuItem, styles.expandableItem]}
+            onPress={() => setIsLanguageExpanded(!isLanguageExpanded)}
+          >
             <Text style={styles.subMenuText}>Svenska</Text>
+            <FontAwesomeIcon icon={isLanguageExpanded ? faChevronUp : faChevronDown} size={16} color="#B0C4DE" />
           </TouchableOpacity>
+
+          {isLanguageExpanded && (
+            <View style={styles.languageOptions}>
+              <TouchableOpacity style={styles.languageOptionItem}>
+                <Text style={styles.languageOptionText}>Svenska</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.languageOptionItem}>
+                <Text style={styles.languageOptionText}>English</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
           <TouchableOpacity style={styles.subMenuItem}>
             <Text style={styles.subMenuText}>Notifikationer</Text>
           </TouchableOpacity>
@@ -91,6 +111,7 @@ const styles = StyleSheet.create({
   },
   header: {
     padding: 20,
+    marginTop: 50,
     backgroundColor: '#1E4A61', // Header background color
     alignItems: 'center',
   },
@@ -113,7 +134,13 @@ const styles = StyleSheet.create({
     color: '#FFF',
   },
   expandableItem: {
-    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: "space-between"
+  },
+  expandableWrapper: {
+    display: "flex",
+    flexDirection: "row"
   },
   subMenu: {
     marginLeft: 40, // Submenu indentation
@@ -126,6 +153,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#B0C4DE', // Lighter color for submenu
   },
+  languageOptions: {
+    marginLeft: 20,  // Indent the language options further
+    marginTop: 5,
+  },
+  languageOptionItem: {
+    paddingVertical: 5,
+  },
+  languageOptionText: {
+    fontSize: 14,
+    color: '#B0C4DE', // Same color as other submenu items
+  },
   divider: {
     height: 1,
     backgroundColor: '#B0C4DE', // Divider color
@@ -134,7 +172,7 @@ const styles = StyleSheet.create({
   },
   curvedLine: {
     position: 'absolute',
-    left: -40, // Position it to the left of the submenu
+    left: -40,
     top: 5,
   },
 });

@@ -29,12 +29,14 @@ const EnhancedTextInput = ({
 
   return (
     <View style={styles.container}>
+      <EnhancedText style={styles.label}>
+        {placeholder}
+      </EnhancedText>
       <TextInput
         style={[styles.input, customStyle]}
         value={value}
         onChangeText={handleChangeText}
         placeholder={placeholder}
-        placeholderTextColor={placeholderTextColor}
         secureTextEntry={secureTextEntry && isPasswordVisible}
         keyboardType={keyboardType}
       />
@@ -64,10 +66,11 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   input: {
-    height: 50,
+    height: 45,
     width: "100%",
     color: "#fff",
-    backgroundColor: "#000000",
+    backgroundColor: "#fff",
+    opacity: 0.2,
     fontFamily: "BahnSchrift",
     borderColor: colors.border || "#fff",
     borderRadius: 10,
@@ -76,10 +79,15 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 40,
   },
+  label: {
+    fontSize: 15,
+    marginBottom: 5,
+    color: "#fff"
+  },
   icon: {
     position: "absolute",
     right: 10,
-    top: 15,
+    top: 32,
     zIndex: 1,
   },
   errorText: {

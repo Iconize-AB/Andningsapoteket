@@ -43,10 +43,10 @@ const EnhancedButton = ({
       <View style={[styles.contentContainer, size === "small" && !title && styles.centerIconContainer]}>
         {/* Render Icon if passed */}
         {icon && (
-          <FontAwesomeIcon icon={icon} size={20} color="#fff" />
+          <FontAwesomeIcon icon={icon} size={20} color="#000" />
         )}
         {/* Render Text if there's any */}
-        {title ? <EnhancedText style={textStyles}>{title}</EnhancedText> : null}
+        {title ? <EnhancedText style={textStyles} weight="bold">{title}</EnhancedText> : null}
       </View>
     </TouchableOpacity>
   );
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   button: {
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 120, // Full rounded corners
+    borderRadius: 10,
     marginTop: 12,
     paddingVertical: 10, // Padding inside the button
     paddingHorizontal: 16,
@@ -67,15 +67,15 @@ const styles = StyleSheet.create({
     elevation: 4, // Elevation for Android
   },
   buttonSolid: {
-    backgroundColor: colors.primary, // Default solid background color (primary style)
+    backgroundColor: colors.background, // Default solid background color (primary style)
   },
   buttonOutline: {
-    backgroundColor: "transparent",
+    backgroundColor: "#fff",
     borderWidth: 2,
     borderColor: colors.primary, // Outline border color for outline buttons
   },
   primaryButton: {
-    backgroundColor: colors.primary, // Primary button background color
+    backgroundColor: "#fff", // Primary button background color
   },
   secondaryButton: {
     backgroundColor: colors.secondary, // Secondary button background color
@@ -89,14 +89,13 @@ const styles = StyleSheet.create({
     // Default medium size (inherits from `button`)
   },
   largeButton: {
-    paddingVertical: 14, // Larger padding vertically
-    paddingHorizontal: 20, // More padding for large button
-    borderRadius: 140, // Larger border radius for large button
+    width: 300,
+    borderRadius: 10, // Larger border radius for large button
   },
   buttonText: {
     textTransform: "uppercase", // Text is transformed to uppercase
     fontSize: 18, // Default font size
-    color: "#fff", // Default text color
+    color: "#000", // Default text color
   },
   smallText: {
     fontSize: 14, // Smaller font size for small buttons
@@ -105,7 +104,7 @@ const styles = StyleSheet.create({
     fontSize: 22, // Larger font size for large buttons
   },
   solidText: {
-    color: "#fff", // Text color for solid buttons (white)
+    color: "#000", // Text color for solid buttons (white)
   },
   outlineText: {
     color: colors.primary, // Text color for outline buttons

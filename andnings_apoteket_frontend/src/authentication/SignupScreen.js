@@ -12,10 +12,13 @@ import colors from "../common/colors/Colors";
 import EnhancedButton from "../regular/EnhancedButton";
 import SingleSignOn from "./SingleSignOn";
 import { Register } from "./endpoints/AuthenticationEndpoints";
+import CustomCheckbox from "../regular/CustomCheckbox";
 
 const SignupScreen = ({ navigation }) => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [agree, setAgree] = useState(false);
   const [formError, setFormError] = useState({ email: "", password: "" });
 
   const handleSignUp = async () => {
@@ -84,31 +87,52 @@ const SignupScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.content}>
+        <EnhancedText style={styles.title} weight="bold">Register</EnhancedText>
+        <EnhancedText style={styles.subTitle}>
+          Enter your credentials to access your account
+        </EnhancedText>
+      </View>
       <BackIcon navigation={navigation} />
       <View style={styles.wrapper}>
-        <View style={styles.titleContainer}>
-          <EnhancedText style={styles.title}>
-            WELCOME TO ANDNINGSAPOTEKET.
-          </EnhancedText>
+        {/* Social sign-in buttons */}
+        <SingleSignOn />
+
+        <View style={styles.inputWrapper}>
+          <EnhancedTextInput
+            style={styles.input}
+            onChangeText={(text) => setName(text)}
+            value={name}
+            placeholder="Name"
+            placeholderTextColor="#fff"
+          />
+
+          {/* Email input */}
+          <EnhancedTextInput
+            style={styles.input}
+            onChangeText={(text) => setEmail(text)}
+            value={email}
+            placeholder="Email"
+            placeholderTextColor="#fff"
+          />
+
+          {/* Password input */}
+          <EnhancedTextInput
+            style={styles.input}
+            onChangeText={(text) => setPassword(text)}
+            value={password}
+            placeholder="Password"
+            placeholderTextColor="#fff"
+            secureTextEntry={true}
+          />
         </View>
 
-        {/* Email and password fields */}
-        <EnhancedTextInput
-          style={styles.input}
-          onChangeText={(text) => setEmail(text)}
-          value={email}
-          placeholder="Email"
-          placeholderTextColor="#A9A9A9"
-        />
-        <EnhancedTextInput
-          style={styles.input}
-          onChangeText={(text) => setPassword(text)}
-          value={password}
-          placeholder="Password"
-          placeholderTextColor="#A9A9A9"
-          secureTextEntry={true}
-        />
+        {/* Name input */}
 
+        {/* Display errors if they exist */}
+        {formError.name !== "" && (
+          <EnhancedText style={styles.errorText}>{formError.name}</EnhancedText>
+        )}
         {formError.email !== "" && (
           <EnhancedText style={styles.errorText}>
             {formError.email}
@@ -120,25 +144,31 @@ const SignupScreen = ({ navigation }) => {
           </EnhancedText>
         )}
 
+        {/* Checkbox for Terms & Privacy */}
+        <View style={styles.checkboxContainer}>
+          <CustomCheckbox
+            isChecked={agree}
+            onChange={() => setAgree((prev) => !prev)}
+          />
+        </View>
+
+        {/* Register Button */}
         <EnhancedButton
           onPress={handleSignUp}
-          title="Sign Up"
-          size="medium"
+          title="Register"
+          size="large"
           type="outline"
         />
-
-        {/* Use SingleSignOn Component */}
-        <SingleSignOn />
-
-        <TouchableOpacity
-          style={styles.textButton}
-          onPress={() => navigation.navigate("SignIn")}
-        >
-          <EnhancedText style={styles.textButton}>
-            Already have an account?
-          </EnhancedText>
-        </TouchableOpacity>
       </View>
+      {/* Sign up link */}
+      <TouchableOpacity
+        style={styles.textButton}
+        onPress={() => navigation.navigate("SignIn")}
+      >
+        <EnhancedText style={styles.textButton}>
+         Already have an account? Sign in
+        </EnhancedText>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -147,51 +177,69 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: colors.background,
-    alignItems: "center",
+    backgroundColor: colors.primary,
   },
-  errorText: {
-    alignSelf: "flex-start",
-    marginRight: 12,
-    marginTop: -10,
-    color: "red",
+  button: {
+    fontWeight: "bold"
   },
-  titleContainer: {
-    display: "flex",
-    flexDirection: "column",
-    alignContent: "center",
-    marginBottom: 20,
-  },
-  title: {
-    color: "#000",
-    fontSize: 24,
-    marginBottom: 30,
-    marginTop: 40,
-    textAlign: "center",
+  content: {
+    marginLeft: 20,
   },
   wrapper: {
-    padding: 60,
-    paddingTop: 10,
-    height: "100%",
     width: "100%",
     alignItems: "center",
-    justifyContent: "center",
+  },
+  inputWrapper: {
+    padding: 20,
+    width: "100%",
+    alignItems: "center",
+  },
+  title: {
+    fontSize: 24,
+    color: "#fff",
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  subTitle: {
+    fontSize: 16,
+    color: "#A9A9A9",
   },
   input: {
     height: 50,
     width: "100%",
+    backgroundColor: "#000",
     color: "#fff",
-    backgroundColor: "#000000",
-    borderRadius: 10,
-    fontSize: 16,
-    margin: 12,
-    borderWidth: 1,
     padding: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    marginBottom: 12,
+  },
+  errorText: {
+    color: "red",
+    marginBottom: 10,
+  },
+  checkboxContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  checkbox: {
+    marginRight: 8,
+  },
+  checkboxLabel: {
+    color: "#fff",
+  },
+  linkText: {
+    textDecorationLine: "underline",
+    color: "#1E90FF",
   },
   textButton: {
-    color: "#000",
-    marginTop: 12,
+    color: "#fff",
+    position: "absolute",
+    left: 50,
+    alignItems: "center",
+    justifyContent: "center",
     textDecorationLine: "underline",
+    bottom: 40,
   },
 });
 

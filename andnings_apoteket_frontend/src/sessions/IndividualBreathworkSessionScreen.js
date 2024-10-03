@@ -25,6 +25,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import BottomSlider from "./BottomSlider";
 import SessionInfo from "./SessionInfo";
 import { TrackGlobalWatchedSessionEvent } from "../events/TrackEventsEndpoints";
+import RelatedSessions from "./RelatedSessions";
 
 const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
   const { selectedVideo } = route.params;
@@ -87,16 +88,16 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
   }
 
 
-  const saveVideoToList = async () => {
+  const saveVideoToList = async (listId = null) => {
     const token = await AsyncStorage.getItem("userToken");
-    if (listName.trim() === "") {
+    if (listName.trim() === "" && !listId) {
       Alert.alert("Error", "Please enter a valid list name");
       return;
     }
     let response = await AddVideoToPlaylist(
       token,
       listName,
-      null,
+      listId,
       selectedVideo.id
     );
     if (response.status === 200) {
@@ -111,7 +112,7 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={styles.container} showsHorizontalScrollIndicator={false}>
       {/* Video Preview */}
       <TouchableOpacity
         onPress={handlePlay}
@@ -153,11 +154,7 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
             {t("related_topic")}
           </EnhancedText>
           <View style={styles.tagsContainer}>
-            {categories.map((category, index) => (
-              <View key={index} style={styles.tag}>
-                <EnhancedText style={styles.tagText}>{category}</EnhancedText>
-              </View>
-            ))}
+            <RelatedSessions />
           </View>
         </View>
       </View>

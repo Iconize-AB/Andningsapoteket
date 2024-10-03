@@ -1,39 +1,47 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ImageBackground } from "react-native";
 import colors from "../common/colors/Colors";
 import EnhancedButton from "../regular/EnhancedButton";
 
 const UsersChoice = ({ navigation }) => {
   return (
-    <View style={styles.container}>
-      <View style={styles.wrapper}>
-        <EnhancedButton
-          title="Sign In"
-          onPress={() => navigation.navigate("SignIn")}
-          size="large"
-          type="primary"
-        />
-        <EnhancedButton
-          title="Go to Sign Up"
-          onPress={() => navigation.navigate("SignUp")}
-          size="large"
-          type="secondary"
-        />
+    <ImageBackground
+      source={require("../resources/test.png")}
+      style={styles.backgroundImage}
+    >
+      <View style={styles.container}>
+        <View style={styles.wrapper}>
+          <EnhancedButton
+            title="Sign In"
+            onPress={() => navigation.navigate("SignIn")}
+            size="medium"
+            type="primary"
+          />
+          <EnhancedButton
+            title="Go to Sign Up"
+            onPress={() => navigation.navigate("SignUp")}
+            size="medium"
+            type="secondary"
+          />
+        </View>
       </View>
-    </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: colors.background,
     alignItems: "center",
   },
   wrapper: {
     padding: 60,
     height: "100%",
+    justifyContent: "center", // Center content vertically
   },
 });
 
