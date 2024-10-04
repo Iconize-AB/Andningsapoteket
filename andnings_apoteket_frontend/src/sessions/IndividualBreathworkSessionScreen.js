@@ -20,12 +20,13 @@ import EnhancedText from "../regular/EnhancedText";
 import EnhancedButton from "../regular/EnhancedButton";
 import { useTranslation } from "react-i18next";
 import AddToPlaylistModel from "../playlists/PlaylistModel";
-import { AddVideoToPlaylist } from "./endpoints/BreatworkSessionActionsEndpoints";
+import { AddVideoToLibrary, AddVideoToPlaylist } from "./endpoints/BreatworkSessionActionsEndpoints";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import BottomSlider from "./BottomSlider";
 import SessionInfo from "./SessionInfo";
 import { TrackGlobalWatchedSessionEvent } from "../events/TrackEventsEndpoints";
 import RelatedSessions from "./RelatedSessions";
+import Toast from "react-native-toast-message";
 
 const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
   const { selectedVideo } = route.params;
@@ -83,8 +84,43 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
     setModalVisible(true);
   };
 
-  const handleSaveSessionToLibrary = () => {
-    return;
+  const handleSaveSessionToLibrary = async () => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+  
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
+
+      const response = await AddVideoToLibrary(token, selectedVideo.id);
+  
+      if (response.status === 200) {
+        Toast.show({
+          type: "success",
+          text1: "Great!",
+          text2: "Video is now added to your library!",
+          backgroundColor: "#000",
+          text1Style: {
+            color: "#466F78",
+          },
+          text2Style: { color: "#466F78" },
+        });
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "Ahh!",
+          text2: "Video failed to be added to your library!",
+          backgroundColor: "#000",
+          text1Style: {
+            color: "#466F78",
+          },
+          text2Style: { color: "#466F78" },
+        });
+      }
+    } catch (error) {
+      console.error("Error tracking watch session:", error);
+    }
   }
 
   const saveVideoToList = async (listId = null) => {

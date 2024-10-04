@@ -1,5 +1,4 @@
 export async function AddVideoToPlaylist(token, listName, listId, videoId) {  
-    console.log('token', token);  
     const response = await fetch(
       "http://localhost:3000/playlistsRoute/lists/add-video",
       {
@@ -11,8 +10,6 @@ export async function AddVideoToPlaylist(token, listName, listId, videoId) {
         body: JSON.stringify({ listName, listId, videoId }),
       }
     );
-
-    console.log('response', response);
   
     if (!response.ok) {
       console.error("Failed to add video to playlist:", response.statusText);
@@ -23,7 +20,6 @@ export async function AddVideoToPlaylist(token, listName, listId, videoId) {
   }
 
   export async function FetchUserPlaylists(token) {  
-    console.log('token', token);  
     const response = await fetch(
       "http://localhost:3000/playlistsRoute/fetch/lists",
       {
@@ -44,9 +40,8 @@ export async function AddVideoToPlaylist(token, listName, listId, videoId) {
   }
 
   export async function FetchUserLibrary(token) {  
-    console.log('token', token);  
     const response = await fetch(
-      "http://localhost:3000/libraryRoute/fetch/library",
+      "http://localhost:3000/libraryRoute/library",
       {
         method: "GET",
         headers: {
@@ -62,5 +57,26 @@ export async function AddVideoToPlaylist(token, listName, listId, videoId) {
     }
   
     return response.json();
+  }
+
+  export async function AddVideoToLibrary(token, videoId) {  
+    const response = await fetch(
+      "http://localhost:3000/libraryRoute/library/add-video",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ videoId }),
+      }
+    );
+  
+    if (!response.ok) {
+      console.error("Failed to add video to library:", response.statusText);
+      throw new Error(`Error: ${response.statusText}`);
+    }
+  
+    return response;
   }
   

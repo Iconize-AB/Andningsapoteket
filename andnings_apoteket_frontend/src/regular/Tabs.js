@@ -16,7 +16,14 @@ const Tabs = ({ activeTab, setActiveTab }) => {
         ]}
         onPress={() => setActiveTab("playlists")}
       >
-        <EnhancedText style={styles.tabText}>{t("playlists")}</EnhancedText>
+        <EnhancedText
+          style={[
+            styles.tabText,
+            activeTab === "playlists" && styles.activeTabText,
+          ]}
+        >
+          {t("playlists")}
+        </EnhancedText>
       </TouchableOpacity>
       <TouchableOpacity
         style={[
@@ -25,7 +32,14 @@ const Tabs = ({ activeTab, setActiveTab }) => {
         ]}
         onPress={() => setActiveTab("library")}
       >
-        <EnhancedText style={styles.tabText}>{t("library")}</EnhancedText>
+        <EnhancedText
+          style={[
+            styles.tabText,
+            activeTab === "library" && styles.activeTabText,
+          ]}
+        >
+          {t("library")}
+        </EnhancedText>
       </TouchableOpacity>
     </View>
   );
@@ -36,23 +50,38 @@ export default Tabs;
 const styles = StyleSheet.create({
   tabContainer: {
     flexDirection: "row",
-    justifyContent: "center",
-    marginTop: 20,
+    justifyContent: "space-evenly",
+    marginVertical: 20,
+    marginHorizontal: 20,
+    backgroundColor: colors.background,
+    borderRadius: 25,
+    padding: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
   },
   tabButton: {
     flex: 1,
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: "#f0f0f0",
+    paddingVertical: 12,
+    borderRadius: 20,
     alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#e0e0e0",
     marginHorizontal: 5,
   },
   activeTabButton: {
     backgroundColor: colors.primary,
+    elevation: 5,
   },
   tabText: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "600",
+    color: "#555",
+  },
+  activeTabText: {
     color: "#fff",
+    fontWeight: "bold",
   },
 });

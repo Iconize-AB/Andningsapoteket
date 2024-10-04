@@ -16,16 +16,15 @@ import {
   FetchUserLibrary,
   FetchUserPlaylists,
 } from "../sessions/endpoints/BreatworkSessionActionsEndpoints";
-import PlaylistItem from "./PlaylistItem"; // Import the new PlaylistItem component
-import Tabs from "../regular/Tabs";
+import PlaylistItem from "./PlaylistItem";
 import VideoItem from "../regular/VideoItem";
 
 const CreatedPlayListsScreen = ({ navigation }) => {
   const { t } = useTranslation();
   const [playlists, setPlaylists] = useState([]);
-  const [library, setLibrary] = useState([]); // State for saved sessions
+  const [library, setLibrary] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("playlists"); // State for active tab
+  const [activeTab, setActiveTab] = useState("playlists");
 
   useEffect(() => {
     const fetchPlaylists = async () => {
@@ -33,16 +32,13 @@ const CreatedPlayListsScreen = ({ navigation }) => {
         const token = await AsyncStorage.getItem("userToken");
         if (!token) throw new Error("No token found");
 
-        if (activeTab === "playlists") {
-          const data = await FetchUserPlaylists(token);
-          if (data) {
-            setPlaylists(data?.lists || []);
-          }
-        } else {
-          const savedData = await FetchUserLibrary(token);
-          if (savedData) {
-            setLibrary(savedData?.lists || []);
-          }
+        const data = await FetchUserPlaylists(token);
+        if (data) {
+          setPlaylists(data?.lists || []);
+        }
+        const savedData = await FetchUserLibrary(token);
+        if (savedData) {
+          setLibrary(savedData?.library || []);
         }
       } catch (error) {
         console.error("Failed to fetch sessions", error);
@@ -55,7 +51,40 @@ const CreatedPlayListsScreen = ({ navigation }) => {
   }, []);
 
   const renderTabs = () => (
-    <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
+    <View style={styles.tabContainer}>
+      <TouchableOpacity
+        style={[
+          styles.tabButton,
+          activeTab === "playlists" && styles.activeTabButton,
+        ]}
+        onPress={() => setActiveTab("playlists")}
+      >
+        <Text
+          style={[
+            styles.tabText,
+            activeTab === "playlists" && styles.activeTabText,
+          ]}
+        >
+          {t("playlists")}
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[
+          styles.tabButton,
+          activeTab === "library" && styles.activeTabButton,
+        ]}
+        onPress={() => setActiveTab("library")}
+      >
+        <Text
+          style={[
+            styles.tabText,
+            activeTab === "library" && styles.activeTabText,
+          ]}
+        >
+          {t("library")}
+        </Text>
+      </TouchableOpacity>
+    </View>
   );
 
   if (loading) {
@@ -65,6 +94,8 @@ const CreatedPlayListsScreen = ({ navigation }) => {
       </View>
     );
   }
+
+  console.log("library", library.videos);
 
   return (
     <ScrollView
@@ -106,18 +137,20 @@ const CreatedPlayListsScreen = ({ navigation }) => {
             {t("your_library")}
           </EnhancedText>
           <View style={styles.listContainer}>
-            {library.length > 0 ? (
-              library.map((session, index) => (
-                <VideoItem
-                  session={session}
-                  key={index}
-                  onPress={() =>
-                    navigation.navigate("IndividualBreathworkSession", {
-                      selectedVideo: session,
-                    })
-                  }
-                />
-              ))
+            {library.videos.length > 0 ? (
+              <View style={styles.videoRowContainer}>
+                {library.videos.map((session, index) => (
+                  <VideoItem
+                    session={session}
+                    size="small"
+                    handlePlayNow={() =>
+                      navigation.navigate("IndividualBreathworkSession", {
+                        selectedVideo: session,
+                      })
+                    }
+                  />
+                ))}
+              </View>
             ) : (
               <EnhancedText style={styles.noPlaylistsText}>
                 {t("no_sessions_found")}
@@ -126,6 +159,8 @@ const CreatedPlayListsScreen = ({ navigation }) => {
           </View>
         </>
       )}
+
+      {/* Recommended sessions for the user */}
       <RecommendedSessions />
     </ScrollView>
   );
@@ -144,8 +179,13 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   listContainer: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     marginTop: 20,
+  },
+  videoRowContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
   },
   noPlaylistsText: {
     textAlign: "center",
@@ -160,14 +200,20 @@ const styles = StyleSheet.create({
   },
   tabContainer: {
     flexDirection: "row",
-    justifyContent: "center",
-    marginTop: 20,
+    justifyContent: "space-between",
+    marginVertical: 20,
+    marginHorizontal: 20,
+    backgroundColor: "#F0F0F0",
+    borderRadius: 30,
+    padding: 5,
   },
   tabButton: {
     flex: 1,
-    padding: 10,
-    backgroundColor: "#f0f0f0",
+    paddingVertical: 12,
+    borderRadius: 25,
     alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#E0E0E0",
     marginHorizontal: 5,
   },
   activeTabButton: {
@@ -176,7 +222,10 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#000",
+    color: "#888",
+  },
+  activeTabText: {
+    color: "#fff",
   },
 });
 
