@@ -34,11 +34,30 @@ export async function AddVideoToPlaylist(token, listName, listId, videoId) {
         },
       }
     );
-
-    console.log('response', response);
   
     if (!response.ok) {
       console.error("Failed to fetch playlists and added videos:", response.statusText);
+      throw new Error(`Error: ${response.statusText}`);
+    }
+  
+    return response.json();
+  }
+
+  export async function FetchUserLibrary(token) {  
+    console.log('token', token);  
+    const response = await fetch(
+      "http://localhost:3000/libraryRoute/fetch/library",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  
+    if (!response.ok) {
+      console.error("Failed to fetch library:", response.statusText);
       throw new Error(`Error: ${response.statusText}`);
     }
   

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, Text, FlatList, StyleSheet } from "react-native";
 import colors from "../common/colors/Colors";
 import EnhancedText from "../regular/EnhancedText";
 import VideoItem from "../regular/VideoItem";
@@ -10,7 +10,7 @@ const BreathworkPlaylistDetails = ({ route, navigation }) => {
   const renderVideoItem = ({ item }) => {
     const session = item?.video;
     return (
-        <VideoItem session={session} handlePlayNow={() => navigation.navigate("VideoDetail", { video: item })}  />
+        <VideoItem session={session} handlePlayNow={() => navigation.navigate("IndividualBreathworkSession", { selectedVideo: item })}  />
     )
   };
 

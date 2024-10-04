@@ -87,7 +87,6 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
     return;
   }
 
-
   const saveVideoToList = async (listId = null) => {
     const token = await AsyncStorage.getItem("userToken");
     if (listName.trim() === "" && !listId) {

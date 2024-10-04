@@ -1,20 +1,32 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { DrawerContentScrollView } from '@react-navigation/drawer';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faUser, faChevronDown, faChevronUp, faSignOutAlt, faFileAlt, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
-import Svg, { Path } from 'react-native-svg';
+import React, { useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { DrawerContentScrollView } from "@react-navigation/drawer";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import {
+  faUser,
+  faChevronDown,
+  faChevronUp,
+  faSignOutAlt,
+  faFileAlt,
+  faCheckCircle,
+} from "@fortawesome/free-solid-svg-icons";
+import Svg, { Path } from "react-native-svg";
 
 const CustomDrawerContent = (props) => {
   const [isProfileExpanded, setIsProfileExpanded] = useState(false);
-  const [isLanguageExpanded, setIsLanguageExpanded] = useState(false);  // State to control the language dropdown
+  const [isLanguageExpanded, setIsLanguageExpanded] = useState(false); // State to control the language dropdown
 
   return (
-    <DrawerContentScrollView {...props} contentContainerStyle={styles.drawerContainer}>
+    <DrawerContentScrollView
+      {...props}
+      contentContainerStyle={styles.drawerContainer}
+    >
       <View style={styles.header}>
         <Text style={styles.username}>Philip</Text>
+        <TouchableOpacity onPress={() => props.navigation.navigate("Profile")}>
+          <Text style={styles.username}>Profile</Text>
+        </TouchableOpacity>
       </View>
-
       {/* Menu Items */}
       <TouchableOpacity style={styles.drawerItem}>
         <FontAwesomeIcon icon={faCheckCircle} size={18} color="#FFF" />
@@ -35,7 +47,11 @@ const CustomDrawerContent = (props) => {
           <FontAwesomeIcon icon={faUser} size={18} color="#FFF" />
           <Text style={styles.itemText}>Profil</Text>
         </View>
-        <FontAwesomeIcon icon={isProfileExpanded ? faChevronUp : faChevronDown} size={18} color="#FFF" />
+        <FontAwesomeIcon
+          icon={isProfileExpanded ? faChevronUp : faChevronDown}
+          size={18}
+          color="#FFF"
+        />
       </TouchableOpacity>
 
       {isProfileExpanded && (
@@ -60,7 +76,11 @@ const CustomDrawerContent = (props) => {
             onPress={() => setIsLanguageExpanded(!isLanguageExpanded)}
           >
             <Text style={styles.subMenuText}>Svenska</Text>
-            <FontAwesomeIcon icon={isLanguageExpanded ? faChevronUp : faChevronDown} size={16} color="#B0C4DE" />
+            <FontAwesomeIcon
+              icon={isLanguageExpanded ? faChevronUp : faChevronDown}
+              size={16}
+              color="#B0C4DE"
+            />
           </TouchableOpacity>
 
           {isLanguageExpanded && (
@@ -95,7 +115,10 @@ const CustomDrawerContent = (props) => {
         <Text style={styles.itemText}>Dela andningsapoteket</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.drawerItem} onPress={() => props.navigation.navigate('LogOut')}>
+      <TouchableOpacity
+        style={styles.drawerItem}
+        onPress={() => props.navigation.navigate("LogOut")}
+      >
         <FontAwesomeIcon icon={faSignOutAlt} size={18} color="#FFF" />
         <Text style={styles.itemText}>Logga ut</Text>
       </TouchableOpacity>
@@ -106,24 +129,24 @@ const CustomDrawerContent = (props) => {
 const styles = StyleSheet.create({
   drawerContainer: {
     flex: 1,
-    backgroundColor: '#1E4A61', // Darker blue background as per image
+    backgroundColor: "#1E4A61", // Darker blue background as per image
     paddingTop: 0,
   },
   header: {
     padding: 20,
     marginTop: 50,
-    backgroundColor: '#1E4A61', // Header background color
-    alignItems: 'center',
+    backgroundColor: "#1E4A61", // Header background color
+    alignItems: "center",
   },
   username: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#FFF',
+    fontWeight: "bold",
+    color: "#FFF",
     marginBottom: 10,
   },
   drawerItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: 15,
     paddingHorizontal: 20,
     marginVertical: 2,
@@ -131,30 +154,30 @@ const styles = StyleSheet.create({
   itemText: {
     marginLeft: 10,
     fontSize: 16,
-    color: '#FFF',
+    color: "#FFF",
   },
   expandableItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: "space-between"
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   expandableWrapper: {
     display: "flex",
-    flexDirection: "row"
+    flexDirection: "row",
   },
   subMenu: {
     marginLeft: 40, // Submenu indentation
-    marginTop: -10,  // Adjust margin for proper spacing
+    marginTop: -10, // Adjust margin for proper spacing
   },
   subMenuItem: {
     paddingVertical: 8,
   },
   subMenuText: {
     fontSize: 14,
-    color: '#B0C4DE', // Lighter color for submenu
+    color: "#B0C4DE", // Lighter color for submenu
   },
   languageOptions: {
-    marginLeft: 20,  // Indent the language options further
+    marginLeft: 20, // Indent the language options further
     marginTop: 5,
   },
   languageOptionItem: {
@@ -162,16 +185,16 @@ const styles = StyleSheet.create({
   },
   languageOptionText: {
     fontSize: 14,
-    color: '#B0C4DE', // Same color as other submenu items
+    color: "#B0C4DE", // Same color as other submenu items
   },
   divider: {
     height: 1,
-    backgroundColor: '#B0C4DE', // Divider color
+    backgroundColor: "#B0C4DE", // Divider color
     marginVertical: 15,
     marginLeft: 20,
   },
   curvedLine: {
-    position: 'absolute',
+    position: "absolute",
     left: -40,
     top: 5,
   },

@@ -34,7 +34,7 @@ const SelectedCategoryScreen = ({ navigation, route }) => {
   }, [category]);
 
   const renderVideoItem = ({ item }) => (
-    <VideoItem session={item} key={item.id} size="small" handlePlayNow={() => navigation.navigate("VideoDetail", { video: item })} />
+    <VideoItem session={item} key={item.id} size="small" handlePlayNow={() => navigation.navigate("IndividualBreathworkSession", { selectedVideo: item })} />
   );
 
   if (videos.length === 0) {
