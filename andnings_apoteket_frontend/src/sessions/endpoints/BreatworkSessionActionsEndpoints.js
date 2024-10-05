@@ -51,8 +51,6 @@ export async function FetchUserLibrary(token) {
     },
   });
 
-  console.log("response", response);
-
   if (!response.ok) {
     console.error("Failed to fetch library:", response.statusText);
     throw new Error(`Error: ${response.statusText}`);
@@ -103,7 +101,6 @@ export async function DeleteUserPlaylist(token, playlistId) {
 }
 
 export async function DeleteUserLibrarySessions(token, selectedSessionIds) {
-  console.log("selectedSessionIds", selectedSessionIds);
   const response = await fetch(
     "http://localhost:3000/libraryRoute/library/delete",
     {

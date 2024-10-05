@@ -20,7 +20,6 @@ const MostPlayedSessions = () => {
       try {
         const token = await AsyncStorage.getItem("userToken");
         const response = await GetMostPlayedSessions(token);
-        console.log('response', response);
         if (response.ok) {
           const data = await response.json();
           setMostPlayedSessions(data?.videos);

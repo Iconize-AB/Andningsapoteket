@@ -49,6 +49,7 @@ import IndividualBreathworkSessionScreen from "./src/sessions/IndividualBreathwo
 import JourneyOverviewScreen from "./src/challenge/JourneyOverviewScreen";
 import SelectedCategoryScreen from "./src/categories/SelectedCategoryScreen";
 import BreathworkPlaylistDetails from "./src/favorites/BreathworkPlaylistDetails";
+import SettingsScreen from "./src/profile/SettingsScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -197,6 +198,12 @@ function Root({ userDetails, refreshUserProfile, navigation }) {
         options={{ tabBarButton: () => null }}
       >
         {(props) => <SelectedCategoryScreen {...props} />}
+      </Tab.Screen>
+      <Tab.Screen
+        name="Settings"
+        options={{ tabBarButton: () => null }}
+      >
+        {(props) => <SettingsScreen {...props} />}
       </Tab.Screen>
       <Tab.Screen name="Profile" options={{ tabBarButton: () => null }}>
         {(props) => <ProfileScreen {...props} />}

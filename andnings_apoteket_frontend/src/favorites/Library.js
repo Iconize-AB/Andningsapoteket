@@ -24,7 +24,6 @@ const Library = ({ library, handleDeleteSessions, navigation }) => {
   };
 
   const handleDeleteSelectedSessions = async () => {
-    console.log("Deleting videos:", selectedSessions);
     handleDeleteSessions(selectedSessions);
     setSelectedSessions([]);
     setIsEditing(false);

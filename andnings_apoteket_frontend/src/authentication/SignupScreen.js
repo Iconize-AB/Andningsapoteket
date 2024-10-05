@@ -37,7 +37,6 @@ const SignupScreen = ({ navigation }) => {
     if (!isValid) return;
     try {
       const response = await Register(email, password);
-      console.log('response', response);
       if (!response.ok) {
         Toast.show({
           type: "error",

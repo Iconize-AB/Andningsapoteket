@@ -1,8 +1,14 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { StyleSheet, SafeAreaView, View, Modal, TouchableOpacity, Alert } from "react-native";
+import {
+  StyleSheet,
+  SafeAreaView,
+  View,
+  Modal,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faClose, faCog } from "@fortawesome/free-solid-svg-icons";
-import SettingsComponent from "./SettingsComponent";
+import { faCog } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../context/AuthContext";
 import colors from "../common/colors/Colors";
 import { LoadingScreen } from "../regular/LoadingSreen";
@@ -23,16 +29,15 @@ export default function ProfileScreen({ navigation, route }) {
     pushNotification: false,
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [showSettingsModal, setShowSettingsModal] = useState(false);
   const { signOut } = useAuth();
-  
+
   const fetchUserProfile = useCallback(async () => {
     try {
       const token = await AsyncStorage.getItem("userToken");
       if (!token) throw new Error("No token found");
-  
+
       setIsLoading(true);
-      const response = await FetchUserProfile(token);  
+      const response = await FetchUserProfile(token);
       const json = await response.json();
       if (response.ok) {
         setUserDetails({
@@ -62,7 +67,7 @@ export default function ProfileScreen({ navigation, route }) {
       setIsLoading(false);
     }
   }, []);
-  
+
   useEffect(() => {
     fetchUserProfile();
   }, [fetchUserProfile]);
@@ -82,9 +87,7 @@ export default function ProfileScreen({ navigation, route }) {
           onPress: async () => {
             try {
               const token = await AsyncStorage.getItem("userToken");
-              console.log('user', userDetails.id);
               const response = await DeleteUser(token, userDetails.id);
-              console.log('response222', response);
               if (response.ok) {
                 Toast.show({
                   type: "success",
@@ -138,10 +141,6 @@ export default function ProfileScreen({ navigation, route }) {
     signOut();
   };
 
-  const toggleSettingsModal = () => {
-    setShowSettingsModal(!showSettingsModal);
-  };
-
   if (isLoading) {
     return <LoadingScreen />;
   }
@@ -149,32 +148,21 @@ export default function ProfileScreen({ navigation, route }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <EnhancedText style={styles.title}>
-          Profile
-        </EnhancedText>
-        <TouchableOpacity onPress={toggleSettingsModal}>
+        <EnhancedText style={styles.title}>Profile</EnhancedText>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("Settings", {
+              userDetails,
+              setUserDetails,
+              handleOnDelete,
+              fetchUserProfile,
+              handleSignOut,
+            })
+          }
+        >
           <FontAwesomeIcon icon={faCog} size={24} color="#000" />
         </TouchableOpacity>
       </View>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={showSettingsModal}
-        onRequestClose={toggleSettingsModal}
-      >
-        <View style={styles.modalContainer}>
-          <TouchableOpacity style={styles.closeButton} onPress={toggleSettingsModal}>
-            <FontAwesomeIcon icon={faClose} size={24} color="#000" />
-          </TouchableOpacity>
-          <SettingsComponent
-            userDetails={userDetails}
-            setUserDetails={setUserDetails}
-            handleOnDelete={handleOnDelete}
-            fetchUserProfile={fetchUserProfile}
-            handleSignOut={handleSignOut}
-          />
-        </View>
-      </Modal>
     </SafeAreaView>
   );
 }

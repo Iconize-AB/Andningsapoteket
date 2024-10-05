@@ -70,7 +70,6 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
         if (data?.totalWatches) {
           setSessionStats(data.totalWatches);
         }
-        console.log("Watch session successfully tracked");
       } else {
         console.log("Watch session failed to be tracked");
       }
@@ -135,7 +134,6 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
       Alert.alert("Error", "Please enter a valid list name");
       return;
     }
-    console.log("list", listName, listId, selectedVideo);
     let response = await AddVideoToPlaylist(
       token,
       listName,

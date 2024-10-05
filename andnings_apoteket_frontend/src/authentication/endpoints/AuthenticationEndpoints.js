@@ -50,7 +50,6 @@ export async function Signin(email, password) {
   }
   
   export async function DeleteUser(token, userId) {
-    console.log('##token', token, userId);
     const response = await fetch(
       `http://localhost:3000/userRoute/delete-user`,
       {
