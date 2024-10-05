@@ -12,12 +12,10 @@ import { useTranslation } from "react-i18next";
 import EnhancedText from "../regular/EnhancedText";
 import RecommendedSessions from "../recommendations/RecommendedSessions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  FetchUserLibrary,
-  FetchUserPlaylists,
-} from "../sessions/endpoints/BreatworkSessionActionsEndpoints";
+import { FetchUserLibrary, FetchUserPlaylists, DeleteUserPlaylist } from "../sessions/endpoints/BreatworkSessionActionsEndpoints";
 import PlaylistItem from "./PlaylistItem";
 import VideoItem from "../regular/VideoItem";
+import Icon from "react-native-vector-icons/Ionicons"; // Import Ionicons
 
 const CreatedPlayListsScreen = ({ navigation }) => {
   const { t } = useTranslation();
@@ -49,6 +47,23 @@ const CreatedPlayListsScreen = ({ navigation }) => {
 
     fetchPlaylists();
   }, []);
+
+  const handleDeletePlaylist = async (playlistId) => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+      if (!token) throw new Error("No token found");
+
+      const response = await DeleteUserPlaylist(token, playlistId);
+      console.log('response', response);
+      if (response.ok) {
+        setPlaylists((prevPlaylists) =>
+          prevPlaylists.filter((playlist) => playlist.id !== playlistId)
+        );
+      }
+    } catch (error) {
+      console.error("Failed to delete playlist", error);
+    }
+  };
 
   const renderTabs = () => (
     <View style={styles.tabContainer}>
@@ -95,8 +110,6 @@ const CreatedPlayListsScreen = ({ navigation }) => {
     );
   }
 
-  console.log("library", library.videos);
-
   return (
     <ScrollView
       contentContainerStyle={styles.scrollViewContent}
@@ -114,15 +127,22 @@ const CreatedPlayListsScreen = ({ navigation }) => {
           <View style={styles.listContainer}>
             {playlists.length > 0 ? (
               playlists.map((list, index) => (
-                <PlaylistItem
-                  key={index}
-                  playlist={list}
-                  onPress={() =>
-                    navigation.navigate("BreathworkPlaylistDetails", {
-                      playlist: list,
-                    })
-                  }
-                />
+                <View key={index} style={styles.playlistItemContainer}>
+                  <PlaylistItem
+                    playlist={list}
+                    onPress={() =>
+                      navigation.navigate("BreathworkPlaylistDetails", {
+                        playlist: list,
+                      })
+                    }
+                  />
+                  <TouchableOpacity
+                    onPress={() => handleDeletePlaylist(list.id)}
+                    style={styles.deleteIcon}
+                  >
+                    <Icon name="trash" size={24} color={colors.primary} />
+                  </TouchableOpacity>
+                </View>
               ))
             ) : (
               <EnhancedText style={styles.noPlaylistsText}>
@@ -141,6 +161,7 @@ const CreatedPlayListsScreen = ({ navigation }) => {
               <View style={styles.videoRowContainer}>
                 {library.videos.map((session, index) => (
                   <VideoItem
+                    key={index}
                     session={session}
                     size="small"
                     handlePlayNow={() =>
@@ -226,6 +247,12 @@ const styles = StyleSheet.create({
   },
   activeTabText: {
     color: "#fff",
+  },
+  deleteIcon: {
+    padding: 10,
+    position: "absolute",
+    top: 0,
+    right: 0,
   },
 });
 

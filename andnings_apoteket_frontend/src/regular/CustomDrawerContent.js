@@ -11,10 +11,12 @@ import {
   faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import Svg, { Path } from "react-native-svg";
+import { useAuth } from "../context/AuthContext";
 
 const CustomDrawerContent = (props) => {
   const [isProfileExpanded, setIsProfileExpanded] = useState(false);
-  const [isLanguageExpanded, setIsLanguageExpanded] = useState(false); // State to control the language dropdown
+  const [isLanguageExpanded, setIsLanguageExpanded] = useState(false);
+  const { signOut } = useAuth();
 
   return (
     <DrawerContentScrollView
@@ -117,7 +119,7 @@ const CustomDrawerContent = (props) => {
 
       <TouchableOpacity
         style={styles.drawerItem}
-        onPress={() => props.navigation.navigate("LogOut")}
+        onPress={signOut}
       >
         <FontAwesomeIcon icon={faSignOutAlt} size={18} color="#FFF" />
         <Text style={styles.itemText}>Logga ut</Text>

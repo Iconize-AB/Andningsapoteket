@@ -12,7 +12,6 @@ const EnhancedTextInput = ({
   secureTextEntry = false,
   keyboardType = "default",
   customStyle = {},
-  placeholderTextColor = "#A9A9A9",
 }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(secureTextEntry); // Toggle for showing/hiding password
   
@@ -68,7 +67,7 @@ const styles = StyleSheet.create({
   input: {
     height: 45,
     width: "100%",
-    color: "#fff",
+    color: "#000",
     backgroundColor: "#fff",
     opacity: 0.2,
     fontFamily: "BahnSchrift",
