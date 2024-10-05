@@ -11,16 +11,19 @@ import EnhancedText from "../regular/EnhancedText";
 import BackIcon from "../regular/BackIcon";
 import { VerifyAccount } from "./endpoints/AuthenticationEndpoints";
 import colors from "../common/colors/Colors";
+import { useAuth } from "../context/AuthContext";
 
 const VerifyAccountScreen = ({ route, navigation }) => {
   const { email } = route.params;
   const [code, setCode] = useState("");
+  const { signIn } = useAuth();
 
   const handleVerifyCode = async () => {
     try {
       const response = await VerifyAccount(email, code);
+      const data = await response.json();
 
-      if (response.ok) {
+      if (data) {
         Toast.show({
           type: "success",
           text1: "You're all set. Welcome!",
@@ -30,10 +33,7 @@ const VerifyAccountScreen = ({ route, navigation }) => {
           },
           text2Style: { color: "#466F78" },
         });
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'MainTabs', state: { routes: [{ name: 'Home' }] } }],
-        });
+        signIn(data.token);
       } else {
         Toast.show({
           type: "error",

@@ -79,7 +79,7 @@ const AddToPlaylistModel = ({
           <View style={styles.actionButtons}>
             <EnhancedButton
               title={t("Save")}
-              onPress={saveVideoToList}
+              onPress={() => saveVideoToList(null)}
               size="medium"
             />
             <EnhancedButton

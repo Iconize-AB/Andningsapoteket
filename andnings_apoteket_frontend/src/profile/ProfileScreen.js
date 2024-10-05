@@ -84,6 +84,7 @@ export default function ProfileScreen({ navigation, route }) {
               const token = await AsyncStorage.getItem("userToken");
               console.log('user', userDetails.id);
               const response = await DeleteUser(token, userDetails.id);
+              console.log('response222', response);
               if (response.ok) {
                 Toast.show({
                   type: "success",
@@ -134,7 +135,7 @@ export default function ProfileScreen({ navigation, route }) {
   };
 
   const handleSignOut = () => {
-    signOut(null);
+    signOut();
   };
 
   const toggleSettingsModal = () => {

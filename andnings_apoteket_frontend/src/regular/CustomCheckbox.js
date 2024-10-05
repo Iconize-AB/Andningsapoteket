@@ -6,9 +6,6 @@ const CustomCheckbox = ({ isChecked, onChange }) => {
     return (
       <TouchableOpacity onPress={onChange} style={styles.checkboxContainer}>
         <View style={[styles.checkbox, isChecked && styles.checkedCheckbox]} />
-        <EnhancedText style={styles.label}>
-          I agree to the Terms & Privacy
-        </EnhancedText>
       </TouchableOpacity>
     );
   };
@@ -23,7 +20,7 @@ const CustomCheckbox = ({ isChecked, onChange }) => {
       marginRight: 8,
     },
     checkboxLabel: {
-      color: "#fff",
+      color: "#000",
     },
   });
 export default CustomCheckbox;

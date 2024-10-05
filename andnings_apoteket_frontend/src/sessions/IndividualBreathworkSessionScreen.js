@@ -20,7 +20,10 @@ import EnhancedText from "../regular/EnhancedText";
 import EnhancedButton from "../regular/EnhancedButton";
 import { useTranslation } from "react-i18next";
 import AddToPlaylistModel from "../playlists/PlaylistModel";
-import { AddVideoToLibrary, AddVideoToPlaylist } from "./endpoints/BreatworkSessionActionsEndpoints";
+import {
+  AddVideoToLibrary,
+  AddVideoToPlaylist,
+} from "./endpoints/BreatworkSessionActionsEndpoints";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import BottomSlider from "./BottomSlider";
 import SessionInfo from "./SessionInfo";
@@ -50,25 +53,28 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
   const handlePlay = async () => {
     try {
       const token = await AsyncStorage.getItem("userToken");
-  
+
       if (!token) {
         console.error("No token found");
         return;
       }
-  
-      const response = await TrackGlobalWatchedSessionEvent(token, selectedVideo.id);
+
+      const response = await TrackGlobalWatchedSessionEvent(
+        token,
+        selectedVideo.id
+      );
 
       const data = await response.json();
-  
+
       if (response.status === 200) {
         if (data?.totalWatches) {
-          setSessionStats(data.totalWatches)
+          setSessionStats(data.totalWatches);
         }
         console.log("Watch session successfully tracked");
       } else {
         console.log("Watch session failed to be tracked");
       }
-  
+
       setIsPlaying(true);
     } catch (error) {
       console.error("Error tracking watch session:", error);
@@ -87,14 +93,14 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
   const handleSaveSessionToLibrary = async () => {
     try {
       const token = await AsyncStorage.getItem("userToken");
-  
+
       if (!token) {
         console.error("No token found");
         return;
       }
 
       const response = await AddVideoToLibrary(token, selectedVideo.id);
-  
+
       if (response.status === 200) {
         Toast.show({
           type: "success",
@@ -121,14 +127,15 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
     } catch (error) {
       console.error("Error tracking watch session:", error);
     }
-  }
+  };
 
-  const saveVideoToList = async (listId = null) => {
+  const saveVideoToList = async (listId) => {
     const token = await AsyncStorage.getItem("userToken");
     if (listName.trim() === "" && !listId) {
       Alert.alert("Error", "Please enter a valid list name");
       return;
     }
+    console.log("list", listName, listId, selectedVideo);
     let response = await AddVideoToPlaylist(
       token,
       listName,
@@ -147,7 +154,10 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container} showsHorizontalScrollIndicator={false}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      showsHorizontalScrollIndicator={false}
+    >
       {/* Video Preview */}
       <TouchableOpacity
         onPress={handlePlay}
@@ -173,8 +183,11 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
             <EnhancedText style={styles.threeDotsIcon}>•••</EnhancedText>
           </TouchableOpacity>
         </View>
-        
-        <SessionInfo selectedVideo={selectedVideo} sessionStats={sessionStats} />
+
+        <SessionInfo
+          selectedVideo={selectedVideo}
+          sessionStats={sessionStats}
+        />
         {/* Add to Saved Sessions */}
         <EnhancedButton
           icon={faHeart}
@@ -195,7 +208,11 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
       </View>
 
       {/* Bottom Slider for More Options */}
-      <BottomSlider isVisible={isMoreVisible} onClose={toggleMoreOptions} handleSaveSession={handleSaveSession} />
+      <BottomSlider
+        isVisible={isMoreVisible}
+        onClose={toggleMoreOptions}
+        handleSaveSession={handleSaveSession}
+      />
 
       {/* Modal for entering the list name */}
       <AddToPlaylistModel

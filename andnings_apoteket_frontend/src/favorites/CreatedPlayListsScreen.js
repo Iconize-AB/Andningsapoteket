@@ -12,10 +12,10 @@ import { useTranslation } from "react-i18next";
 import EnhancedText from "../regular/EnhancedText";
 import RecommendedSessions from "../recommendations/RecommendedSessions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { FetchUserLibrary, FetchUserPlaylists, DeleteUserPlaylist } from "../sessions/endpoints/BreatworkSessionActionsEndpoints";
+import { FetchUserLibrary, FetchUserPlaylists, DeleteUserPlaylist, DeleteUserLibrarySessions } from "../sessions/endpoints/BreatworkSessionActionsEndpoints";
 import PlaylistItem from "./PlaylistItem";
-import VideoItem from "../regular/VideoItem";
-import Icon from "react-native-vector-icons/Ionicons"; // Import Ionicons
+import Icon from "react-native-vector-icons/Ionicons";
+import Library from "./Library";
 
 const CreatedPlayListsScreen = ({ navigation }) => {
   const { t } = useTranslation();
@@ -31,6 +31,7 @@ const CreatedPlayListsScreen = ({ navigation }) => {
         if (!token) throw new Error("No token found");
 
         const data = await FetchUserPlaylists(token);
+        console.log('data', data);
         if (data) {
           setPlaylists(data?.lists || []);
         }
@@ -54,7 +55,6 @@ const CreatedPlayListsScreen = ({ navigation }) => {
       if (!token) throw new Error("No token found");
 
       const response = await DeleteUserPlaylist(token, playlistId);
-      console.log('response', response);
       if (response.ok) {
         setPlaylists((prevPlaylists) =>
           prevPlaylists.filter((playlist) => playlist.id !== playlistId)
@@ -62,6 +62,23 @@ const CreatedPlayListsScreen = ({ navigation }) => {
       }
     } catch (error) {
       console.error("Failed to delete playlist", error);
+    }
+  };
+
+  const handleDeleteSessions = async (sessionIds) => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+      if (!token) throw new Error("No token found");
+  
+      const response = await DeleteUserLibrarySessions(token, sessionIds);
+      if (response.ok) {
+        setLibrary((prevLibrary) => ({
+          ...prevLibrary,
+          videos: prevLibrary.videos.filter((session) => !sessionIds.includes(session.videoId)),
+        }));
+      }
+    } catch (error) {
+      console.error("Failed to delete sessions", error);
     }
   };
 
@@ -156,28 +173,7 @@ const CreatedPlayListsScreen = ({ navigation }) => {
           <EnhancedText style={styles.greetingText}>
             {t("your_library")}
           </EnhancedText>
-          <View style={styles.listContainer}>
-            {library.videos.length > 0 ? (
-              <View style={styles.videoRowContainer}>
-                {library.videos.map((session, index) => (
-                  <VideoItem
-                    key={index}
-                    session={session}
-                    size="small"
-                    handlePlayNow={() =>
-                      navigation.navigate("IndividualBreathworkSession", {
-                        selectedVideo: session,
-                      })
-                    }
-                  />
-                ))}
-              </View>
-            ) : (
-              <EnhancedText style={styles.noPlaylistsText}>
-                {t("no_sessions_found")}
-              </EnhancedText>
-            )}
-          </View>
+          <Library library={library} handleDeleteSessions={handleDeleteSessions} navigation={navigation} />
         </>
       )}
 
@@ -202,11 +198,6 @@ const styles = StyleSheet.create({
   listContainer: {
     paddingHorizontal: 10,
     marginTop: 20,
-  },
-  videoRowContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
   },
   noPlaylistsText: {
     textAlign: "center",

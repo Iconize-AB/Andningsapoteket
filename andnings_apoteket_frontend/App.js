@@ -282,6 +282,14 @@ function AppNavigator({ navigation }) {
   }, []);
 
   useEffect(() => {
+    if (userToken) {
+      console.log("userToken8", userToken);
+    } else {
+      console.log("userToken8", userToken);
+    }
+  }, [userToken, navigation]);
+
+  useEffect(() => {
     const timer = setTimeout(() => {
       setIsReady(true);
     }, 4000);

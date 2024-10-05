@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo/vector-icons": "^14.0.3",
     "@fortawesome/free-brands-svg-icons": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-native-fontawesome": "^0.3.2",
@@ -30,6 +31,7 @@
     "react": "18.2.0",
     "react-i18next": "^15.0.2",
     "react-native": "0.74.5",
+    "react-native-checkbox-reanimated": "^0.1.1",
     "react-native-confirmation-code-field": "^7.4.0",
     "react-native-gesture-handler": "^2.19.0",
     "react-native-paper": "^5.12.5",
@@ -37,7 +39,7 @@
     "react-native-svg": "^15.7.1",
     "react-native-toast-message": "^2.2.0",
     "react-native-vector-icons": "^10.1.0",
-    "@expo/vector-icons": "^14.0.3"
+    "expo-checkbox": "~3.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
