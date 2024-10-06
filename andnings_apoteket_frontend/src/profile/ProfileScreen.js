@@ -18,6 +18,8 @@ import { FetchUserProfile } from "./endpoints/ProfileEndpoints";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DeleteUser } from "../authentication/endpoints/AuthenticationEndpoints";
 import { useTranslation } from "react-i18next";
+import Tabs from "../regular/Tabs";
+import UserDetails from "./UserDetails";
 
 export default function ProfileScreen({ navigation, route }) {
   const { t } = useTranslation();
@@ -28,6 +30,12 @@ export default function ProfileScreen({ navigation, route }) {
     emailNotification: false,
     pushNotification: false,
   });
+  const [activeTab, setActiveTab] = useState("userDetails");
+  const tabs = [
+    { label: "User Details", value: "userDetails" },
+    { label: "Dashboard", value: "dashboard" },
+    { label: "Check-in", value: "checkin" },
+  ];
   const [isLoading, setIsLoading] = useState(false);
   const { signOut } = useAuth();
 
@@ -145,6 +153,19 @@ export default function ProfileScreen({ navigation, route }) {
     return <LoadingScreen />;
   }
 
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case "userDetails":
+        return <UserDetails userDetails={userDetails} />;
+      case "dashboard":
+        return <Dashboard />;
+      case "checkin":
+        return <CheckIn />;
+      default:
+        return <UserDetails userDetails={userDetails} />;
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -163,6 +184,12 @@ export default function ProfileScreen({ navigation, route }) {
           <FontAwesomeIcon icon={faCog} size={24} color="#000" />
         </TouchableOpacity>
       </View>
+
+      {/* Render Tabs */}
+      <Tabs activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabs} />
+
+      {/* Render tab content based on active tab */}
+      {renderTabContent()}
     </SafeAreaView>
   );
 }

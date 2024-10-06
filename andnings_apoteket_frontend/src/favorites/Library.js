@@ -1,9 +1,17 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Image } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Image,
+} from "react-native";
 import { useTranslation } from "react-i18next";
 import colors from "../common/colors/Colors";
 import Icon from "react-native-vector-icons/Ionicons";
 import EnhancedText from "../regular/EnhancedText";
+import NoResult from "../regular/NoResult";
 
 const Library = ({ library, handleDeleteSessions, navigation }) => {
   const { t } = useTranslation();
@@ -17,9 +25,9 @@ const Library = ({ library, handleDeleteSessions, navigation }) => {
 
   const handleSelectSession = (videoId) => {
     if (selectedSessions.includes(videoId)) {
-        setSelectedSessions(selectedSessions.filter((id) => id !== videoId));
+      setSelectedSessions(selectedSessions.filter((id) => id !== videoId));
     } else {
-        setSelectedSessions([...selectedSessions, videoId]);
+      setSelectedSessions([...selectedSessions, videoId]);
     }
   };
 
@@ -33,6 +41,9 @@ const Library = ({ library, handleDeleteSessions, navigation }) => {
     <View style={styles.container}>
       {/* Edit Mode */}
       <View style={styles.editHeader}>
+        <EnhancedText style={styles.greetingText}>
+          {t("your_library")}
+        </EnhancedText>
         <TouchableOpacity onPress={toggleEditMode}>
           <Text style={styles.editButtonText}>
             {isEditing ? t("done") : t("edit")}
@@ -51,18 +62,31 @@ const Library = ({ library, handleDeleteSessions, navigation }) => {
           {library.videos.map((session, index) => (
             <View key={index} style={styles.videoItemContainer}>
               {isEditing && (
-                <TouchableOpacity onPress={() => handleSelectSession(session.video.id)}>
+                <TouchableOpacity
+                  onPress={() => handleSelectSession(session.video.id)}
+                >
                   <Icon
-                    name={selectedSessions.includes(session.video.id) ? "checkbox" : "square-outline"}
+                    name={
+                      selectedSessions.includes(session.video.id)
+                        ? "checkbox"
+                        : "square-outline"
+                    }
                     size={24}
                     color={colors.primary}
                   />
                 </TouchableOpacity>
               )}
-              <Image source={{ uri: session.video.imageUrl }} style={styles.videoImage} />
+              <Image
+                source={{ uri: session.video.imageUrl }}
+                style={styles.videoImage}
+              />
               <View style={styles.videoInfo}>
-                <EnhancedText style={styles.videoTitle}>{session.video.title}</EnhancedText>
-                <EnhancedText style={styles.videoSubtitle}>{session.video.description}</EnhancedText>
+                <EnhancedText style={styles.videoTitle}>
+                  {session.video.title}
+                </EnhancedText>
+                <EnhancedText style={styles.videoSubtitle}>
+                  {session.video.description}
+                </EnhancedText>
               </View>
               <TouchableOpacity style={styles.addButton}>
                 <Icon name="play" size={24} color="#fff" />
@@ -71,7 +95,9 @@ const Library = ({ library, handleDeleteSessions, navigation }) => {
           ))}
         </ScrollView>
       ) : (
-        <Text style={styles.noVideosText}>{t("no_sessions_found")}</Text>
+        <View>
+          <NoResult />
+        </View>
       )}
     </View>
   );
@@ -96,6 +122,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     backgroundColor: colors.background,
+  },
+  greetingText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#000",
   },
   editButtonText: {
     fontSize: 16,

@@ -1,46 +1,30 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
-import { View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import EnhancedText from "./EnhancedText";
 import colors from "../common/colors/Colors";
-import { useTranslation } from "react-i18next";
 
-const Tabs = ({ activeTab, setActiveTab }) => {
-  const { t } = useTranslation();
+const Tabs = ({ activeTab, setActiveTab, tabs }) => {
   return (
     <View style={styles.tabContainer}>
-      <TouchableOpacity
-        style={[
-          styles.tabButton,
-          activeTab === "playlists" && styles.activeTabButton,
-        ]}
-        onPress={() => setActiveTab("playlists")}
-      >
-        <EnhancedText
+      {tabs.map((tab, index) => (
+        <TouchableOpacity
+          key={index}
           style={[
-            styles.tabText,
-            activeTab === "playlists" && styles.activeTabText,
+            styles.tabButton,
+            activeTab === tab.value && styles.activeTabButton,
           ]}
+          onPress={() => setActiveTab(tab.value)}
         >
-          {t("playlists")}
-        </EnhancedText>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[
-          styles.tabButton,
-          activeTab === "library" && styles.activeTabButton,
-        ]}
-        onPress={() => setActiveTab("library")}
-      >
-        <EnhancedText
-          style={[
-            styles.tabText,
-            activeTab === "library" && styles.activeTabText,
-          ]}
-        >
-          {t("library")}
-        </EnhancedText>
-      </TouchableOpacity>
+          <EnhancedText
+            style={[
+              styles.tabText,
+              activeTab === tab.value && styles.activeTabText,
+            ]}
+          >
+            {tab.label}
+          </EnhancedText>
+        </TouchableOpacity>
+      ))}
     </View>
   );
 };

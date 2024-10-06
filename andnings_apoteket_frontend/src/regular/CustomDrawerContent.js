@@ -9,6 +9,7 @@ import {
   faSignOutAlt,
   faFileAlt,
   faCheckCircle,
+  faCog,
 } from "@fortawesome/free-solid-svg-icons";
 import Svg, { Path } from "react-native-svg";
 import { useAuth } from "../context/AuthContext";
@@ -115,6 +116,13 @@ const CustomDrawerContent = (props) => {
       <TouchableOpacity style={styles.drawerItem}>
         <FontAwesomeIcon icon={faFileAlt} size={18} color="#FFF" />
         <Text style={styles.itemText}>Dela andningsapoteket</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.drawerItem}
+        onPress={() => props.navigation.navigate("Settings")}
+      >
+        <FontAwesomeIcon icon={faCog} size={18} color="#FFF" />
+        <Text style={styles.itemText}>Settings</Text>
       </TouchableOpacity>
 
       <TouchableOpacity

@@ -5,7 +5,8 @@ import EnhancedText from "../regular/EnhancedText";
 import colors from "../common/colors/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import VideoItem from "../regular/VideoItem";
-import NoData from "../regular/NoData";
+import NoData from "../regular/NoResult";
+import NoResult from "../regular/NoResult";
 
 const SelectedCategoryScreen = ({ navigation, route }) => {
   const { category } = route.params;
@@ -40,7 +41,7 @@ const SelectedCategoryScreen = ({ navigation, route }) => {
   if (videos.length === 0) {
     return (
       <View style={styles.container}>
-        <NoData />
+        <NoResult />
       </View>
     )
   }

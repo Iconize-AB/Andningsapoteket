@@ -12,16 +12,27 @@ import { useTranslation } from "react-i18next";
 import EnhancedText from "../regular/EnhancedText";
 import RecommendedSessions from "../recommendations/RecommendedSessions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { FetchUserLibrary, FetchUserPlaylists, DeleteUserPlaylist, DeleteUserLibrarySessions } from "../sessions/endpoints/BreatworkSessionActionsEndpoints";
+import {
+  FetchUserLibrary,
+  FetchUserPlaylists,
+  DeleteUserPlaylist,
+  DeleteUserLibrarySessions,
+} from "../sessions/endpoints/BreatworkSessionActionsEndpoints";
 import PlaylistItem from "./PlaylistItem";
 import Icon from "react-native-vector-icons/Ionicons";
 import Library from "./Library";
+import NoResult from "../regular/NoResult";
+import Tabs from "../regular/Tabs";
 
 const CreatedPlayListsScreen = ({ navigation }) => {
   const { t } = useTranslation();
   const [playlists, setPlaylists] = useState([]);
   const [library, setLibrary] = useState([]);
   const [loading, setLoading] = useState(true);
+  const tabs = [
+    { label: "Playlists", value: "playlists" },
+    { label: "Library", value: "library" },
+  ];
   const [activeTab, setActiveTab] = useState("playlists");
 
   useEffect(() => {
@@ -31,7 +42,7 @@ const CreatedPlayListsScreen = ({ navigation }) => {
         if (!token) throw new Error("No token found");
 
         const data = await FetchUserPlaylists(token);
-        console.log('data', data);
+        console.log("data", data);
         if (data) {
           setPlaylists(data?.lists || []);
         }
@@ -69,12 +80,14 @@ const CreatedPlayListsScreen = ({ navigation }) => {
     try {
       const token = await AsyncStorage.getItem("userToken");
       if (!token) throw new Error("No token found");
-  
+
       const response = await DeleteUserLibrarySessions(token, sessionIds);
       if (response.ok) {
         setLibrary((prevLibrary) => ({
           ...prevLibrary,
-          videos: prevLibrary.videos.filter((session) => !sessionIds.includes(session.videoId)),
+          videos: prevLibrary.videos.filter(
+            (session) => !sessionIds.includes(session.videoId)
+          ),
         }));
       }
     } catch (error) {
@@ -83,40 +96,7 @@ const CreatedPlayListsScreen = ({ navigation }) => {
   };
 
   const renderTabs = () => (
-    <View style={styles.tabContainer}>
-      <TouchableOpacity
-        style={[
-          styles.tabButton,
-          activeTab === "playlists" && styles.activeTabButton,
-        ]}
-        onPress={() => setActiveTab("playlists")}
-      >
-        <Text
-          style={[
-            styles.tabText,
-            activeTab === "playlists" && styles.activeTabText,
-          ]}
-        >
-          {t("playlists")}
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[
-          styles.tabButton,
-          activeTab === "library" && styles.activeTabButton,
-        ]}
-        onPress={() => setActiveTab("library")}
-      >
-        <Text
-          style={[
-            styles.tabText,
-            activeTab === "library" && styles.activeTabText,
-          ]}
-        >
-          {t("library")}
-        </Text>
-      </TouchableOpacity>
-    </View>
+    <Tabs activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabs} />
   );
 
   if (loading) {
@@ -162,19 +142,18 @@ const CreatedPlayListsScreen = ({ navigation }) => {
                 </View>
               ))
             ) : (
-              <EnhancedText style={styles.noPlaylistsText}>
-                {t("no_playlists_found")}
-              </EnhancedText>
+              <View>
+                <NoResult />
+              </View>
             )}
           </View>
         </>
       ) : (
-        <>
-          <EnhancedText style={styles.greetingText}>
-            {t("your_library")}
-          </EnhancedText>
-          <Library library={library} handleDeleteSessions={handleDeleteSessions} navigation={navigation} />
-        </>
+          <Library
+            library={library}
+            handleDeleteSessions={handleDeleteSessions}
+            navigation={navigation}
+          />
       )}
 
       {/* Recommended sessions for the user */}

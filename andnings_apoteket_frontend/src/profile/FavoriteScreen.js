@@ -1,8 +1,9 @@
 import React from "react";
 import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
-import NoData from "../regular/NoData";
+import NoData from "../regular/NoResult";
 import { LoadingScreen } from "../regular/LoadingSreen";
 import ListItem from "../regular/ListItem";
+import NoResult from "../regular/NoResult";
 
 const FavoriteScreen = ({
   setSelectedList,
@@ -20,7 +21,7 @@ const FavoriteScreen = ({
   if (lists.length === 0) {
     return (
       <View style={styles.favorites}>
-        <NoData message="You haven't created any session lists." />
+        <NoResult message="You haven't created any session lists." />
       </View>
     );
   }
