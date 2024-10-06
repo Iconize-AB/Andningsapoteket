@@ -53,6 +53,7 @@ import SettingsScreen from "./src/profile/SettingsScreen";
 import NotificationScreen from "./src/profile/notifications/NotificationScreen";
 import SubscriptionModal from "./src/subscription/SubscriptionModal";
 import LanguageScreen from "./src/profile/language/LanguageScreen";
+import SupportScreen from "./src/support/SupportScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -216,6 +217,12 @@ function Root({ userDetails, refreshUserProfile, navigation }) {
         options={{ tabBarButton: () => null }}
       >
         {(props) => <SettingsScreen {...props} userDetails={userDetails} />}
+      </Tab.Screen>
+      <Tab.Screen
+        name="SupportScreen"
+        options={{ tabBarButton: () => null }}
+      >
+        {(props) => <SupportScreen {...props} userDetails={userDetails} />}
       </Tab.Screen>
       <Tab.Screen
         name="LanguageScreen"

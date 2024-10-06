@@ -11,7 +11,9 @@ const EnhancedTextInput = ({
   errorMessage = "",
   secureTextEntry = false,
   keyboardType = "default",
+  outlined = false,
   customStyle = {},
+  customLabelStyle = {},
 }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(secureTextEntry); // Toggle for showing/hiding password
   
@@ -28,11 +30,11 @@ const EnhancedTextInput = ({
 
   return (
     <View style={styles.container}>
-      <EnhancedText style={styles.label}>
+      <EnhancedText style={[styles.label, customLabelStyle]}>
         {placeholder}
       </EnhancedText>
       <TextInput
-        style={[styles.input, customStyle]}
+        style={[styles.input, customStyle, outlined && styles.outlinedInput]}
         value={value}
         onChangeText={handleChangeText}
         placeholder={placeholder}
@@ -77,6 +79,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingLeft: 10,
     paddingRight: 40,
+  },
+  outlinedInput: {
+    borderColor: "#000",
+    borderWidth: 2,
   },
   label: {
     fontSize: 15,
