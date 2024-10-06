@@ -40,7 +40,7 @@ const TermsAndConditionPopup = ({ setAccepted, onClose }) => {
       const token = await AsyncStorage.getItem("userToken");
 
       const response = await fetch(
-        "https://primal-backend-851afa707cbd.herokuapp.com/users/accept-terms",
+        "http://localhost:3000/users/accept-terms",
         {
           method: "POST",
           headers: {

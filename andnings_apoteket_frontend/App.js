@@ -50,11 +50,21 @@ import JourneyOverviewScreen from "./src/challenge/JourneyOverviewScreen";
 import SelectedCategoryScreen from "./src/categories/SelectedCategoryScreen";
 import BreathworkPlaylistDetails from "./src/favorites/BreathworkPlaylistDetails";
 import SettingsScreen from "./src/profile/SettingsScreen";
+import NotificationScreen from "./src/profile/notifications/NotificationScreen";
+import SubscriptionModal from "./src/subscription/SubscriptionModal";
+import LanguageScreen from "./src/profile/language/LanguageScreen";
 
 const Drawer = createDrawerNavigator();
 
 function DrawerNavigator({ userDetails, refreshUserProfile, handleSignOut }) {
   const [showTerms, setShowTerms] = useState(false);
+  const [showPlusMembership, setShowPlusMembership] = useState(false);
+
+  if (showPlusMembership) {
+    return (
+      <SubscriptionModal isModalVisible={showPlusMembership} setModalVisible={setShowPlusMembership}/>
+    )
+  }
 
   if (showTerms) {
     return <TermsAndConditionPopup onClose={() => setShowTerms(false)} />;
@@ -65,6 +75,7 @@ function DrawerNavigator({ userDetails, refreshUserProfile, handleSignOut }) {
       drawerContent={(props) => (
         <CustomDrawerContent
           {...props}
+          setShowPlusMembership={setShowPlusMembership}
           userDetails={userDetails}
           setShowTerms={setShowTerms}
           handleSignOut={handleSignOut}
@@ -78,6 +89,7 @@ function DrawerNavigator({ userDetails, refreshUserProfile, handleSignOut }) {
         {(props) => (
           <Root
             {...props}
+            setShowPlusMembership={setShowPlusMembership}
             userDetails={userDetails}
             refreshUserProfile={refreshUserProfile}
           />
@@ -100,7 +112,7 @@ function Root({ userDetails, refreshUserProfile, navigation }) {
           right: 20,
           elevation: 5,
           backgroundColor: "#FFFFFF",
-          borderRadius: 30, // Rounded navigation bar
+          borderRadius: 30,
           height: 65,
           paddingBottom: 0,
           justifyContent: "center",
@@ -203,10 +215,22 @@ function Root({ userDetails, refreshUserProfile, navigation }) {
         name="Settings"
         options={{ tabBarButton: () => null }}
       >
-        {(props) => <SettingsScreen {...props} />}
+        {(props) => <SettingsScreen {...props} userDetails={userDetails} />}
       </Tab.Screen>
-      <Tab.Screen name="Profile" options={{ tabBarButton: () => null }}>
-        {(props) => <ProfileScreen {...props} />}
+      <Tab.Screen
+        name="LanguageScreen"
+        options={{ tabBarButton: () => null }}
+      >
+        {(props) => <LanguageScreen {...props} userDetails={userDetails} />}
+      </Tab.Screen>
+      <Tab.Screen
+        name="NotificationScreen"
+        options={{ tabBarButton: () => null }}
+      >
+        {(props) => <NotificationScreen {...props} />}
+      </Tab.Screen>
+      <Tab.Screen name="ProfileScreen" options={{ tabBarButton: () => null }}>
+        {(props) => <ProfileScreen {...props} userDetails={userDetails} />}
       </Tab.Screen>
       <Tab.Screen name="Condition">
         {(props) => <ConditionScreen {...props} />}

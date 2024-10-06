@@ -26,7 +26,9 @@ const CustomDrawerContent = (props) => {
     >
       <View style={styles.header}>
         <Text style={styles.username}>Philip</Text>
-        <TouchableOpacity onPress={() => props.navigation.navigate("Profile")}>
+        <TouchableOpacity
+          onPress={() => props.navigation.navigate("ProfileScreen")}
+        >
           <Text style={styles.username}>Profile</Text>
         </TouchableOpacity>
       </View>
@@ -117,18 +119,23 @@ const CustomDrawerContent = (props) => {
         <FontAwesomeIcon icon={faFileAlt} size={18} color="#FFF" />
         <Text style={styles.itemText}>Dela andningsapoteket</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={styles.drawerItem} onPress={() => props.setShowPlusMembership(true)}>
+        <FontAwesomeIcon icon={faFileAlt} size={18} color="#FFF" />
+        <Text style={styles.itemText}>Plus membership</Text>
+      </TouchableOpacity>
       <TouchableOpacity
         style={styles.drawerItem}
-        onPress={() => props.navigation.navigate("Settings")}
+        onPress={() =>
+          props.navigation.navigate("Settings", {
+            setShowTerms: props.setShowTerms,
+          })
+        }
       >
         <FontAwesomeIcon icon={faCog} size={18} color="#FFF" />
         <Text style={styles.itemText}>Settings</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.drawerItem}
-        onPress={signOut}
-      >
+      <TouchableOpacity style={styles.drawerItem} onPress={signOut}>
         <FontAwesomeIcon icon={faSignOutAlt} size={18} color="#FFF" />
         <Text style={styles.itemText}>Logga ut</Text>
       </TouchableOpacity>

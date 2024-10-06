@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const token = await AsyncStorage.getItem("userToken");
       const response = await fetch(
-        "https://primal-backend-851afa707cbd.herokuapp.com/users/profile",
+        "http://localhost:3000/profileRoute/fetch-profile",
         {
           method: "GET",
           headers: {
@@ -33,27 +33,13 @@ export const AuthProvider = ({ children }) => {
 
       if (response.ok) {
         setUserDetails({
-          name: json.name,
+          fullName: json.fullName,
           email: json.email,
-          userInfoId: json.userInfoId,
-          isActivated: json.isActivated,
-          emailNotification: json.emailNotification,
-          pushNotification: json.pushNotification,
-          trainingListCount: json.trainingListCount,
-          diaryEntriesCount: json.diaryEntriesCount,
-          recipeListsCount: json.recipeListsCount,
-          viewedAnalyticsIntroduction: json.viewedAnalyticsIntroduction,
-          subscription: json.subscription,
-          viewedReceipeListIntroduction: json.viewedReceipeListIntroduction,
-          viewedRecoveryIntroduction: json.viewedRecoveryIntroduction,
-          viewedWorkInIntroduction: json.viewedWorkInIntroduction,
-          viewedWorkoutIntroduction: json.viewedWorkoutIntroduction,
-          viewedWelcomePopup: json.viewedWelcomePopup,
-          viewedNutritionIntroduction: json.viewedNutritionIntroduction,
-          userCategories: json.categories,
-          acceptedTermsAndCondition: json.acceptedTermsAndCondition,
-          avatar: json.profileImageUrl,
-          batches: json.batches,
+          id: json.id,
+          language: json.language,
+          avatar: json.profile.profileImageUrl,
+          emailNotification: json.profile.emailNotifications,
+          pushNotification: json.profile.pushNotifications,
         });
         await AsyncStorage.setItem("userDetails", JSON.stringify(json));
       } else {
@@ -88,6 +74,7 @@ export const AuthProvider = ({ children }) => {
       value={{
         userToken,
         userDetails,
+        setUserDetails,
         setUserToken,
         refreshUserProfile,
         signIn,

@@ -13,6 +13,21 @@ export async function pushNotificationSettingsChange(token, newSetting) {
   return response;
 }
 
+export async function changeLanguageSetting(token, language) {
+  const response = await fetch(
+    "http://localhost:3000/settingsRoute/user/change-language-setting",
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ language }),
+    }
+  );
+  return response;
+}
+
 export async function emailNotificationSettingsChange(token, newSetting) {
   const response = await fetch(
     "http://localhost:3000/settingsRoute/user/toggle-email-notification",
