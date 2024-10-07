@@ -1,6 +1,6 @@
 export async function Signin(email, password) {
     const response = await fetch(
-      `http://localhost:3000/userRoute/signin`,
+      `http://localhost:3000/v1/user/signin`,
       {
         method: "POST",
         headers: {
@@ -17,7 +17,7 @@ export async function Signin(email, password) {
   
   export async function Register(email, password, identityToken) {
     const response = await fetch(
-      `http://localhost:3000/userRoute/register`,
+      `http://localhost:3000/v1/user/register`,
       {
         method: "POST",
         headers: {
@@ -35,7 +35,7 @@ export async function Signin(email, password) {
   
   export async function ResetPassword(email) {
     const response = await fetch(
-      `http://localhost:3000/userRoute/request-reset`,
+      `http://localhost:3000/v1/user/request-reset`,
       {
         method: "POST",
         headers: {
@@ -51,7 +51,7 @@ export async function Signin(email, password) {
   
   export async function DeleteUser(token, userId) {
     const response = await fetch(
-      `http://localhost:3000/userRoute/delete-user`,
+      `http://localhost:3000/v1/user/delete-user`,
       {
         method: "DELETE",
         headers: {
@@ -68,7 +68,7 @@ export async function Signin(email, password) {
 
   export async function SetNewPassword(email, newPassword) {
     const response = await fetch(
-      `http://localhost:3000/userRoute/set-new-password`,
+      `http://localhost:3000/v1/user/set-new-password`,
       {
         method: "POST",
         headers: {
@@ -85,7 +85,7 @@ export async function Signin(email, password) {
   
   export async function VerifyResetCode(email, code) {
     const response = await fetch(
-      `http://localhost:3000/userRoute/verify-reset-code`,
+      `http://localhost:3000/v1/user/verify-reset-code`,
       {
         method: "POST",
         headers: {
@@ -102,7 +102,7 @@ export async function Signin(email, password) {
   
   export async function VerifyAccount(email, code) {
     const response = await fetch(
-      `http://localhost:3000/userRoute/verify-code`,
+      `http://localhost:3000/v1/user/verify-code`,
       {
         method: "POST",
         headers: {

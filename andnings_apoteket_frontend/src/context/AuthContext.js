@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const token = await AsyncStorage.getItem("userToken");
       const response = await fetch(
-        "http://localhost:3000/profileRoute/fetch-profile",
+        "http://localhost:3000/v1/profile/fetch-profile",
         {
           method: "GET",
           headers: {

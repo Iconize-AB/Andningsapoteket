@@ -1,6 +1,6 @@
 export async function GetMostPlayedSessions(token) {
     const response = await fetch(
-      "http://localhost:3000/breathworkRoute/videos/most-watched",
+      "http://localhost:3000/v1/sessions/most-watched",
       {
         method: "GET",
         headers: {

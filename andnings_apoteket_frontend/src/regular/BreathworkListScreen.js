@@ -26,7 +26,7 @@ const BreathWorkListScreen = ({ navigation }) => {
           console.log('Error fetching breathwork sessions:', response.statusText);
         }
       } catch (error) {
-        console.error("Failed to fetch breathwork sessions", error);
+        console.error("Failed to fetch breathwork sessions111", error);
       } finally {
         setLoading(false);
       }

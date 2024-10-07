@@ -1,6 +1,6 @@
 export async function FetchUserProfile(token) {
   const response = await fetch(
-    "http://localhost:3000/profileRoute/fetch-profile",
+    "http://localhost:3000/v1/profile/fetch-profile",
     {
       method: "GET",
       headers: {
@@ -14,7 +14,7 @@ export async function FetchUserProfile(token) {
 
 export async function ChangeUserDetails(token, userDetails) {
   const response = await fetch(
-    "http://localhost:3000/profileRoute/update/user",
+    "http://localhost:3000/v1/profile/update/user",
     {
       method: "PUT",
       headers: {

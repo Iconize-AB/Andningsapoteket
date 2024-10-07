@@ -1,6 +1,7 @@
 export async function AddVideoToPlaylist(token, listName, listId, videoId) {
+  console.log('token, listName, listId, videoId', token, listName, listId, videoId);
   const response = await fetch(
-    "http://localhost:3000/playlistsRoute/lists/add-video",
+    "http://localhost:3000/v1/playlists/add-video",
     {
       method: "POST",
       headers: {
@@ -21,7 +22,7 @@ export async function AddVideoToPlaylist(token, listName, listId, videoId) {
 
 export async function FetchUserPlaylists(token) {
   const response = await fetch(
-    "http://localhost:3000/playlistsRoute/fetch/lists",
+    "http://localhost:3000/v1/playlists/fetch",
     {
       method: "GET",
       headers: {
@@ -43,7 +44,7 @@ export async function FetchUserPlaylists(token) {
 }
 
 export async function FetchUserLibrary(token) {
-  const response = await fetch("http://localhost:3000/libraryRoute/library", {
+  const response = await fetch("http://localhost:3000/v1/library/fetch", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -61,7 +62,7 @@ export async function FetchUserLibrary(token) {
 
 export async function AddVideoToLibrary(token, videoId) {
   const response = await fetch(
-    "http://localhost:3000/libraryRoute/library/add-video",
+    "http://localhost:3000/v1/library/add-video",
     {
       method: "POST",
       headers: {
@@ -82,7 +83,7 @@ export async function AddVideoToLibrary(token, videoId) {
 
 export async function DeleteUserPlaylist(token, playlistId) {
   const response = await fetch(
-    `http://localhost:3000/playlistsRoute/lists/delete/${playlistId}`,
+    `http://localhost:3000/v1/playlists/delete/${playlistId}`,
     {
       method: "DELETE",
       headers: {
@@ -102,7 +103,7 @@ export async function DeleteUserPlaylist(token, playlistId) {
 
 export async function DeleteUserLibrarySessions(token, selectedSessionIds) {
   const response = await fetch(
-    "http://localhost:3000/libraryRoute/library/delete",
+    "http://localhost:3000/v1/library/delete",
     {
       method: "DELETE",
       headers: {

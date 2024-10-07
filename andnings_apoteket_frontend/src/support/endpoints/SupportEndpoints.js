@@ -1,6 +1,6 @@
 export async function sendSupportRequest(token, name, email, subject, message) {
   const response = await fetch(
-    "http://localhost:3000/supportRoute/send-support-request",
+    "http://localhost:3000/v1/support/send-support-request",
     {
       method: "POST",
       headers: {
