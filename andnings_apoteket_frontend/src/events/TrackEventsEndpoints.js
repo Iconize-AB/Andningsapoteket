@@ -1,6 +1,6 @@
 export async function TrackGlobalWatchedSessionEvent(token, videoId) {
     const response = await fetch(
-      `http://localhost:3000/eventsRoute/videos/watch`,
+      `http://localhost:3000/eventsRoute/session/watch`,
       {
         method: "POST",
         headers: {

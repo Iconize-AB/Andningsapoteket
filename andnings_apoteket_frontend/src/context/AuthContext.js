@@ -37,6 +37,7 @@ export const AuthProvider = ({ children }) => {
           email: json.email,
           id: json.id,
           language: json.language,
+          lastActive: json.lastActive,
           avatar: json.profile.profileImageUrl,
           emailNotification: json.profile.emailNotifications,
           pushNotification: json.profile.pushNotifications,
