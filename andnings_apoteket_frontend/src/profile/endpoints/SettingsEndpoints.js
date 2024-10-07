@@ -1,6 +1,6 @@
 export async function pushNotificationSettingsChange(token, newSetting) {
   const response = await fetch(
-    "http://localhost:3000/settings/user/toggle-push-notification",
+    "http://localhost:3000/v1/settings/user/toggle-push-notification",
     {
       method: "PUT",
       headers: {
@@ -15,7 +15,7 @@ export async function pushNotificationSettingsChange(token, newSetting) {
 
 export async function changeLanguageSetting(token, language) {
   const response = await fetch(
-    "http://localhost:3000/settings/user/change-language-setting",
+    "http://localhost:3000/v1/settings/user/change-language-setting",
     {
       method: "PUT",
       headers: {
@@ -25,12 +25,13 @@ export async function changeLanguageSetting(token, language) {
       body: JSON.stringify({ language }),
     }
   );
+  console.log('response', response);
   return response;
 }
 
 export async function emailNotificationSettingsChange(token, newSetting) {
   const response = await fetch(
-    "http://localhost:3000/settings/user/toggle-email-notification",
+    "http://localhost:3000/v1/settings/user/toggle-email-notification",
     {
       method: "PUT",
       headers: {
