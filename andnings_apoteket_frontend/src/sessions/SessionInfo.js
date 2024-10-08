@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faHeadphonesAlt, faHeart } from "@fortawesome/free-solid-svg-icons";
 
 const SessionInfo = ({ selectedVideo, sessionStats }) => {
+  console.log("sessionStats", sessionStats);
   return (
     <View style={styles.videoInfo}>
       <View style={styles.videoInfoRow}>
@@ -18,11 +19,13 @@ const SessionInfo = ({ selectedVideo, sessionStats }) => {
       <View style={styles.statsRow}>
         <View style={styles.stat}>
           <FontAwesomeIcon icon={faHeart} style={styles.statIcon} />
-          <EnhancedText style={styles.statText}>24.234 Libraries</EnhancedText>
+          <EnhancedText>
+            Total Watches: {sessionStats?.totalWatches}
+          </EnhancedText>
         </View>
         <View style={styles.stat}>
           <FontAwesomeIcon icon={faHeadphonesAlt} style={styles.statIcon} />
-          <EnhancedText style={styles.statText}>{sessionStats} Listenings</EnhancedText>
+          <EnhancedText>Likes: {sessionStats?.likeCount}</EnhancedText>
         </View>
       </View>
     </View>

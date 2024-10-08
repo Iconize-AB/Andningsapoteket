@@ -36,19 +36,13 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [sessionStats, setSessionStats] = useState(selectedVideo?.totalWatches);
+  const [sessionStats, setSessionStats] = useState({
+    likeCount: selectedVideo?.likeCount || 0,
+    totalWatches: selectedVideo?.totalWatches || 0,
+  });
   const [isMoreVisible, setIsMoreVisible] = useState(false);
   const [listName, setListName] = useState("");
   const { t } = useTranslation();
-
-  const categories = [
-    "Sleep",
-    "Restful Sleep",
-    "Deep Sleep",
-    "Breathing",
-    "Progressive Muscle Relaxation",
-    "Parasympathetic Nervous System",
-  ];
 
   const handlePlay = async () => {
     try {
@@ -68,13 +62,15 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
 
       if (response.status === 200) {
         if (data?.totalWatches) {
-          setSessionStats(data.totalWatches);
+          setSessionStats((prevStats) => ({
+            ...prevStats,
+            totalWatches: data.totalWatches,
+          }));
         }
+        setIsPlaying(true);
       } else {
         console.log("Watch session failed to be tracked");
       }
-
-      setIsPlaying(true);
     } catch (error) {
       console.error("Error tracking watch session:", error);
     }
@@ -100,7 +96,15 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
 
       const response = await AddVideoToLibrary(token, selectedVideo.id);
 
+      const data = await response.json();
+
       if (response.status === 200) {
+        if (data) {
+          setSessionStats((prevStats) => ({
+            ...prevStats,
+            likeCount: data.likeCount,
+          }));
+        }
         Toast.show({
           type: "success",
           text1: "Great!",
@@ -236,12 +240,12 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
             <FontAwesomeIcon icon={faTimes} size={30} color="#FFF" />
           </TouchableOpacity>
           <Video
-            source={{ uri: selectedVideo.videoUrl }}
+            source={{ uri: selectedVideo.url }}
             rate={1.0}
             volume={1.0}
             isMuted={false}
             resizeMode="cover"
-            shouldPlay
+            shouldPlay={isPlaying}
             style={styles.videoPlayer}
             useNativeControls
           />
