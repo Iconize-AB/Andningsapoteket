@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, FlatList, StyleSheet } from "react-native";
+import { View, FlatList, StyleSheet, Dimensions } from "react-native";
 import { FetchSessionsByCategoryName } from "./endpoints/BreathworkByCategoryEndpoints";
 import EnhancedText from "../regular/EnhancedText";
 import colors from "../common/colors/Colors";
@@ -34,8 +34,19 @@ const SelectedCategoryScreen = ({ navigation, route }) => {
     fetchSessions();
   }, [category]);
 
-  const renderSessionItem = ({ item }) => (
-    <VideoItem session={item} key={item?.id} size="small" handlePlayNow={() => navigation.navigate("IndividualBreathworkSession", { session: item })} />
+  const renderSessionItem = ({ item, index }) => (
+    <View style={styles.itemWrapper}>
+      <VideoItem 
+        session={{
+          ...item,
+          duration: `${item.duration} MIN`,
+          category: item.category.toUpperCase()
+        }} 
+        key={item?.id} 
+        size="small" 
+        handlePlayNow={() => navigation.navigate("IndividualBreathworkSession", { session: item })} 
+      />
+    </View>
   );
 
   if (sessions.length === 0) {
@@ -53,32 +64,33 @@ const SelectedCategoryScreen = ({ navigation, route }) => {
       ) : (
         <FlatList
           data={sessions.items}
-          numColumns={2} // Ensure there are 2 items per row
           renderItem={renderSessionItem}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.videoList}
           showsVerticalScrollIndicator={false}
-          columnWrapperStyle={styles.row}
+          numColumns={2}
         />
       )}
     </View>
   );
 };
 
+const { width } = Dimensions.get('window');
+const itemWidth = (width - 30) / 2; // 30 is the total horizontal padding
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
     marginBottom: 100,
     paddingTop: 20,
     backgroundColor: colors.background,
   },
   videoList: {
-    justifyContent: "center", // Center the content
-    alignItems: "center",
+    alignItems: "flex-start",
   },
-  row: {
-    justifyContent: "space-between", // Ensure space between items in each row
+  itemWrapper: {
+    width: itemWidth,
     marginBottom: 20,
   },
 });
