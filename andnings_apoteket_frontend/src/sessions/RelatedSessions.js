@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, ScrollView, StyleSheet } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import EnhancedText from "../regular/EnhancedText";
 import testImage from "../resources/test_image.jpg";
 import VideoItem from "../regular/VideoItem";
+import { FetchRelatedSessionsList } from "./endpoints/BreatworkSessionActionsEndpoints";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const mostPlayedJourneyData = [
   {
@@ -30,13 +32,30 @@ const mostPlayedJourneyData = [
   },
 ];
 
-const RelatedSessions = ({ navigateToOption }) => {
+const RelatedSessions = ({ sessionId }) => {
   const { t } = useTranslation();
   const navigation = useNavigation();
+  const [relatedSessions, setRelatedSessions] = useState([]);
+  useEffect(() => {
+    const fetchRelatedSessions = async () => {
+      try {
+        const token = await AsyncStorage.getItem("userToken");
+        const response = await FetchRelatedSessionsList(token, sessionId);
+        if (response?.items) {
+          setRelatedSessions(response.items);
+        } else {
+          console.log('Error fetching related sessions:', response.statusText);
+        }
+      } catch (error) {
+        console.error("Failed to fetch breathwork sessions", error);
+      }
+    };
+    fetchRelatedSessions();
+  }, []);
 
   const handlePlayNow = (session) => {
     navigation.navigate("IndividualBreathworkSession", {
-      selectedVideo: session,
+      session: session,
     });
   };
 
@@ -50,7 +69,7 @@ const RelatedSessions = ({ navigateToOption }) => {
         showsHorizontalScrollIndicator={false}
         style={styles.horizontalScroll}
       >
-        {mostPlayedJourneyData.map((session) => (
+        {relatedSessions.map((session) => (
           <VideoItem session={session} handlePlayNow={handlePlayNow} />
         ))}
       </ScrollView>

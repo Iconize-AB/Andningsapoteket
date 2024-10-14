@@ -5,46 +5,46 @@ import { useRoute } from "@react-navigation/native";
 import colors from "../common/colors/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import VideoItem from "./VideoItem";
-import { FetchVideosByCondition } from "../categories/endpoints/BreathworkByCategoryEndpoints";
+import { FetchSessionsByCondition } from "../categories/endpoints/BreathworkByCategoryEndpoints";
 
 const BreathWorkListScreen = ({ navigation }) => {
   const route = useRoute();
   const { condition } = route.params;
 
-  const [videos, setVideos] = useState([]);
+  const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchVideos = async () => {
+    const fetchSessions = async () => {
       try {
         const token = await AsyncStorage.getItem("userToken");
-        const response = await FetchVideosByCondition(token, condition);
+        const response = await FetchSessionsByCondition(token, condition);
         const data = await response.json();
         if (data) {
-          setVideos(data?.items);
+          setSessions(data?.items);
         } else {
           console.log('Error fetching breathwork sessions:', response.statusText);
         }
       } catch (error) {
-        console.error("Failed to fetch breathwork sessions111", error);
+        console.error("Failed to fetch breathwork sessions", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchVideos();
+    fetchSessions();
   }, [condition]);
 
-  const renderVideoItem = ({ item }) => (
-    <VideoItem session={item} key={item.id} size="small" handlePlayNow={() => navigation.navigate("IndividualBreathworkSession", { selectedVideo: item })} />
+  const renderSessionItem = ({ item }) => (
+    <VideoItem session={item} key={item.id} size="small" handlePlayNow={() => navigation.navigate("IndividualBreathworkSession", { session: item })} />
   );
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={videos}
+        data={sessions}
         numColumns={2} // Ensure there are 2 items per row
-        renderItem={renderVideoItem}
+        renderItem={renderSessionItem}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.videoList}
         columnWrapperStyle={styles.row}

@@ -17,14 +17,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import SubscriptionModal from "../subscription/SubscriptionModal";
 
 const SettingsScreen = ({
-  handleOnTermsPress,
   navigation,
   userDetails,
   setUserDetails,
-  route
+  setShowTerms,
 }) => {
   const [isModalVisible, setModalVisible] = useState(false);
-  const { setShowTerms } = route.params;
 
   const handleOnDelete = async () => {
     Alert.alert(

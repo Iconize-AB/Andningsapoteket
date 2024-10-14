@@ -10,7 +10,7 @@ const ListItem = ({ item }) => {
         <EnhancedText style={styles.text}>{item?.name}</EnhancedText>
       </View>
       <View style={styles.options}>
-        <EnhancedText style={styles.text}>{item?.Videos?.length}</EnhancedText>
+        <EnhancedText style={styles.text}>{item?.Sessions?.length}</EnhancedText>
         <FontAwesomeIcon icon={faCaretRight} size={20} color="#000" />
       </View>
     </View>

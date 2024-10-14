@@ -25,7 +25,6 @@ export async function changeLanguageSetting(token, language) {
       body: JSON.stringify({ language }),
     }
   );
-  console.log('response', response);
   return response;
 }
 

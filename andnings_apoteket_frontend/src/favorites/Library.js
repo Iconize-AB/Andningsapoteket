@@ -23,11 +23,11 @@ const Library = ({ library, handleDeleteSessions, navigation }) => {
     setSelectedSessions([]);
   };
 
-  const handleSelectSession = (videoId) => {
-    if (selectedSessions.includes(videoId)) {
-      setSelectedSessions(selectedSessions.filter((id) => id !== videoId));
+  const handleSelectSession = (sessionId) => {
+    if (selectedSessions.includes(sessionId)) {
+      setSelectedSessions(selectedSessions.filter((id) => id !== sessionId));
     } else {
-      setSelectedSessions([...selectedSessions, videoId]);
+      setSelectedSessions([...selectedSessions, sessionId]);
     }
   };
 
@@ -36,6 +36,8 @@ const Library = ({ library, handleDeleteSessions, navigation }) => {
     setSelectedSessions([]);
     setIsEditing(false);
   };
+
+  console.log('##session', library?.sessions);
 
   return (
     <View style={styles.container}>
@@ -57,9 +59,9 @@ const Library = ({ library, handleDeleteSessions, navigation }) => {
       </View>
 
       {/* Video Item List */}
-      {library?.videos?.length > 0 ? (
+      {library?.sessions?.length > 0 ? (
         <ScrollView style={styles.listContainer}>
-          {library.videos.map((session, index) => (
+          {library.sessions.map((session, index) => (
             <View key={index} style={styles.videoItemContainer}>
               {isEditing && (
                 <TouchableOpacity
@@ -67,7 +69,7 @@ const Library = ({ library, handleDeleteSessions, navigation }) => {
                 >
                   <Icon
                     name={
-                      selectedSessions.includes(session.video.id)
+                      selectedSessions.includes(session.session.id)
                         ? "checkbox"
                         : "square-outline"
                     }
@@ -77,15 +79,15 @@ const Library = ({ library, handleDeleteSessions, navigation }) => {
                 </TouchableOpacity>
               )}
               <Image
-                source={{ uri: session.video.imageUrl }}
+                source={{ uri: session.session.imageUrl }}
                 style={styles.videoImage}
               />
               <View style={styles.videoInfo}>
                 <EnhancedText style={styles.videoTitle}>
-                  {session.video.title}
+                  {session.session.title}
                 </EnhancedText>
                 <EnhancedText style={styles.videoSubtitle}>
-                  {session.video.description}
+                  {session.session.description}
                 </EnhancedText>
               </View>
               <TouchableOpacity style={styles.addButton}>

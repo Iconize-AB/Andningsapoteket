@@ -1,219 +1,175 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { DrawerContentScrollView } from "@react-navigation/drawer";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import React, { useState } from 'react';
 import {
-  faUser,
-  faChevronDown,
-  faChevronUp,
-  faSignOutAlt,
-  faFileAlt,
-  faCheckCircle,
-  faCog,
-} from "@fortawesome/free-solid-svg-icons";
-import Svg, { Path } from "react-native-svg";
-import { useAuth } from "../context/AuthContext";
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  ScrollView,
+} from 'react-native';
+import { DrawerContentScrollView } from '@react-navigation/drawer';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useTranslation } from 'react-i18next';
+import ShareAppModal from './ShareAppModal';
 
 const CustomDrawerContent = (props) => {
-  const [isProfileExpanded, setIsProfileExpanded] = useState(false);
-  const [isLanguageExpanded, setIsLanguageExpanded] = useState(false);
-  const { signOut } = useAuth();
+  const { t } = useTranslation();
+  const { navigation, userDetails, setShowPlusMembership } = props;
+  const [isShareAppModalVisible, setShareAppModalVisible] = useState(false);
+
+  const DrawerItem = ({ icon, label, onPress, expandable, expanded, children }) => (
+    <View>
+      <TouchableOpacity style={styles.drawerItem} onPress={onPress}>
+        <Icon name={icon} size={24} color="#B3B3B3" style={styles.icon} />
+        <Text style={styles.drawerItemText}>{label}</Text>
+        {expandable && (
+          <Icon
+            name={expanded ? 'chevron-up' : 'chevron-down'}
+            size={24}
+            color="#B3B3B3"
+            style={styles.expandIcon}
+          />
+        )}
+      </TouchableOpacity>
+      {expanded && children}
+    </View>
+  );
 
   return (
-    <DrawerContentScrollView
-      {...props}
-      contentContainerStyle={styles.drawerContainer}
-    >
-      <View style={styles.header}>
-        <Text style={styles.username}>Philip</Text>
-        <TouchableOpacity
-          onPress={() => props.navigation.navigate("ProfileScreen")}
-        >
-          <Text style={styles.username}>Profile</Text>
-        </TouchableOpacity>
-      </View>
-      {/* Menu Items */}
-      <TouchableOpacity style={styles.drawerItem}>
-        <FontAwesomeIcon icon={faCheckCircle} size={18} color="#FFF" />
-        <Text style={styles.itemText}>Checka in</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.drawerItem}>
-        <FontAwesomeIcon icon={faFileAlt} size={18} color="#FFF" />
-        <Text style={styles.itemText}>Allmänna villkor</Text>
-      </TouchableOpacity>
-
-      {/* Profile Section with Submenu */}
-      <TouchableOpacity
-        style={[styles.drawerItem, styles.expandableItem]}
-        onPress={() => setIsProfileExpanded(!isProfileExpanded)}
-      >
-        <View style={styles.expandableWrapper}>
-          <FontAwesomeIcon icon={faUser} size={18} color="#FFF" />
-          <Text style={styles.itemText}>Profil</Text>
+    <SafeAreaView style={styles.container}>
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>{t('Philip')}</Text>
         </View>
-        <FontAwesomeIcon
-          icon={isProfileExpanded ? faChevronUp : faChevronDown}
-          size={18}
-          color="#FFF"
-        />
-      </TouchableOpacity>
-
-      {isProfileExpanded && (
-        <View style={styles.subMenu}>
-          {/* Custom SVG Curved Line */}
-          <Svg height="120" width="40" style={styles.curvedLine}>
-            <Path
-              d="M20 0 C10 20, 10 40, 20 60 C30 80, 30 100, 20 120"
-              stroke="#FFFFFF"
-              strokeWidth="2"
-              fill="none"
-            />
-          </Svg>
-
-          <TouchableOpacity style={styles.subMenuItem}>
-            <Text style={styles.subMenuText}>Inställningar</Text>
-          </TouchableOpacity>
-
-          {/* Language Section with Dropdown */}
-          <TouchableOpacity
-            style={[styles.subMenuItem, styles.expandableItem]}
-            onPress={() => setIsLanguageExpanded(!isLanguageExpanded)}
+        <DrawerContentScrollView {...props} contentContainerStyle={styles.drawerContent}>
+          <DrawerItem 
+            icon="check-circle-outline" 
+            label={t('Checka in')} 
+            onPress={() => navigation.navigate('CheckIn')} 
+          />
+          <DrawerItem 
+            icon="file-document-outline"
+            label={t('Allmänna villkor')}
+            onPress={() => navigation.navigate('Terms')}
+          />
+          <DrawerItem
+            icon="account-outline"
+            label={t('Profil')}
+            expandable
+            expanded={true}
+            onPress={() => navigation.navigate('ProfileScreen')}
           >
-            <Text style={styles.subMenuText}>Svenska</Text>
-            <FontAwesomeIcon
-              icon={isLanguageExpanded ? faChevronUp : faChevronDown}
-              size={16}
-              color="#B0C4DE"
-            />
-          </TouchableOpacity>
-
-          {isLanguageExpanded && (
-            <View style={styles.languageOptions}>
-              <TouchableOpacity style={styles.languageOptionItem}>
-                <Text style={styles.languageOptionText}>Svenska</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.languageOptionItem}>
-                <Text style={styles.languageOptionText}>English</Text>
-              </TouchableOpacity>
+            <View style={styles.subMenu}>
+              <DrawerItem 
+                icon="cog-outline" 
+                label={t('Inställningar')} 
+                onPress={() => navigation.navigate('Settings')} 
+              />
+              <DrawerItem
+                icon="translate"
+                label={userDetails?.language} 
+                onPress={() => navigation.navigate('LanguageScreen')} 
+              />
+              <DrawerItem
+                icon="bell-outline" 
+                label={t('Notifikationer')} 
+                onPress={() => navigation.navigate('NotificationScreen')} 
+              />
+              <DrawerItem 
+                icon="star-outline" 
+                label={t('Prenumeration')} 
+                onPress={() => setShowPlusMembership(true)} 
+              />
             </View>
-          )}
-
-          <TouchableOpacity style={styles.subMenuItem}>
-            <Text style={styles.subMenuText}>Notifikationer</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.subMenuItem}>
-            <Text style={styles.subMenuText}>Prenumeration</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-
-      <TouchableOpacity style={styles.drawerItem}>
-        <FontAwesomeIcon icon={faFileAlt} size={18} color="#FFF" />
-        <Text style={styles.itemText}>Nya sessions</Text>
-      </TouchableOpacity>
-
-      <View style={styles.divider} />
-
-      <TouchableOpacity style={styles.drawerItem}>
-        <FontAwesomeIcon icon={faFileAlt} size={18} color="#FFF" />
-        <Text style={styles.itemText}>Dela andningsapoteket</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.drawerItem} onPress={() => props.setShowPlusMembership(true)}>
-        <FontAwesomeIcon icon={faFileAlt} size={18} color="#FFF" />
-        <Text style={styles.itemText}>Plus membership</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.drawerItem}
-        onPress={() =>
-          props.navigation.navigate("Settings", {
-            setShowTerms: props.setShowTerms,
-          })
-        }
-      >
-        <FontAwesomeIcon icon={faCog} size={18} color="#FFF" />
-        <Text style={styles.itemText}>Settings</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.drawerItem} onPress={signOut}>
-        <FontAwesomeIcon icon={faSignOutAlt} size={18} color="#FFF" />
-        <Text style={styles.itemText}>Logga ut</Text>
-      </TouchableOpacity>
-    </DrawerContentScrollView>
+          </DrawerItem>
+          <DrawerItem 
+            icon="play-circle-outline" 
+            label={t('Nya sessions')} 
+            onPress={() => navigation.navigate('NewSessions')} 
+          />
+          <DrawerItem 
+            icon="cog-outline" 
+            label={t('Inställningar')} 
+            onPress={() => navigation.navigate('Settings')} 
+          />
+          <View style={styles.separator} />
+          <DrawerItem 
+            icon="share-variant-outline" 
+            label={t('Dela andningsapoteket')} 
+            onPress={() => {
+              setShareAppModalVisible(true);
+            }} 
+          />
+          <DrawerItem 
+            icon="logout" 
+            label={t('Logga ut')} 
+            onPress={() => {
+              // Handle logout logic here
+              // For example:
+              // logout();
+              navigation.navigate('Login');
+            }} 
+          />
+          <ShareAppModal 
+            isVisible={isShareAppModalVisible}
+            onClose={() => setShareAppModalVisible(false)}
+            onShare={(emails) => {
+              // Handle sharing logic here
+              console.log('Sharing with emails:', emails);
+              setShareAppModalVisible(false);
+            }}
+          />
+        </DrawerContentScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  drawerContainer: {
+  container: {
     flex: 1,
-    backgroundColor: "#1E4A61", // Darker blue background as per image
-    paddingTop: 0,
+    backgroundColor: '#1E3A4F',
+  },
+  scrollView: {
+    flex: 1,
   },
   header: {
-    padding: 20,
-    marginTop: 50,
-    backgroundColor: "#1E4A61", // Header background color
-    alignItems: "center",
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#2C4D66',
   },
-  username: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#FFF",
-    marginBottom: 10,
+  headerText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+  },
+  drawerContent: {
+    paddingTop: 16,
   },
   drawerItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    marginVertical: 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
   },
-  itemText: {
-    marginLeft: 10,
+  icon: {
+    marginRight: 16,
+  },
+  drawerItemText: {
     fontSize: 16,
-    color: "#FFF",
+    color: '#B3B3B3',
+    flex: 1,
   },
-  expandableItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  expandableWrapper: {
-    display: "flex",
-    flexDirection: "row",
+  expandIcon: {
+    marginLeft: 'auto',
   },
   subMenu: {
-    marginLeft: 40, // Submenu indentation
-    marginTop: -10, // Adjust margin for proper spacing
+    paddingLeft: 16,
   },
-  subMenuItem: {
-    paddingVertical: 8,
-  },
-  subMenuText: {
-    fontSize: 14,
-    color: "#B0C4DE", // Lighter color for submenu
-  },
-  languageOptions: {
-    marginLeft: 20, // Indent the language options further
-    marginTop: 5,
-  },
-  languageOptionItem: {
-    paddingVertical: 5,
-  },
-  languageOptionText: {
-    fontSize: 14,
-    color: "#B0C4DE", // Same color as other submenu items
-  },
-  divider: {
+  separator: {
     height: 1,
-    backgroundColor: "#B0C4DE", // Divider color
-    marginVertical: 15,
-    marginLeft: 20,
-  },
-  curvedLine: {
-    position: "absolute",
-    left: -40,
-    top: 5,
+    backgroundColor: '#2C4D66',
+    marginVertical: 8,
   },
 });
 

@@ -36,7 +36,7 @@ const MostPlayedJourneys = ({ navigateToOption }) => {
 
   const handlePlayNow = (session) => {
     navigation.navigate("IndividualBreathworkSession", {
-      selectedVideo: session,
+      session: session,
     });
   };
 

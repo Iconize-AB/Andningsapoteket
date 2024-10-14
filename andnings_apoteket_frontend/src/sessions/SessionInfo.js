@@ -4,8 +4,7 @@ import EnhancedText from "../regular/EnhancedText";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faHeadphonesAlt, faHeart } from "@fortawesome/free-solid-svg-icons";
 
-const SessionInfo = ({ selectedVideo, sessionStats }) => {
-  console.log("sessionStats", sessionStats);
+const SessionInfo = ({ session, sessionStats }) => {
   return (
     <View style={styles.videoInfo}>
       <View style={styles.videoInfoRow}>
@@ -13,7 +12,7 @@ const SessionInfo = ({ selectedVideo, sessionStats }) => {
       </View>
       <View>
         <EnhancedText style={styles.videoDescription}>
-          {selectedVideo.description}
+          {session.description}
         </EnhancedText>
       </View>
       <View style={styles.statsRow}>

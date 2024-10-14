@@ -5,9 +5,10 @@ import Toast from "react-native-toast-message";
 import { emailNotificationSettingsChange, pushNotificationSettingsChange } from "../endpoints/SettingsEndpoints";
 import EnhancedText from "../../regular/EnhancedText";
 import colors from "../../common/colors/Colors";
+import { useAuth } from "../../context/AuthContext";
 
-const NotificationScreen = ({ route }) => {
-  const { userDetails, setUserDetails } = route.params;
+const NotificationScreen = () => {
+  const {userDetails, setUserDetails} = useAuth();
   const [emailNotification, setEmailNotification] = useState(userDetails.emailNotification);
   const [pushNotification, setPushNotification] = useState(userDetails.pushNotification);
 
@@ -15,7 +16,7 @@ const NotificationScreen = ({ route }) => {
     const token = await AsyncStorage.getItem("userToken");
     const response = await emailNotificationSettingsChange(token, newSetting);
     if (response.ok) {
-      setEmailNotification(newSetting);
+      setEmailNotification(newSetting);A
       setUserDetails({ ...userDetails, emailNotification: newSetting });
     } else {
       Toast.show({

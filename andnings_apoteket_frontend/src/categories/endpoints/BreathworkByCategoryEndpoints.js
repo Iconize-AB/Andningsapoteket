@@ -1,4 +1,4 @@
-export async function FetchVideosByCategoryName(token, selectedCategory) {
+export async function FetchSessionsByCategoryName(token, selectedCategory) {
   const response = await fetch(
     `http://localhost:3000/v1/sessions/recordings?category=${selectedCategory}`,
     {
@@ -12,7 +12,7 @@ export async function FetchVideosByCategoryName(token, selectedCategory) {
   return response;
 }
 
-export async function FetchVideosByCondition(token, condition) {
+export async function FetchSessionsByCondition(token, condition) {
   const response = await fetch(
     `http://localhost:3000/v1/sessions/recordings/by-condition?condition=${condition}`,
     {

@@ -4,7 +4,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  Modal,
   ScrollView,
   Alert,
 } from "react-native";
@@ -30,15 +29,16 @@ import SessionInfo from "./SessionInfo";
 import { TrackGlobalWatchedSessionEvent } from "../events/TrackEventsEndpoints";
 import RelatedSessions from "./RelatedSessions";
 import Toast from "react-native-toast-message";
+import AudioPlayerModal from "../regular/AudioPlayerModal";
 
 const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
-  const { selectedVideo } = route.params;
+  const { session } = route.params;
   const [isPlaying, setIsPlaying] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [sessionStats, setSessionStats] = useState({
-    likeCount: selectedVideo?.likeCount || 0,
-    totalWatches: selectedVideo?.totalWatches || 0,
+    likeCount: session?.likeCount || 0,
+    totalWatches: session?.totalWatches || 0,
   });
   const [isMoreVisible, setIsMoreVisible] = useState(false);
   const [listName, setListName] = useState("");
@@ -53,10 +53,7 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
         return;
       }
 
-      const response = await TrackGlobalWatchedSessionEvent(
-        token,
-        selectedVideo.id
-      );
+      const response = await TrackGlobalWatchedSessionEvent(token, session.id);
 
       const data = await response.json();
 
@@ -94,7 +91,7 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
         return;
       }
 
-      const response = await AddVideoToLibrary(token, selectedVideo.id);
+      const response = await AddVideoToLibrary(token, session.id);
 
       const data = await response.json();
 
@@ -142,7 +139,7 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
       token,
       listName,
       listId,
-      selectedVideo.id
+      session.id
     );
     if (response.status === 200) {
       Alert.alert("Success", "Video saved to list");
@@ -166,7 +163,7 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
         style={styles.videoPreviewContainer}
         activeOpacity={0.8}
       >
-        <Image source={selectedVideo?.url} style={styles.previewImage} />
+        <Image source={session?.url} style={styles.previewImage} />
         <View style={styles.playIcon}>
           <FontAwesomeIcon icon={faPlayCircle} size={60} color="#fff" />
         </View>
@@ -186,10 +183,7 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <SessionInfo
-          selectedVideo={selectedVideo}
-          sessionStats={sessionStats}
-        />
+        <SessionInfo session={session} sessionStats={sessionStats} />
         {/* Add to Saved Sessions */}
         <EnhancedButton
           icon={faHeart}
@@ -204,7 +198,7 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
             {t("related_topic")}
           </EnhancedText>
           <View style={styles.tagsContainer}>
-            <RelatedSessions />
+            <RelatedSessions sessionId={session.id} />
           </View>
         </View>
       </View>
@@ -226,31 +220,12 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
       />
 
       {/* Video Play Modal */}
-      <Modal
-        visible={isPlaying}
-        animationType="fade"
-        onRequestClose={handleCloseModal}
-        transparent={true}
-      >
-        <View style={styles.modalContentContainer}>
-          <TouchableOpacity
-            style={styles.closeButton}
-            onPress={handleCloseModal}
-          >
-            <FontAwesomeIcon icon={faTimes} size={30} color="#FFF" />
-          </TouchableOpacity>
-          <Video
-            source={{ uri: selectedVideo.url }}
-            rate={1.0}
-            volume={1.0}
-            isMuted={false}
-            resizeMode="cover"
-            shouldPlay={isPlaying}
-            style={styles.videoPlayer}
-            useNativeControls
-          />
-        </View>
-      </Modal>
+      <AudioPlayerModal
+        isVisible={isPlaying}
+        onClose={() => setIsPlaying(false)}
+        track={session}
+        onLikePress={handleSaveSessionToLibrary}
+      />
     </ScrollView>
   );
 };

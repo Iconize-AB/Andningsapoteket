@@ -1,26 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { View, FlatList, StyleSheet } from "react-native";
-import { FetchVideosByCategoryName } from "./endpoints/BreathworkByCategoryEndpoints";
+import { FetchSessionsByCategoryName } from "./endpoints/BreathworkByCategoryEndpoints";
 import EnhancedText from "../regular/EnhancedText";
 import colors from "../common/colors/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import VideoItem from "../regular/VideoItem";
-import NoData from "../regular/NoResult";
 import NoResult from "../regular/NoResult";
 
 const SelectedCategoryScreen = ({ navigation, route }) => {
   const { category } = route.params;
-  const [videos, setVideos] = useState([]);
+  const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchVideos = async () => {
+    const fetchSessions = async () => {
       try {
         const token = await AsyncStorage.getItem("userToken");
-        const response = await FetchVideosByCategoryName(token, category);
+        const response = await FetchSessionsByCategoryName(token, category);
         if (response.ok) {
           const data = await response.json();
-          setVideos(data);
+          console.log('responsedatadatadatadata', data);
+          setSessions(data);
         } else {
           console.log('Error fetching breathwork sessions:', response.statusText);
         }
@@ -31,14 +31,14 @@ const SelectedCategoryScreen = ({ navigation, route }) => {
       }
     };
 
-    fetchVideos();
+    fetchSessions();
   }, [category]);
 
-  const renderVideoItem = ({ item }) => (
-    <VideoItem session={item} key={item.id} size="small" handlePlayNow={() => navigation.navigate("IndividualBreathworkSession", { selectedVideo: item })} />
+  const renderSessionItem = ({ item }) => (
+    <VideoItem session={item} key={item?.id} size="small" handlePlayNow={() => navigation.navigate("IndividualBreathworkSession", { session: item })} />
   );
 
-  if (videos.length === 0) {
+  if (sessions.length === 0) {
     return (
       <View style={styles.container}>
         <NoResult />
@@ -52,9 +52,9 @@ const SelectedCategoryScreen = ({ navigation, route }) => {
         <EnhancedText>Loading...</EnhancedText>
       ) : (
         <FlatList
-          data={videos.items}
+          data={sessions.items}
           numColumns={2} // Ensure there are 2 items per row
-          renderItem={renderVideoItem}
+          renderItem={renderSessionItem}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.videoList}
           showsVerticalScrollIndicator={false}

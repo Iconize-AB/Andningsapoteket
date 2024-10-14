@@ -103,7 +103,7 @@ const AddToPlaylistModel = ({
                     <PlaylistItem
                       key={index}
                       playlist={playlist}
-                      onPress={() => saveVideoToList(playlist)}
+                      onPress={() => saveVideoToList(playlist?.id)}
                     />
                   ))
                 ) : (

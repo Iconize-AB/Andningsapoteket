@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ImageBackground, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import { View, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import EnhancedText from "../regular/EnhancedText";
-import colors from "../common/colors/Colors";
-import EnhancedButton from "../regular/EnhancedButton";
-import testImage from "../resources/test_image.jpg";
 import VideoItem from "../regular/VideoItem";
 import { GetMostPlayedSessions } from "./endpoints/OverallSessionEndpoints";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -16,13 +13,13 @@ const MostPlayedSessions = () => {
   const [mostPlayedSessions, setMostPlayedSessions] = useState([]);
 
   useEffect(() => {
-    const fetchVideos = async () => {
+    const fetchSessions = async () => {
       try {
         const token = await AsyncStorage.getItem("userToken");
         const response = await GetMostPlayedSessions(token);
         if (response.ok) {
           const data = await response.json();
-          setMostPlayedSessions(data?.videos);
+          setMostPlayedSessions(data?.sessions);
         } else {
           console.log('Error fetching breathwork sessions:', response.statusText);
         }
@@ -30,18 +27,18 @@ const MostPlayedSessions = () => {
         console.error("Failed to fetch breathwork sessions", error);
       }
     };
-    fetchVideos();
+    fetchSessions();
   }, []);
 
   const handlePlayNow = (session) => {
-    navigation.navigate("IndividualBreathworkSession", { selectedVideo: session });
+    navigation.navigate("IndividualBreathworkSession", { session: session });
   };
 
   return (
     <View style={styles.mostPlayedContainer}>
       <EnhancedText style={styles.mostPlayedTitle}>{t("most_played_sessions")}</EnhancedText>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
-        {mostPlayedSessions.map((session) => (
+        {mostPlayedSessions?.map((session) => (
           <VideoItem session={session} handlePlayNow={handlePlayNow}  />
         ))}
       </ScrollView>
@@ -65,3 +62,4 @@ const styles = StyleSheet.create({
 });
 
 export default MostPlayedSessions;
+

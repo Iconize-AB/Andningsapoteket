@@ -1,4 +1,4 @@
-export async function TrackGlobalWatchedSessionEvent(token, videoId) {
+export async function TrackGlobalWatchedSessionEvent(token, sessionId) {
     const response = await fetch(
       `http://localhost:3000/v1/events/session/watch`,
       {
@@ -8,7 +8,7 @@ export async function TrackGlobalWatchedSessionEvent(token, videoId) {
             "Content-Type": "application/json",
           },
         body: JSON.stringify({
-            videoId
+          sessionId
         }),
       }
     );

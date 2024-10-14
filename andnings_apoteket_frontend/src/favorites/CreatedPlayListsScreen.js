@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   StyleSheet,
   ScrollView,
@@ -19,7 +19,6 @@ import {
   DeleteUserLibrarySessions,
 } from "../sessions/endpoints/BreatworkSessionActionsEndpoints";
 import PlaylistItem from "./PlaylistItem";
-import Icon from "react-native-vector-icons/Ionicons";
 import Library from "./Library";
 import NoResult from "../regular/NoResult";
 import Tabs from "../regular/Tabs";
@@ -35,32 +34,30 @@ const CreatedPlayListsScreen = ({ navigation }) => {
   ];
   const [activeTab, setActiveTab] = useState("playlists");
 
-  useEffect(() => {
-    const fetchPlaylists = async () => {
-      try {
-        const token = await AsyncStorage.getItem("userToken");
-        if (!token) throw new Error("No token found");
+  const fetchData = useCallback(async () => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+      if (!token) throw new Error("No token found");
 
-        const data = await FetchUserPlaylists(token);
-        console.log("data", data);
-        if (data) {
-          setPlaylists(data?.lists || []);
-        }
-        const savedData = await FetchUserLibrary(token);
-        if (savedData) {
-          setLibrary(savedData?.library || []);
-        }
-      } catch (error) {
-        console.error("Failed to fetch sessions", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+      const [playlistsData, libraryData] = await Promise.all([
+        FetchUserPlaylists(token),
+        FetchUserLibrary(token),
+      ]);
 
-    fetchPlaylists();
+      setPlaylists(playlistsData?.lists || []);
+      setLibrary(libraryData?.library || []);
+    } catch (error) {
+      console.error("Failed to fetch data", error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  const handleDeletePlaylist = async (playlistId) => {
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const handleDeletePlaylist = useCallback(async (playlistId) => {
     try {
       const token = await AsyncStorage.getItem("userToken");
       if (!token) throw new Error("No token found");
@@ -74,9 +71,9 @@ const CreatedPlayListsScreen = ({ navigation }) => {
     } catch (error) {
       console.error("Failed to delete playlist", error);
     }
-  };
+  }, []);
 
-  const handleDeleteSessions = async (sessionIds) => {
+  const handleDeleteSessions = useCallback(async (sessionIds) => {
     try {
       const token = await AsyncStorage.getItem("userToken");
       if (!token) throw new Error("No token found");
@@ -85,18 +82,40 @@ const CreatedPlayListsScreen = ({ navigation }) => {
       if (response.ok) {
         setLibrary((prevLibrary) => ({
           ...prevLibrary,
-          videos: prevLibrary.videos.filter(
-            (session) => !sessionIds.includes(session.videoId)
+          sessions: prevLibrary.sessions.filter(
+            (session) => !sessionIds.includes(session.sessionId)
           ),
         }));
       }
     } catch (error) {
       console.error("Failed to delete sessions", error);
     }
-  };
+  }, []);
 
-  const renderTabs = () => (
-    <Tabs activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabs} />
+  const renderPlaylists = () => (
+    <>
+      <EnhancedText style={styles.greetingText}>
+        {t("your_playlists")}
+      </EnhancedText>
+      <View style={styles.listContainer}>
+        {playlists.length > 0 ? (
+          playlists.map((list) => (
+            <PlaylistItem
+              key={list.id}
+              playlist={list}
+              onPress={() =>
+                navigation.navigate("BreathworkPlaylistDetails", {
+                  playlist: list,
+                })
+              }
+              onDelete={() => handleDeletePlaylist(list.id)}
+            />
+          ))
+        ) : (
+          <NoResult />
+        )}
+      </View>
+    </>
   );
 
   if (loading) {
@@ -112,51 +131,16 @@ const CreatedPlayListsScreen = ({ navigation }) => {
       contentContainerStyle={styles.scrollViewContent}
       showsVerticalScrollIndicator={false}
     >
-      {/* Render Tabs */}
-      {renderTabs()}
-
-      {/* Conditionally render content based on the active tab */}
+      <Tabs activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabs} />
       {activeTab === "playlists" ? (
-        <>
-          <EnhancedText style={styles.greetingText}>
-            {t("your_playlists")}
-          </EnhancedText>
-          <View style={styles.listContainer}>
-            {playlists.length > 0 ? (
-              playlists.map((list, index) => (
-                <View key={index} style={styles.playlistItemContainer}>
-                  <PlaylistItem
-                    playlist={list}
-                    onPress={() =>
-                      navigation.navigate("BreathworkPlaylistDetails", {
-                        playlist: list,
-                      })
-                    }
-                  />
-                  <TouchableOpacity
-                    onPress={() => handleDeletePlaylist(list.id)}
-                    style={styles.deleteIcon}
-                  >
-                    <Icon name="trash" size={24} color={colors.primary} />
-                  </TouchableOpacity>
-                </View>
-              ))
-            ) : (
-              <View>
-                <NoResult />
-              </View>
-            )}
-          </View>
-        </>
+        renderPlaylists()
       ) : (
-          <Library
-            library={library}
-            handleDeleteSessions={handleDeleteSessions}
-            navigation={navigation}
-          />
+        <Library
+          library={library}
+          handleDeleteSessions={handleDeleteSessions}
+          navigation={navigation}
+        />
       )}
-
-      {/* Recommended sessions for the user */}
       <RecommendedSessions />
     </ScrollView>
   );
