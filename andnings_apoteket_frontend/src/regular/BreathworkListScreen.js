@@ -1,11 +1,11 @@
 // src/screens/VideoListScreen.js
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from "react-native";
+import { View, StyleSheet, FlatList } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import colors from "../common/colors/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import VideoItem from "./VideoItem";
 import { FetchSessionsByCondition } from "../categories/endpoints/BreathworkByCategoryEndpoints";
+import SessionItem from "./VideoItem";
 
 const BreathWorkListScreen = ({ navigation }) => {
   const route = useRoute();
@@ -36,7 +36,7 @@ const BreathWorkListScreen = ({ navigation }) => {
   }, [condition]);
 
   const renderSessionItem = ({ item }) => (
-    <VideoItem session={item} key={item.id} size="small" handlePlayNow={() => navigation.navigate("IndividualBreathworkSession", { session: item })} />
+    <SessionItem session={item} key={item.id} size="small" handlePlayNow={() => navigation.navigate("IndividualBreathworkSession", { session: item })} />
   );
 
   return (

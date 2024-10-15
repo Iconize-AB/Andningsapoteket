@@ -3,9 +3,9 @@ import { View, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import EnhancedText from "../regular/EnhancedText";
-import VideoItem from "../regular/VideoItem";
 import { GetMostPlayedSessions } from "./endpoints/OverallSessionEndpoints";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import SessionItem from "../regular/VideoItem";
 
 const MostPlayedSessions = () => {
   const { t } = useTranslation();
@@ -39,7 +39,7 @@ const MostPlayedSessions = () => {
       <EnhancedText style={styles.mostPlayedTitle}>{t("most_played_sessions")}</EnhancedText>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
         {mostPlayedSessions?.map((session) => (
-          <VideoItem session={session} handlePlayNow={handlePlayNow}  />
+          <SessionItem session={session} handlePlayNow={handlePlayNow}  />
         ))}
       </ScrollView>
     </View>

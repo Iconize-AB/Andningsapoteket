@@ -4,8 +4,8 @@ import { FetchSessionsByCategoryName } from "./endpoints/BreathworkByCategoryEnd
 import EnhancedText from "../regular/EnhancedText";
 import colors from "../common/colors/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import VideoItem from "../regular/VideoItem";
 import NoResult from "../regular/NoResult";
+import SessionItem from "../regular/VideoItem";
 
 const SelectedCategoryScreen = ({ navigation, route }) => {
   const { category } = route.params;
@@ -35,8 +35,11 @@ const SelectedCategoryScreen = ({ navigation, route }) => {
   }, [category]);
 
   const renderSessionItem = ({ item, index }) => (
-    <View style={styles.itemWrapper}>
-      <VideoItem 
+    <View style={[
+      styles.itemWrapper,
+      index % 2 === 0 ? styles.leftItem : styles.rightItem
+    ]}>
+      <SessionItem
         session={{
           ...item,
           duration: `${item.duration} MIN`,
@@ -76,7 +79,7 @@ const SelectedCategoryScreen = ({ navigation, route }) => {
 };
 
 const { width } = Dimensions.get('window');
-const itemWidth = (width - 30) / 2; // 30 is the total horizontal padding
+const itemWidth = (width - 38) / 2; // 38 is total horizontal padding (15 * 2 + 8 gap)
 
 const styles = StyleSheet.create({
   container: {
@@ -91,7 +94,13 @@ const styles = StyleSheet.create({
   },
   itemWrapper: {
     width: itemWidth,
-    marginBottom: 20,
+    marginBottom: 8, // Vertical gap between items
+  },
+  leftItem: {
+    marginRight: 4, // Half of the 8px gap
+  },
+  rightItem: {
+    marginLeft: 4, // Half of the 8px gap
   },
 });
 

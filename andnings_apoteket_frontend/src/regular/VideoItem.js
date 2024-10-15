@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View, Image, TouchableOpacity } from "react-native";
 import EnhancedText from "./EnhancedText";
 import colors from "../common/colors/Colors";
+import videoitem from "../resources/videoitem.png";
 
-const VideoItem = ({ session, handlePlayNow, size = "medium" }) => {
+
+const SessionItem = ({ session, handlePlayNow, size = "medium" }) => {
+  const [imageError, setImageError] = useState(false);
+
   const getCardSizeStyle = () => {
     switch (size) {
       case "small":
@@ -15,6 +19,17 @@ const VideoItem = ({ session, handlePlayNow, size = "medium" }) => {
     }
   };
 
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
+  const getImageSource = () => {
+    if (session.imageUrl && !imageError) {
+      return { uri: session.imageUrl };
+    }
+    return videoitem;
+  };
+
   return (
     <TouchableOpacity 
       style={[styles.container, getCardSizeStyle()]} 
@@ -23,15 +38,18 @@ const VideoItem = ({ session, handlePlayNow, size = "medium" }) => {
     >
       <View style={styles.card}>
         <Image
-          source={{ uri: session.imageUrl }}
+          source={getImageSource()}
           style={styles.cardImage}
           resizeMode="cover"
+          onError={handleImageError}
         />
       </View>
       <View style={styles.textContainer}>
-        <EnhancedText style={styles.cardTitle}>{session.title}</EnhancedText>
+        <EnhancedText style={styles.cardTitle} numberOfLines={2} ellipsizeMode="tail">
+          {session.title}
+        </EnhancedText>
         <EnhancedText style={styles.cardSubtitle}>
-          {session.duration} • {session.category}
+          {session.duration || 'null MIN'} • {session.category || 'FIRE'}
         </EnhancedText>
       </View>
     </TouchableOpacity>
@@ -40,14 +58,15 @@ const VideoItem = ({ session, handlePlayNow, size = "medium" }) => {
 
 const styles = StyleSheet.create({
   container: {
+    width: '100%', // Take full width of its parent (itemWrapper)
     marginBottom: 20,
   },
   card: {
     borderRadius: 10,
     overflow: "hidden",
+    aspectRatio: 16 / 9,
   },
   smallCard: {
-    width: "48%", // Slightly less than 50% to account for spacing
   },
   mediumCard: {
     width: 250,
@@ -58,7 +77,7 @@ const styles = StyleSheet.create({
   },
   cardImage: {
     width: '100%',
-    aspectRatio: 16 / 9,
+    height: '100%',
   },
   textContainer: {
     marginTop: 8,
@@ -67,12 +86,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
     color: colors.text,
+    marginBottom: 4,
   },
   cardSubtitle: {
     fontSize: 12,
     color: colors.textSecondary,
-    marginTop: 2,
   },
 });
 
-export default VideoItem;
+export default SessionItem;

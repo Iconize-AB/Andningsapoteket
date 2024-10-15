@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import EnhancedText from "../regular/EnhancedText";
 import testImage from "../resources/test_image.jpg";
-import VideoItem from "../regular/VideoItem";
+import SessionItem from "../regular/VideoItem";
 
 const mostPlayedJourneyData = [
   {
@@ -51,7 +51,7 @@ const MostPlayedJourneys = ({ navigateToOption }) => {
         style={styles.horizontalScroll}
       >
         {mostPlayedJourneyData.map((session) => (
-          <VideoItem session={session} handlePlayNow={handlePlayNow} />
+          <SessionItem session={session} handlePlayNow={handlePlayNow} />
         ))}
       </ScrollView>
     </View>

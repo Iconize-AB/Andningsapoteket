@@ -2,9 +2,9 @@ import React from "react";
 import { View, Text, Image, FlatList, TouchableOpacity, StyleSheet } from "react-native";
 import colors from "../common/colors/Colors";
 import EnhancedText from "../regular/EnhancedText";
-import VideoItem from "../regular/VideoItem";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faPlay, faRandom, faEllipsisVertical, faDownload, faShare } from '@fortawesome/free-solid-svg-icons';
+import SessionItem from "../regular/VideoItem";
 
 const dummyThumbnail = require('../resources/test.png'); // Ensure you have a dummy image in your assets
 
@@ -16,7 +16,7 @@ const BreathworkPlaylistDetails = ({ route, navigation }) => {
   const renderVideoItem = ({ item }) => {
     const session = item?.session;
     return (
-        <VideoItem session={session} handlePlayNow={() => navigation.navigate("IndividualBreathworkSession", { session: item })}  />
+        <SessionItem session={session} handlePlayNow={() => navigation.navigate("IndividualBreathworkSession", { session: item })}  />
     )
   };
 
