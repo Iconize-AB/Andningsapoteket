@@ -4,23 +4,35 @@ import {
   StyleSheet,
   TouchableOpacity,
   ImageBackground,
+  SafeAreaView,
+  TextInput,
 } from "react-native";
-import { CodeField, Cursor } from "react-native-confirmation-code-field";
+import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from "react-native-confirmation-code-field";
 import Toast from "react-native-toast-message";
 import EnhancedText from "../regular/EnhancedText";
 import BackIcon from "../regular/BackIcon";
 import { VerifyAccount } from "./endpoints/AuthenticationEndpoints";
 import colors from "../common/colors/Colors";
 import { useAuth } from "../context/AuthContext";
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { LinearGradient } from 'expo-linear-gradient';
+
+const CELL_COUNT = 6;
 
 const VerifyAccountScreen = ({ route, navigation }) => {
   const { email } = route.params;
-  const [code, setCode] = useState("");
+  const [value, setValue] = useState('');
+  const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
+  const [props, getCellOnLayoutHandler] = useClearByFocusCell({
+    value,
+    setValue,
+  });
   const { signIn } = useAuth();
 
-  const handleVerifyCode = async () => {
+  const handleVerify = async () => {
     try {
-      const response = await VerifyAccount(email, code);
+      const response = await VerifyAccount(email, value);
       const data = await response.json();
 
       if (data) {
@@ -33,7 +45,8 @@ const VerifyAccountScreen = ({ route, navigation }) => {
           },
           text2Style: { color: "#466F78" },
         });
-        signIn(data.token);
+        // signIn(data.token);
+        navigation.navigate("HelpOptionsScreen");
       } else {
         Toast.show({
           type: "error",
@@ -61,89 +74,125 @@ const VerifyAccountScreen = ({ route, navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-        <BackIcon navigation={navigation} />
-        <View style={styles.wrapper}>
-          <EnhancedText style={styles.title}>VERIFY YOUR EMAIL ADDRESS</EnhancedText>
-          <CodeField
-            value={code}
-            onChangeText={setCode}
-            cellCount={6}
-            rootStyle={styles.codeFieldRoot}
-            keyboardType="number-pad"
-            textContentType="oneTimeCode"
-            renderCell={({ index, symbol, isFocused }) => (
-              <EnhancedText
-                key={index}
-                style={[styles.cell, isFocused && styles.focusCell]}
-                onLayout={isFocused ? () => {} : undefined}
-              >
-                {symbol || (isFocused ? <Cursor /> : null)}
-              </EnhancedText>
-            )}
-          />
-          <TouchableOpacity style={styles.button} onPress={handleVerifyCode}>
-            <EnhancedText style={styles.buttonText}>Verify Code</EnhancedText>
+    <LinearGradient colors={['#1E3A5F', '#091D34']} style={styles.container}>
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.content}>
+          <EnhancedText style={styles.title}>Verify Your{'\n'}Account</EnhancedText>
+          <View style={styles.codeFieldContainer}>
+            <EnhancedText style={styles.inputLabel}>Enter Verification Code</EnhancedText>
+            <CodeField
+              ref={ref}
+              {...props}
+              value={value}
+              onChangeText={setValue}
+              cellCount={CELL_COUNT}
+              rootStyle={styles.codeFieldRoot}
+              keyboardType="number-pad"
+              textContentType="oneTimeCode"
+              renderCell={({index, symbol, isFocused}) => (
+                <View
+                  onLayout={getCellOnLayoutHandler(index)}
+                  key={index}
+                  style={[styles.cellRoot, isFocused && styles.focusCell]}>
+                  <EnhancedText style={styles.cellText}>
+                    {symbol || (isFocused ? <Cursor /> : null)}
+                  </EnhancedText>
+                </View>
+              )}
+            />
+          </View>
+          <EnhancedText style={styles.footerText}>
+            We've sent a verification code to {email}.{'\n'}Please check your inbox and enter the code above.
+          </EnhancedText>
+        </View>
+        <View style={styles.footer}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <EnhancedText style={styles.backText}>Back</EnhancedText>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.verifyButton, value.length === CELL_COUNT && styles.verifyButtonActive]} 
+            onPress={handleVerify}
+          >
+            <FontAwesomeIcon icon={faChevronRight} color={value.length === CELL_COUNT ? "#1E3A5F" : "#8E8E8E"} size={20} />
           </TouchableOpacity>
         </View>
-    </View>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    backgroundColor: colors.background,
-    alignItems: "center",
   },
-  image: {
-    width: "100%",
-    height: "100%",
-    position: "relative",
+  safeArea: {
+    flex: 1,
   },
-  wrapper: {
-    padding: 60,
-    paddingTop: 10,
-    height: "100%",
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
+  content: {
+    flex: 1,
+    padding: 20,
+    justifyContent: 'space-between',
   },
   title: {
-    marginBottom: 20,
-    fontSize: 20,
-    color: "#fff",
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    marginBottom: 30,
   },
-  codeFieldRoot: { marginTop: 20 },
-  cell: {
+  codeFieldContainer: {
+    marginBottom: 30,
+  },
+  inputLabel: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  codeFieldRoot: {
+    marginTop: 20,
+  },
+  cellRoot: {
     width: 40,
-    height: 40,
-    lineHeight: 38,
-    fontSize: 24,
-    borderWidth: 2,
-    borderColor: "#fff",
-    color: "#fff",
-    textAlign: "center",
-    marginRight: 8,
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderBottomColor: '#F2E8DC',
+    borderBottomWidth: 1,
+  },
+  cellText: {
+    color: '#F2E8DC',
+    fontSize: 36,
+    textAlign: 'center',
   },
   focusCell: {
-    borderColor: "#F55E09",
+    borderBottomColor: '#FFFFFF',
+    borderBottomWidth: 2,
   },
-  button: {
-    marginTop: 20,
-    backgroundColor: "#F55E09",
-    padding: 10,
-    alignItems: "center",
-    width: "100%",
-    alignItems: "center",
-    marginTop: 40,
-    borderRadius: 120,
+  footerText: {
+    textAlign: 'center',
+    color: '#FFFFFF',
+    fontSize: 14,
+    opacity: 0.8,
   },
-  buttonText: {
-    color: "#fff",
-    fontSize: 18,
-    textTransform: "uppercase",
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+  },
+  backText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+  },
+  verifyButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#D3D3D3',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  verifyButtonActive: {
+    backgroundColor: '#F2E8DC',
   },
 });
 

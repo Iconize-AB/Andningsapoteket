@@ -7,6 +7,9 @@ import ForgotPasswordScreen from "../authentication/ForgotPasswordScreen";
 import VerifyAccountScreen from "../authentication/VerifyAccountScreen";
 import AuthorizationCodeScreen from "../authentication/AuthorizationCodeScreen";
 import ResetAccountScreen from "../authentication/ResetAccountScreen";
+import HelpOptionsScreen from "../onboarding/HelpOptionsScreen";
+import ContentScreen from "../onboarding/ContentScreen";
+import InvitationScreen from "../onboarding/InvitationScreen";
 
 const Stack = createStackNavigator();
 
@@ -20,6 +23,9 @@ const AuthStack = () => {
       <Stack.Screen name="VerifyAccountScreen" component={VerifyAccountScreen} />
       <Stack.Screen name="AuthorizationCode" component={AuthorizationCodeScreen} />
       <Stack.Screen name="ResetPasswordScreen" component={ResetAccountScreen} />
+      <Stack.Screen name="HelpOptionsScreen" component={HelpOptionsScreen} />
+      <Stack.Screen name="ContentScreen" component={ContentScreen} />
+      <Stack.Screen name="InvitationScreen" component={InvitationScreen} />
     </Stack.Navigator>
   );
 };

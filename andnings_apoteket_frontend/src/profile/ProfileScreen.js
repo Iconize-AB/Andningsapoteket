@@ -18,6 +18,7 @@ import UserDetails from "./UserDetails";
 export default function ProfileScreen({ navigation, userDetails, route }) {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("userDetails");
+  const { setUserDetails } = useAuth();
   const tabs = [
     { label: "User Details", value: "userDetails" },
     { label: "Dashboard", value: "dashboard" },

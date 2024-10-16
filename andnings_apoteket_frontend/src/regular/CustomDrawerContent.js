@@ -11,10 +11,12 @@ import { DrawerContentScrollView } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTranslation } from 'react-i18next';
 import ShareAppModal from './ShareAppModal';
+import { useAuth } from '../context/AuthContext';
 
 const CustomDrawerContent = (props) => {
   const { t } = useTranslation();
   const { navigation, userDetails, setShowPlusMembership } = props;
+  const { signOut } = useAuth();
   const [isShareAppModalVisible, setShareAppModalVisible] = useState(false);
 
   const DrawerItem = ({ icon, label, onPress, expandable, expanded, children }) => (
@@ -101,13 +103,13 @@ const CustomDrawerContent = (props) => {
             }} 
           />
           <DrawerItem 
-            icon="logout" 
-            label={t('Logga ut')} 
+            icon="logout"
+            label={t('Logga ut')}
             onPress={() => {
               // Handle logout logic here
               // For example:
               // logout();
-              navigation.navigate('Login');
+              signOut();
             }} 
           />
           <ShareAppModal 

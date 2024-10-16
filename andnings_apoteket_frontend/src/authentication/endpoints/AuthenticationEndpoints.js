@@ -15,7 +15,7 @@ export async function Signin(email, password) {
     return response;
   }
   
-  export async function Register(email, password, identityToken) {
+  export async function Register(email, password) {
     const response = await fetch(
       `http://localhost:3000/v1/user/register`,
       {
@@ -26,7 +26,6 @@ export async function Signin(email, password) {
         body: JSON.stringify({
           email,
           password,
-          identityToken
         }),
       }
     );
@@ -50,6 +49,7 @@ export async function Signin(email, password) {
   }
   
   export async function DeleteUser(token, userId) {
+    console.log("token", userId);
     const response = await fetch(
       `http://localhost:3000/v1/user/delete-user`,
       {

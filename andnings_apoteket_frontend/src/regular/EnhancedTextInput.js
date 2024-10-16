@@ -11,16 +11,14 @@ const EnhancedTextInput = ({
   errorMessage = "",
   secureTextEntry = false,
   keyboardType = "default",
-  outlined = false,
+  autoCapitalize = "none",
   customStyle = {},
   customLabelStyle = {},
 }) => {
-  const [isPasswordVisible, setIsPasswordVisible] = useState(secureTextEntry); // Toggle for showing/hiding password
-  
-  // Handle input change, allowing only numbers if keyboardType is set to "numeric" or "number-pad"
+  const [isPasswordVisible, setIsPasswordVisible] = useState(secureTextEntry);
+
   const handleChangeText = (text) => {
     if (keyboardType === "numeric" || keyboardType === "number-pad") {
-      // Only allow numbers
       const numericText = text.replace(/[^0-9]/g, "");
       onChangeText(numericText);
     } else {
@@ -30,16 +28,15 @@ const EnhancedTextInput = ({
 
   return (
     <View style={styles.container}>
-      <EnhancedText style={[styles.label, customLabelStyle]}>
-        {placeholder}
-      </EnhancedText>
       <TextInput
-        style={[styles.input, customStyle, outlined && styles.outlinedInput]}
+        style={[styles.input, customStyle]}
         value={value}
         onChangeText={handleChangeText}
         placeholder={placeholder}
+        placeholderTextColor="#8E8E8E"
         secureTextEntry={secureTextEntry && isPasswordVisible}
         keyboardType={keyboardType}
+        autoCapitalize={autoCapitalize}
       />
       {secureTextEntry && (
         <TouchableOpacity
@@ -63,42 +60,26 @@ const EnhancedTextInput = ({
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    marginVertical: 10,
+    marginBottom: 15,
     position: "relative",
   },
   input: {
-    height: 45,
-    width: "100%",
-    color: "#000",
-    backgroundColor: "#fff",
-    opacity: 0.2,
-    fontFamily: "BahnSchrift",
-    borderColor: colors.border || "#fff",
+    backgroundColor: '#F2E8DC',
     borderRadius: 10,
+    padding: 15,
     fontSize: 16,
-    borderWidth: 1,
-    paddingLeft: 10,
-    paddingRight: 40,
-  },
-  outlinedInput: {
-    borderColor: "#000",
-    borderWidth: 2,
-  },
-  label: {
-    fontSize: 15,
-    marginBottom: 5,
-    color: "#fff"
+    color: '#1E3A5F',
   },
   icon: {
     position: "absolute",
     right: 10,
-    top: 32,
+    top: 15,
     zIndex: 1,
   },
   errorText: {
-    alignSelf: "flex-start",
-    marginTop: -10,
     color: "red",
+    fontSize: 14,
+    marginTop: 5,
   },
 });
 

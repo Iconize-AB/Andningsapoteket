@@ -36,6 +36,7 @@
     "react-native-checkbox-reanimated": "^0.1.1",
     "react-native-confirmation-code-field": "^7.4.0",
     "react-native-gesture-handler": "^2.19.0",
+    "react-native-linear-gradient": "^2.8.3",
     "react-native-paper": "^5.12.5",
     "react-native-reanimated": "~3.10.1",
     "react-native-svg": "^15.7.1",

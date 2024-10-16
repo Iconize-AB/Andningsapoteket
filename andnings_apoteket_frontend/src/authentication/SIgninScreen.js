@@ -1,15 +1,14 @@
 import React, { useState } from "react";
-import { View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView } from "react-native";
 import Toast from "react-native-toast-message";
 import { useAuth } from "../context/AuthContext";
 import EnhancedText from "../regular/EnhancedText";
 import { isValidEmail } from "../common/Validation";
-import BackIcon from "../regular/BackIcon";
-import colors from "../common/colors/Colors";
 import EnhancedTextInput from "../regular/EnhancedTextInput";
-import EnhancedButton from "../regular/EnhancedButton";
-import SingleSignOn from "./SingleSignOn";
 import { Signin } from "./endpoints/AuthenticationEndpoints";
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const SigninScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -71,137 +70,101 @@ const SigninScreen = ({ navigation }) => {
     }
   };
 
+  const isFormValid = email && password;
+
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <EnhancedText style={styles.title} weight="bold">Sign in</EnhancedText>
-        <EnhancedText style={styles.subTitle}>
-          Enter your credentials to access your account
-        </EnhancedText>
-      </View>
-      <BackIcon navigation={navigation} />
-      <View style={styles.wrapper}>
-        {/* Social sign-in buttons */}
-        <SingleSignOn />
-        <View style={styles.inputWrapper}>
-          {/* Email input */}
-          <EnhancedTextInput
-            style={styles.input}
-            onChangeText={(text) => setEmail(text)}
-            value={email}
-            placeholder="Email"
-            placeholderTextColor="#fff"
-          />
-
-          {/* Password input */}
-          <EnhancedTextInput
-            style={styles.input}
-            onChangeText={(text) => setPassword(text)}
-            value={password}
-            placeholder="Password"
-            placeholderTextColor="#fff"
-            secureTextEntry={true}
-          />
+    <LinearGradient colors={['#1E3A5F', '#091D34']} style={styles.container}>
+      <SafeAreaView style={styles.safeArea}>
+        <ScrollView contentContainerStyle={styles.scrollView}>
+          <View style={styles.content}>
+            <EnhancedText style={styles.title}>Welcome{'\n'}Back</EnhancedText>
+            <View style={styles.inputContainer}>
+              <EnhancedTextInput
+                value={email}
+                onChangeText={setEmail}
+                placeholder="Email"
+                keyboardType="email-address"
+                errorMessage={formError.email}
+              />
+              <EnhancedTextInput
+                value={password}
+                onChangeText={setPassword}
+                placeholder="Password"
+                secureTextEntry
+                errorMessage={formError.password}
+              />
+            </View>
+            <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
+              <EnhancedText style={styles.forgotPasswordText}>Forgot Password?</EnhancedText>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+        <View style={styles.footer}>
+          <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+            <EnhancedText style={styles.signupText}>Sign Up</EnhancedText>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.signinButton, isFormValid && styles.signinButtonActive]} 
+            onPress={handleSignIn}
+            disabled={!isFormValid}
+          >
+            <FontAwesomeIcon icon={faChevronRight} color={isFormValid ? "#1E3A5F" : "#8E8E8E"} size={20} />
+          </TouchableOpacity>
         </View>
-
-        {formError.email !== "" && (
-          <EnhancedText style={styles.errorText}>
-            {formError.email}
-          </EnhancedText>
-        )}
-        {formError.password !== "" && (
-          <EnhancedText style={styles.errorText}>
-            {formError.password}
-          </EnhancedText>
-        )}
-
-        {/* Register Button */}
-        <EnhancedButton
-          onPress={handleSignIn}
-          title="Sign In"
-          size="large"
-          type="outline"
-        />
-      </View>
-      {/* Sign up link */}
-      <TouchableOpacity
-        style={styles.textButton}
-        onPress={() => navigation.navigate("SignUp")}
-      >
-        <EnhancedText style={styles.textButton}>
-          Don't have an account? Sign up
-        </EnhancedText>
-      </TouchableOpacity>
-    </View>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    backgroundColor: colors.primary,
   },
-  button: {
-    fontWeight: "bold"
+  safeArea: {
+    flex: 1,
+  },
+  scrollView: {
+    flexGrow: 1,
   },
   content: {
-    marginLeft: 20,
-  },
-  wrapper: {
-    width: "100%",
-    alignItems: "center",
-  },
-  inputWrapper: {
+    flex: 1,
     padding: 20,
-    width: "100%",
-    alignItems: "center",
+    justifyContent: 'center',
   },
   title: {
-    fontSize: 24,
-    color: "#fff",
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    marginBottom: 30,
+  },
+  inputContainer: {
     marginBottom: 20,
   },
-  subTitle: {
+  forgotPasswordText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    textAlign: 'right',
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+  },
+  signupText: {
+    color: '#FFFFFF',
     fontSize: 16,
-    color: "#A9A9A9",
-    marginBottom: 20,
   },
-  input: {
-    height: 50,
-    width: "100%",
-    backgroundColor: "#000",
-    color: "#fff",
-    padding: 10,
-    borderRadius: 10,
-    borderWidth: 1,
-    marginBottom: 12,
+  signinButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#D3D3D3',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  errorText: {
-    color: "red",
-    marginBottom: 10,
-  },
-  checkboxContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  checkbox: {
-    marginRight: 8,
-  },
-  checkboxLabel: {
-    color: "#fff",
-  },
-  linkText: {
-    textDecorationLine: "underline",
-    color: "#1E90FF",
-  },
-  textButton: {
-    color: "#fff",
-    marginLeft: 20,
-    marginTop: 40,
-    textDecorationLine: "underline",
-    bottom: 20,
+  signinButtonActive: {
+    backgroundColor: '#F2E8DC',
   },
 });
 

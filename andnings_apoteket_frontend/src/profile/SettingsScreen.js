@@ -15,6 +15,7 @@ import Toast from "react-native-toast-message";
 import { DeleteUser } from "../authentication/endpoints/AuthenticationEndpoints";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SubscriptionModal from "../subscription/SubscriptionModal";
+import { useTranslation } from "react-i18next";
 
 const SettingsScreen = ({
   navigation,
@@ -23,6 +24,7 @@ const SettingsScreen = ({
   setShowTerms,
 }) => {
   const [isModalVisible, setModalVisible] = useState(false);
+  const { t } = useTranslation();
 
   const handleOnDelete = async () => {
     Alert.alert(
@@ -39,6 +41,7 @@ const SettingsScreen = ({
           onPress: async () => {
             try {
               const token = await AsyncStorage.getItem("userToken");
+              console.log('userDetails', userDetails);
               const response = await DeleteUser(token, userDetails.id);
               if (response.ok) {
                 Toast.show({

@@ -1,7 +1,7 @@
 // SignupScreen.js
 
 import React, { useState } from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView } from "react-native";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import EnhancedText from "../regular/EnhancedText";
@@ -13,12 +13,15 @@ import EnhancedButton from "../regular/EnhancedButton";
 import SingleSignOn from "./SingleSignOn";
 import { Register } from "./endpoints/AuthenticationEndpoints";
 import CustomCheckbox from "../regular/CustomCheckbox";
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const SignupScreen = ({ navigation }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [agree, setAgree] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [formError, setFormError] = useState({ email: "", password: "" });
 
   const handleSignUp = async () => {
@@ -32,6 +35,10 @@ const SignupScreen = ({ navigation }) => {
     }
     if (!password) {
       setFormError((prev) => ({ ...prev, password: "Password is required." }));
+      isValid = false;
+    }
+    if (!password === confirmPassword) {
+      setFormError((prev) => ({ ...prev, password: "Passwords do not match." }));
       isValid = false;
     }
     if (!isValid) return;
@@ -84,161 +91,122 @@ const SignupScreen = ({ navigation }) => {
     }
   };
 
+  const isFormValid = name && email && password && confirmPassword && password === confirmPassword;
+
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <EnhancedText style={styles.title} weight="bold">Register</EnhancedText>
-        <EnhancedText style={styles.subTitle}>
-          Enter your credentials to access your account
-        </EnhancedText>
-      </View>
-      <BackIcon navigation={navigation} />
-      <View style={styles.wrapper}>
-        {/* Social sign-in buttons */}
-        <SingleSignOn />
-
-        <View style={styles.inputWrapper}>
-          <EnhancedTextInput
-            style={styles.input}
-            onChangeText={(text) => setName(text)}
-            value={name}
-            placeholder="Name"
-            placeholderTextColor="#fff"
-          />
-
-          {/* Email input */}
-          <EnhancedTextInput
-            style={styles.input}
-            onChangeText={(text) => setEmail(text)}
-            value={email}
-            placeholder="Email"
-            placeholderTextColor="#fff"
-          />
-
-          {/* Password input */}
-          <EnhancedTextInput
-            style={styles.input}
-            onChangeText={(text) => setPassword(text)}
-            value={password}
-            placeholder="Password"
-            placeholderTextColor="#fff"
-            secureTextEntry={true}
-          />
+    <LinearGradient colors={['#1E3A5F', '#091D34']} style={styles.container}>
+      <SafeAreaView style={styles.safeArea}>
+        <ScrollView contentContainerStyle={styles.scrollView}>
+          <View style={styles.content}>
+            <EnhancedText style={styles.title}>Create Your{'\n'}Account</EnhancedText>
+            <View style={styles.inputContainer}>
+              <EnhancedTextInput
+                value={name}
+                onChangeText={setName}
+                placeholder="Name"
+                autoCapitalize="words"
+              />
+              <EnhancedTextInput
+                value={email}
+                onChangeText={setEmail}
+                placeholder="Email"
+                keyboardType="email-address"
+                errorMessage={formError.email}
+              />
+              <EnhancedTextInput
+                value={password}
+                onChangeText={setPassword}
+                placeholder="Password"
+                secureTextEntry
+                errorMessage={formError.password}
+              />
+              <EnhancedTextInput
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                placeholder="Confirm Password"
+                secureTextEntry
+              />
+            </View>
+            <EnhancedText style={styles.footerText}>
+              By signing up, you agree to our Terms of Service and Privacy Policy.
+            </EnhancedText>
+          </View>
+        </ScrollView>
+        <View style={styles.footer}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <EnhancedText style={styles.backText}>Back</EnhancedText>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.signupButton, isFormValid && styles.signupButtonActive]} 
+            onPress={handleSignUp}
+            disabled={!isFormValid}
+          >
+            <FontAwesomeIcon icon={faChevronRight} color={isFormValid ? "#1E3A5F" : "#8E8E8E"} size={20} />
+          </TouchableOpacity>
         </View>
-
-        {/* Name input */}
-
-        {/* Display errors if they exist */}
-        {formError.name !== "" && (
-          <EnhancedText style={styles.errorText}>{formError.name}</EnhancedText>
-        )}
-        {formError.email !== "" && (
-          <EnhancedText style={styles.errorText}>
-            {formError.email}
-          </EnhancedText>
-        )}
-        {formError.password !== "" && (
-          <EnhancedText style={styles.errorText}>
-            {formError.password}
-          </EnhancedText>
-        )}
-
-        {/* Checkbox for Terms & Privacy */}
-        <View style={styles.checkboxContainer}>
-          <CustomCheckbox
-            isChecked={agree}
-            onChange={() => setAgree((prev) => !prev)}
-          />
-        </View>
-
-        {/* Register Button */}
-        <EnhancedButton
-          onPress={handleSignUp}
-          title="Register"
-          size="large"
-          type="outline"
-        />
-      </View>
-      {/* Sign up link */}
-      <TouchableOpacity
-        style={styles.textButton}
-        onPress={() => navigation.navigate("SignIn")}
-      >
-        <EnhancedText style={styles.textButton}>
-         Already have an account? Sign in
-        </EnhancedText>
-      </TouchableOpacity>
-    </View>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    backgroundColor: colors.primary,
   },
-  button: {
-    fontWeight: "bold"
+  safeArea: {
+    flex: 1,
+  },
+  scrollView: {
+    flexGrow: 1,
   },
   content: {
-    marginLeft: 20,
-  },
-  wrapper: {
-    width: "100%",
-    alignItems: "center",
-  },
-  inputWrapper: {
+    flex: 1,
     padding: 20,
-    width: "100%",
-    alignItems: "center",
+    justifyContent: 'space-between',
   },
   title: {
-    fontSize: 24,
-    color: "#fff",
-    marginTop: 20,
-    marginBottom: 20,
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    marginBottom: 30,
   },
-  subTitle: {
-    fontSize: 16,
-    color: "#A9A9A9",
+  inputContainer: {
+    marginBottom: 30,
   },
   input: {
-    height: 50,
-    width: "100%",
-    backgroundColor: "#000",
-    color: "#fff",
-    padding: 10,
+    backgroundColor: '#F2E8DC',
     borderRadius: 10,
-    borderWidth: 1,
-    marginBottom: 12,
+    padding: 15,
+    marginBottom: 15,
+    fontSize: 16,
+    color: '#1E3A5F',
   },
-  errorText: {
-    color: "red",
-    marginBottom: 10,
+  footerText: {
+    textAlign: 'center',
+    color: '#FFFFFF',
+    fontSize: 14,
+    opacity: 0.8,
   },
-  checkboxContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
   },
-  checkbox: {
-    marginRight: 8,
+  backText: {
+    color: '#FFFFFF',
+    fontSize: 16,
   },
-  checkboxLabel: {
-    color: "#fff",
+  signupButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#D3D3D3',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  linkText: {
-    textDecorationLine: "underline",
-    color: "#1E90FF",
-  },
-  textButton: {
-    color: "#fff",
-    position: "absolute",
-    left: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    textDecorationLine: "underline",
-    bottom: 40,
+  signupButtonActive: {
+    backgroundColor: '#F2E8DC',
   },
 });
 

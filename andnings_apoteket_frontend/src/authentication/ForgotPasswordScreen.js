@@ -1,24 +1,26 @@
 import React, { useState } from "react";
 import {
   View,
-  Text,
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  ImageBackground,
+  SafeAreaView,
+  ScrollView,
 } from "react-native";
 import Toast from "react-native-toast-message";
-import BackIcon from "../regular/BackIcon";
 import EnhancedText from "../regular/EnhancedText";
-import colors from "../common/colors/Colors";
-import EnhancedButton from "../regular/EnhancedButton";
 import { ResetPassword } from "./endpoints/AuthenticationEndpoints";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { LinearGradient } from "expo-linear-gradient";
+import EnhancedTextInput from "../regular/EnhancedTextInput";
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
 
   const handleResetPassword = async () => {
     const response = await ResetPassword(email);
+    console.log('response', response);
     if (response.ok) {
       Toast.show({
         type: "success",
@@ -48,85 +50,104 @@ const ForgotPasswordScreen = ({ navigation }) => {
     }
   };
 
+  const isFormValid = email.trim() !== '';
+
   return (
-    <View style={styles.container}>
-      <BackIcon />
-      <View style={styles.wrapper}>
-        <EnhancedText style={styles.title}>FORGOT PASSWORD</EnhancedText>
-        <TextInput
-          style={styles.input}
-          onChangeText={setEmail}
-          value={email}
-          placeholder="Email"
-          placeholderTextColor="#A9A9A9"
-          keyboardType="email-address"
-        />
-        <EnhancedButton
-          onPress={handleResetPassword}
-          title="Send Reset Link"
-          size="medium"
-          type="outline"
-        />
-      </View>
-    </View>
+    <LinearGradient colors={['#1E3A5F', '#091D34']} style={styles.container}>
+      <SafeAreaView style={styles.safeArea}>
+        <ScrollView contentContainerStyle={styles.scrollView}>
+          <View style={styles.content}>
+            <EnhancedText style={styles.title}>Forgot{'\n'}Password?</EnhancedText>
+            <EnhancedText style={styles.subtitle}>
+              Enter your email address and we'll send you instructions to reset your password.
+            </EnhancedText>
+            <View style={styles.inputContainer}>
+              <EnhancedTextInput
+                style={styles.input}
+                placeholder="Email"
+                placeholderTextColor="#8E8E8E"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+            </View>
+          </View>
+        </ScrollView>
+        <View style={styles.footer}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <EnhancedText style={styles.backText}>Back</EnhancedText>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.resetButton, isFormValid && styles.resetButtonActive]} 
+            onPress={handleResetPassword}
+            disabled={!isFormValid}
+          >
+            <FontAwesomeIcon icon={faChevronRight} color={isFormValid ? "#1E3A5F" : "#8E8E8E"} size={20} />
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    backgroundColor: colors.background,
-    alignItems: "center",
+  },
+  safeArea: {
+    flex: 1,
+  },
+  scrollView: {
+    flexGrow: 1,
+  },
+  content: {
+    flex: 1,
+    padding: 20,
+    justifyContent: 'center',
   },
   title: {
-    color: "#000",
-    fontSize: 20,
-    marginBottom: 10,
-    textAlign: "center",
-  },
-  wrapper: {
-    padding: 60,
-    paddingTop: 10,
-    height: "100%",
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  text: {
-    fontSize: 22,
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
     marginBottom: 20,
-    color: "#fff",
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#FFFFFF',
+    marginBottom: 30,
+    opacity: 0.8,
+  },
+  inputContainer: {
+    marginBottom: 20,
   },
   input: {
-    height: 50,
-    width: "100%",
-    color: "#fff",
-    fontSize: 16,
-    backgroundColor: "#000000",
-    fontFamily: "BebasNeue-Regular",
+    backgroundColor: '#F2E8DC',
     borderRadius: 10,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
+    padding: 15,
+    fontSize: 16,
+    color: '#1E3A5F',
   },
-  button: {
-    backgroundColor: "#F55E09",
-    padding: 10,
-    textTransform: "uppercase",
-    width: "100%",
-    alignItems: "center",
-    marginTop: 20,
-    borderRadius: 120,
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
   },
-  textButton: {
-    color: "#fff",
-    textDecorationLine: "underline",
+  backText: {
+    color: '#FFFFFF',
+    fontSize: 16,
   },
-  buttonText: {
-    color: "#fff",
-    textTransform: "uppercase",
-    fontSize: 18,
+  resetButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#D3D3D3',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  resetButtonActive: {
+    backgroundColor: '#F2E8DC',
   },
 });
 
