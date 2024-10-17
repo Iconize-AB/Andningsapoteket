@@ -1,63 +1,50 @@
 import React from "react";
-import { View, TouchableOpacity, StyleSheet, Image } from "react-native";
-import FeatherIcon from "react-native-vector-icons/Feather";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import EnhancedText from "../regular/EnhancedText";
-import colors from "../common/colors/Colors";
+import { LinearGradient } from 'expo-linear-gradient';
 
 const PlaylistItem = ({ playlist, onPress }) => {
   return (
-    <TouchableOpacity onPress={onPress} style={styles.container}>
-      <Image
-        source={{ uri: playlist.thumbnail || "https://via.placeholder.com/100" }}
-        style={styles.thumbnail}
-      />
-      <View style={styles.content}>
-        <View>
+    <TouchableOpacity onPress={onPress}>
+      <LinearGradient
+        colors={['#1E3A5F', '#091D34']}
+        style={styles.container}
+      >
+        <View style={styles.content}>
           <EnhancedText style={styles.title}>{playlist.name}</EnhancedText>
           <EnhancedText style={styles.description}>
             {playlist.description}
           </EnhancedText>
         </View>
-        <FeatherIcon name="chevron-right" size={24} color="#ccc" />
-      </View>
+        <FontAwesomeIcon icon={faChevronRight} color="#F2E8DC" size={20} />
+      </LinearGradient>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    marginBottom: 15,
-    padding: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
     flexDirection: "row",
     alignItems: "center",
-  },
-  thumbnail: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginRight: 15,
+    justifyContent: "space-between",
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 15,
   },
   content: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "100%",
+    flex: 1,
   },
   title: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "bold",
-    color: "#333",
+    color: "#FFFFFF",
   },
   description: {
     fontSize: 14,
-    color: colors.secondaryText,
+    color: "#F2E8DC",
+    opacity: 0.8,
     marginTop: 5,
   },
 });

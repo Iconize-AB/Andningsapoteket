@@ -7,6 +7,7 @@ import {
   ScrollView,
   ActivityIndicator,
 } from "react-native";
+import { LinearGradient } from 'expo-linear-gradient';
 import EnhancedText from "../regular/EnhancedText";
 import { useTranslation } from "react-i18next";
 import EnhancedTextInput from "../regular/EnhancedTextInput";
@@ -15,10 +16,12 @@ import colors from "../common/colors/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FetchUserPlaylists } from "../sessions/endpoints/BreatworkSessionActionsEndpoints";
 import PlaylistItem from "../favorites/PlaylistItem";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 const AddToPlaylistModel = ({
   setModalVisible,
-  saveVideoToList,   // Make sure this function can handle playlist info
+  saveVideoToList,
   modalVisible,
   listName,
   setListName,
@@ -57,7 +60,10 @@ const AddToPlaylistModel = ({
       onRequestClose={() => setModalVisible(false)}
     >
       <View style={styles.modalOverlay}>
-        <View style={styles.modalContainer}>
+        <LinearGradient
+          colors={['#1E3A5F', '#091D34']}
+          style={styles.modalContainer}
+        >
           <View style={styles.modalHeader}>
             <EnhancedText style={styles.modalTitle} weight="bold">
               {t("Create a New List")}
@@ -66,7 +72,7 @@ const AddToPlaylistModel = ({
               onPress={() => setModalVisible(false)}
               style={styles.closeButton}
             >
-              <EnhancedText style={styles.closeButtonText}>X</EnhancedText>
+              <FontAwesomeIcon icon={faTimes} color="#F2E8DC" size={24} />
             </TouchableOpacity>
           </View>
 
@@ -74,6 +80,7 @@ const AddToPlaylistModel = ({
             placeholder="Enter List Name"
             value={listName}
             onChangeText={setListName}
+            style={styles.input}
           />
 
           <View style={styles.actionButtons}>
@@ -81,23 +88,24 @@ const AddToPlaylistModel = ({
               title={t("Save")}
               onPress={() => saveVideoToList(null)}
               size="medium"
+              style={styles.button}
             />
             <EnhancedButton
               title={t("Cancel")}
               onPress={() => setModalVisible(false)}
               size="medium"
+              style={styles.button}
             />
           </View>
 
-          {/* Display Existing Playlists */}
           <View style={styles.playlistsSection}>
             <EnhancedText style={styles.playlistsTitle}>
               {t("Your Playlists")}
             </EnhancedText>
             {loading ? (
-              <ActivityIndicator size="large" color="#FFF" />
+              <ActivityIndicator size="large" color="#F2E8DC" />
             ) : (
-              <ScrollView>
+              <ScrollView style={styles.playlistsScrollView}>
                 {playlists.length > 0 ? (
                   playlists.map((playlist, index) => (
                     <PlaylistItem
@@ -114,7 +122,7 @@ const AddToPlaylistModel = ({
               </ScrollView>
             )}
           </View>
-        </View>
+        </LinearGradient>
       </View>
     </Modal>
   );
@@ -124,56 +132,61 @@ const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
     justifyContent: "flex-end",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContainer: {
-    backgroundColor: colors.primary,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingHorizontal: 20,
-    paddingTop: 10,
+    paddingTop: 20,
     paddingBottom: 40,
     width: "100%",
+    maxHeight: "80%",
   },
   modalHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-    paddingBottom: 15,
+    marginBottom: 20,
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: "bold",
-    color: "#fff",
-    flex: 1,
+    color: "#F2E8DC",
   },
   closeButton: {
     padding: 10,
   },
-  closeButtonText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "red",
+  input: {
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderRadius: 10,
+    padding: 15,
+    color: "#F2E8DC",
+    marginBottom: 20,
   },
   actionButtons: {
-    display: "flex",
-    gap: 16,
     flexDirection: "row",
-    marginTop: 20,
+    justifyContent: "space-between",
+    marginBottom: 30,
+  },
+  button: {
+    flex: 1,
+    marginHorizontal: 5,
   },
   playlistsSection: {
-    marginTop: 30,
+    flex: 1,
   },
   playlistsTitle: {
-    fontSize: 16,
-    color: "#FFF",
-    marginBottom: 10,
+    fontSize: 18,
+    color: "#F2E8DC",
+    marginBottom: 15,
+  },
+  playlistsScrollView: {
+    maxHeight: 300,
   },
   noPlaylistsText: {
     fontSize: 16,
-    color: "#FFF",
+    color: "#F2E8DC",
     textAlign: "center",
     marginTop: 20,
   },

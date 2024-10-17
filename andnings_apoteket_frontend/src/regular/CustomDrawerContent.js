@@ -71,7 +71,7 @@ const CustomDrawerContent = (props) => {
                 />
                 <DrawerItem
                   icon="translate"
-                  label={userDetails?.language} 
+                  label={userDetails?.language || "Language"} 
                   onPress={() => navigation.navigate('LanguageScreen')} 
                 />
                 <DrawerItem

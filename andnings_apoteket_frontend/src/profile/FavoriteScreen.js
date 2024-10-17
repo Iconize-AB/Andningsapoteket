@@ -1,9 +1,11 @@
 import React from "react";
-import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
-import NoData from "../regular/NoResult";
-import { LoadingScreen } from "../regular/LoadingSreen";
-import ListItem from "../regular/ListItem";
+import { FlatList, StyleSheet, TouchableOpacity, View, SafeAreaView } from "react-native";
+import { LinearGradient } from 'expo-linear-gradient';
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import NoResult from "../regular/NoResult";
+import { LoadingScreen } from "../regular/LoadingSreen";
+import EnhancedText from "../regular/EnhancedText";
 
 const FavoriteScreen = ({
   setSelectedList,
@@ -12,7 +14,8 @@ const FavoriteScreen = ({
   setViewComments,
   navigate,
 }) => {
-  // const { lists, isLoading } = useLists();
+  // Assuming you have a hook or state management for lists and loading
+  const { lists, isLoading } = useLists();
 
   if (isLoading) {
     return <LoadingScreen />;
@@ -20,9 +23,11 @@ const FavoriteScreen = ({
 
   if (lists.length === 0) {
     return (
-      <View style={styles.favorites}>
-        <NoResult message="You haven't created any session lists." />
-      </View>
+      <LinearGradient colors={['#1E3A5F', '#091D34']} style={styles.container}>
+        <SafeAreaView style={styles.safeArea}>
+          <NoResult message="You haven't created any session lists." />
+        </SafeAreaView>
+      </LinearGradient>
     );
   }
 
@@ -36,47 +41,73 @@ const FavoriteScreen = ({
       style={styles.listItem}
       onPress={() => handlePressList(item)}
     >
-      <ListItem item={item} />
+      <View style={styles.listItemContent}>
+        <EnhancedText style={styles.listItemTitle}>{item.name}</EnhancedText>
+        <EnhancedText style={styles.listItemSubtitle}>{item.Sessions?.length} sessions</EnhancedText>
+      </View>
+      <FontAwesomeIcon icon={faChevronRight} color="#F2E8DC" size={20} />
     </TouchableOpacity>
   );
 
   return (
-    <View style={styles.favorites}>
-      <FlatList
-        data={lists}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
-        style={styles.listContainer}
-      />
-    </View>
+    <LinearGradient colors={['#1E3A5F', '#091D34']} style={styles.container}>
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.content}>
+          <EnhancedText style={styles.title}>Your Favorites</EnhancedText>
+          <FlatList
+            data={lists}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id.toString()}
+            style={styles.listContainer}
+          />
+        </View>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
-export default FavoriteScreen;
-
 const styles = StyleSheet.create({
-  favorites: {
+  container: {
     flex: 1,
-    marginTop: 20,
-    justifyContent: "center",
-    alignItems: "center",
+  },
+  safeArea: {
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+    padding: 20,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    marginBottom: 30,
   },
   listContainer: {
     width: "100%",
-    padding: 20,
   },
-  deleteIcon: {
-    color: "red",
-    fontSize: 20,
-    marginLeft: 10,
+  listItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 15,
   },
-  videoContainer: {
-    width: "100%",
-    padding: 20,
+  listItemContent: {
+    flex: 1,
   },
-  videoHeader: {
+  listItemTitle: {
     fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+  },
+  listItemSubtitle: {
+    fontSize: 14,
+    color: '#F2E8DC',
+    opacity: 0.8,
   },
 });
+
+export default FavoriteScreen;

@@ -4,10 +4,8 @@ import {
   ScrollView,
   View,
   ActivityIndicator,
-  TouchableOpacity,
-  Text,
+  SafeAreaView,
 } from "react-native";
-import colors from "../common/colors/Colors";
 import { useTranslation } from "react-i18next";
 import EnhancedText from "../regular/EnhancedText";
 import RecommendedSessions from "../recommendations/RecommendedSessions";
@@ -94,7 +92,7 @@ const CreatedPlayListsScreen = ({ navigation }) => {
 
   const renderPlaylists = () => (
     <>
-      <EnhancedText style={styles.greetingText}>
+      <EnhancedText style={styles.sectionTitle}>
         {t("your_playlists")}
       </EnhancedText>
       <View style={styles.listContainer}>
@@ -120,93 +118,62 @@ const CreatedPlayListsScreen = ({ navigation }) => {
 
   if (loading) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={colors.primary} />
+      <View style={[styles.container, styles.loadingContainer]}>
+        <ActivityIndicator size="large" color="#1E3A5F" />
       </View>
     );
   }
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.scrollViewContent}
-      showsVerticalScrollIndicator={false}
-    >
-      <Tabs activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabs} />
-      {activeTab === "playlists" ? (
-        renderPlaylists()
-      ) : (
-        <Library
-          library={library}
-          handleDeleteSessions={handleDeleteSessions}
-          navigation={navigation}
-        />
-      )}
-      <RecommendedSessions />
-    </ScrollView>
+    <SafeAreaView style={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <EnhancedText style={styles.title}>{t("your_favorites")}</EnhancedText>
+        <Tabs activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabs} />
+        {activeTab === "playlists" ? (
+          renderPlaylists()
+        ) : (
+          <Library
+            library={library}
+            handleDeleteSessions={handleDeleteSessions}
+            navigation={navigation}
+          />
+        )}
+        <RecommendedSessions />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  scrollViewContent: {
-    paddingBottom: 120,
-    backgroundColor: colors.background,
+  container: {
+    flex: 1,
+    backgroundColor: '#F2E8DC',
   },
-  greetingText: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#000",
-    paddingHorizontal: 20,
-    marginTop: 20,
+  scrollViewContent: {
+    flexGrow: 1,
+    padding: 20,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#1E3A5F',
+    marginBottom: 30,
+  },
+  sectionTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#1E3A5F',
+    marginBottom: 20,
   },
   listContainer: {
-    paddingHorizontal: 10,
-    marginTop: 20,
-  },
-  noPlaylistsText: {
-    textAlign: "center",
-    color: "#666",
-    marginTop: 20,
+    marginBottom: 20,
   },
   loadingContainer: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: colors.background,
-  },
-  tabContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginVertical: 20,
-    marginHorizontal: 20,
-    backgroundColor: "#F0F0F0",
-    borderRadius: 30,
-    padding: 5,
-  },
-  tabButton: {
-    flex: 1,
-    paddingVertical: 12,
-    borderRadius: 25,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#E0E0E0",
-    marginHorizontal: 5,
-  },
-  activeTabButton: {
-    backgroundColor: colors.primary,
-  },
-  tabText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#888",
-  },
-  activeTabText: {
-    color: "#fff",
-  },
-  deleteIcon: {
-    padding: 10,
-    position: "absolute",
-    top: 0,
-    right: 0,
   },
 });
 
