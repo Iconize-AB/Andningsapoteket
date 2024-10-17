@@ -56,13 +56,15 @@ const AppContent = () => {
     return <DynamicSplashScreen />;
   }
 
-  return userToken ? (
+  const shouldShowAuthStack = !userToken || (userDetails && userDetails.viewedOnBoarding !== "completed");
+
+  return shouldShowAuthStack ? (
+    <AuthStack viewedOnBoarding={userDetails.viewedOnboarding} />
+  ) : (
     <MainNavigator
       userDetails={userDetails}
       refreshUserProfile={refreshUserProfile}
     />
-  ) : (
-    <AuthStack />
   );
 };
 

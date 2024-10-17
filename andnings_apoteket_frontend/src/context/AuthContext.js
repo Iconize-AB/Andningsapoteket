@@ -38,6 +38,8 @@ export const AuthProvider = ({ children }) => {
           id: json.id,
           language: json.language,
           lastActive: json.lastActive,
+          subscription: json.subscription,
+          viewedOnboarding: json.viewedOnBoarding,
           avatar: json.profile.profileImageUrl,
           emailNotification: json.profile.emailNotifications,
           pushNotification: json.profile.pushNotifications,
@@ -50,6 +52,8 @@ export const AuthProvider = ({ children }) => {
       return;
     }
   };
+
+  console.log('userDetails', userDetails);
 
   const refreshUserProfile = useCallback(() => {
     fetchUserProfile();

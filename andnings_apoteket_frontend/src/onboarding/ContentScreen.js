@@ -5,12 +5,25 @@ import EnhancedText from "../regular/EnhancedText";
 import EnhancedButton from "../regular/EnhancedButton";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { updateOnboardingStep } from '../authentication/endpoints/AuthenticationEndpoints';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ContentScreen = ({ route, navigation }) => {
   const { content } = route.params;
 
-  const handleContinue = () => {
-    navigation.navigate("InvitationScreen");
+  const handleContinue = async () => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+      const response = await updateOnboardingStep(token, 'content_viewed');
+      if (response.ok) {
+        console.log('Onboarding step updated successfully');
+        navigation.navigate("InvitationScreen");
+      } else {
+        console.error('Failed to update onboarding step');
+      }
+    } catch (error) {
+      console.error('Error updating onboarding step:', error);
+    }
   };
 
   return (

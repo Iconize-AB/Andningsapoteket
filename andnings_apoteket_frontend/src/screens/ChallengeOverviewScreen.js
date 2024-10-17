@@ -2,6 +2,8 @@ import React from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import EnhancedText from '../regular/EnhancedText';
+import { updateOnboardingStep } from '../authentication/endpoints/AuthenticationEndpoints';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ChallengeOverviewScreen = ({ navigation }) => {
   const challenges = [
@@ -13,6 +15,21 @@ const ChallengeOverviewScreen = ({ navigation }) => {
     { day: 6, title: "Dag 6: Integrerad andningspraxis" },
   ];
 
+  const handleStartChallenge = async () => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+      const response = await updateOnboardingStep(token, 'challenge_started');
+      if (response.ok) {
+        console.log('Onboarding step updated successfully');
+        navigation.navigate('DayChallenge', { day: 1 });
+      } else {
+        console.error('Failed to update onboarding step');
+      }
+    } catch (error) {
+      console.error('Error updating onboarding step:', error);
+    }
+  };
+
   return (
     <LinearGradient colors={['#1E3A5F', '#091D34']} style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -23,7 +40,7 @@ const ChallengeOverviewScreen = ({ navigation }) => {
             {index === 0 && (
               <TouchableOpacity 
                 style={styles.startButton}
-                onPress={() => navigation.navigate('DayChallenge', { day: 1 })}
+                onPress={handleStartChallenge}
               >
                 <EnhancedText style={styles.startButtonText}>Börja</EnhancedText>
               </TouchableOpacity>

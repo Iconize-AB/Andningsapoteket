@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAuth } from '../context/AuthContext'; // Import the AuthContext if you're using it for the token
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { updateOnboardingStep } from '../authentication/endpoints/AuthenticationEndpoints';
 
 const options = [
   'Minska ångest',
@@ -41,6 +42,7 @@ const HelpOptionsScreen = ({ navigation }) => {
     const token = await AsyncStorage.getItem("userToken");
 
     try {
+      // Update help options
       const response = await fetch(
         'http://localhost:3000/v1/user/update-help-options',
         {
@@ -59,6 +61,15 @@ const HelpOptionsScreen = ({ navigation }) => {
         const data = await response.json();
         console.log('Help options updated successfully');
         console.log('Generated content:', data.content);
+        
+        // Update onboarding step
+        const stepResponse = await updateOnboardingStep(token, 'help_options_completed');
+        if (stepResponse.ok) {
+          console.log('Onboarding step updated successfully');
+        } else {
+          console.error('Failed to update onboarding step');
+        }
+
         // Navigate to the next screen, passing the generated content
         navigation.navigate('ContentScreen', { content: data.content });
       } else {

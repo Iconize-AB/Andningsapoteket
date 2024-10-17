@@ -11,7 +11,7 @@ import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from "react-
 import Toast from "react-native-toast-message";
 import EnhancedText from "../regular/EnhancedText";
 import BackIcon from "../regular/BackIcon";
-import { VerifyAccount } from "./endpoints/AuthenticationEndpoints";
+import { updateOnboardingStep, VerifyAccount } from "./endpoints/AuthenticationEndpoints";
 import colors from "../common/colors/Colors";
 import { useAuth } from "../context/AuthContext";
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
@@ -45,6 +45,15 @@ const VerifyAccountScreen = ({ route, navigation }) => {
           },
           text2Style: { color: "#466F78" },
         });
+        
+        // Update onboarding step
+        const stepResponse = await updateOnboardingStep(data.token, 'account_verified');
+        if (stepResponse.ok) {
+          console.log('Onboarding step updated successfully');
+        } else {
+          console.error('Failed to update onboarding step');
+        }
+
         // signIn(data.token);
         navigation.navigate("HelpOptionsScreen");
       } else {

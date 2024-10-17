@@ -16,9 +16,32 @@ import ChallengeOverviewScreen from "../screens/ChallengeOverviewScreen";
 
 const Stack = createStackNavigator();
 
-const AuthStack = () => {
+const AuthStack = ({ viewedOnBoarding }) => {
+  console.log('viewedOnBoarding', viewedOnBoarding);
+  const getInitialRouteName = () => {
+    switch (viewedOnBoarding) {
+      case 'account_verified':
+        return 'HelpOptionsScreen';
+      case 'help_options_completed':
+        return 'ContentScreen';
+      case 'content_viewed':
+        return 'InvitationScreen';
+      case 'invitation_accepted':
+        return 'PaymentMethodScreen';
+      case 'payment_method_selected':
+        return 'SubscriptionScreen';
+      case 'subscription_confirmed':
+        return 'ChallengeOverviewScreen';
+      default:
+        return 'UserChoose';
+    }
+  };
+
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator 
+      screenOptions={{ headerShown: false }}
+      initialRouteName={getInitialRouteName()}
+    >
       <Stack.Screen name="UserChoose" component={UsersChoice} />
       <Stack.Screen name="SignIn" component={SigninScreen} />
       <Stack.Screen name="SignUp" component={SignupScreen} />
@@ -37,4 +60,3 @@ const AuthStack = () => {
 };
 
 export default AuthStack;
-
