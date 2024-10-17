@@ -62,6 +62,9 @@ const HelpOptionsScreen = ({ navigation }) => {
         console.log('Help options updated successfully');
         console.log('Generated content:', data.content);
         
+        // Save content to AsyncStorage
+        await AsyncStorage.setItem('onboardingContent', JSON.stringify(data.content));
+        
         // Update onboarding step
         const stepResponse = await updateOnboardingStep(token, 'help_options_completed');
         if (stepResponse.ok) {

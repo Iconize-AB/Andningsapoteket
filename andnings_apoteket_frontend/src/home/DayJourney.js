@@ -1,5 +1,5 @@
 // src/components/DayJourney.js
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,79 +7,81 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import colors from "../common/colors/Colors"; // Assuming you have this color file
 import { useTranslation } from "react-i18next";
 import EnhancedButton from "../regular/EnhancedButton";
 import EnhancedText from "../regular/EnhancedText";
-
-const daysData = [
-  {
-    day: 1,
-    imageUrl:
-      "https://media.istockphoto.com/id/1357733473/vector/sweet-dreams-concept.jpg?s=612x612&w=0&k=20&c=j5uJIgYYAteMDzj5hBGci_tts8ReiTJWrxWBgDbOF5A=",
-  },
-  {
-    day: 2,
-    imageUrl:
-      "https://media.istockphoto.com/id/1299679815/vector/relaxed-male-character-in-home-clothes-and-slippers-sitting-in-comfortable-chair-yawning-man.jpg?s=612x612&w=0&k=20&c=s4OxVgFYYadB1g48qKQuRlGxcZMXqaKVLrCTcMntO1w=",
-  },
-  {
-    day: 3,
-    imageUrl:
-      "https://media.istockphoto.com/id/1275828972/vector/sick-person-suffering-from-vertigo.jpg?s=612x612&w=0&k=20&c=Zb8fAQUswMHl_g7sHujAAHBNAVJXvaMcw8WKOEsGKZY=",
-  },
-  {
-    day: 4,
-    imageUrl:
-      "https://www.mindful.org/content/uploads/A-10-Minute-Meditation-for-Deep-Relaxation-and-Ease.jpg",
-  },
-  {
-    day: 5,
-    imageUrl:
-      "https://images.pond5.com/focus-abstract-concept-vector-illustration-illustration-170779240_iconl_nowm.jpeg",
-  },
-  {
-    day: 6,
-    imageUrl:
-      "https://media.istockphoto.com/id/1358081661/vector/mental-health-mind-or-psychology-therapy-vector-illustration-with-human-hand-watering.jpg?s=612x612&w=0&k=20&c=eFMP-lXSdiklp9vN3QT1v6WfyDsFg_3SFo7-CKG1HGI=",
-  },
-];
+import { LinearGradient } from 'expo-linear-gradient';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GetSixDayChallenge } from "./endpoints/6DayChallengeEndpoints";
 
 const DayJourney = ({ navigateToOption }) => {
   const { t } = useTranslation();
+  const [challengeData, setChallengeData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchChallengeData = async () => {
+      try {
+        const token = await AsyncStorage.getItem("userToken");
+        const response = await GetSixDayChallenge(token);
+        
+        if (response.ok) {
+          const data = await response.json();
+          setChallengeData(data.challenges[0]);
+        } else {
+          console.error("Failed to fetch challenge data");
+        }
+      } catch (error) {
+        console.error("Error fetching challenge data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchChallengeData();
+  }, []);
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#1E3A5F" />;
+  }
+
+  if (!challengeData) {
+    return <EnhancedText>No challenge data available</EnhancedText>;
+  }
+
   return (
     <View style={styles.journeyContainer}>
       <EnhancedText style={styles.journeyTitle}>
-        {t("start_your_journey")}
+        {challengeData.title}
       </EnhancedText>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         style={styles.horizontalScroll}
       >
-        {daysData.map((dayItem) => (
-          <View key={dayItem.day} style={styles.card}>
-            <View style={styles.cardImage}>
-              <View style={styles.cardOverlay}>
-                <EnhancedText style={styles.cardDayText}>
-                  {t("start_day", { day: dayItem.day })}
-                </EnhancedText>
-                <EnhancedText style={styles.cardTitle}>
-                  {t(`days.${dayItem.day}.title`)}
-                </EnhancedText>
-                <EnhancedText style={styles.cardSubtitle}>
-                  {t(`days.${dayItem.day}.description`)}
-                </EnhancedText>
-                <EnhancedButton
-                  onPress={() => navigateToOption("JourneyOverviewScreen")}
-                  title={dayItem.day === 1 ? t("Start") : t("Explore")} // Conditional button text
-                  size="medium"
-                  type="solid"
-                />
-              </View>
-            </View>
-          </View>
+        {challengeData.sessions.map((session) => (
+          <TouchableOpacity
+            key={session.id}
+            onPress={() => navigateToOption("JourneyOverviewScreen", { sessionId: session.id })}
+          >
+            <LinearGradient
+              colors={['#1E3A5F', '#091D34']}
+              style={styles.card}
+            >
+              <EnhancedText style={styles.cardDayText}>
+                {t("start_day", { day: session.day })}
+              </EnhancedText>
+              <EnhancedText style={styles.cardTitle}>
+                {session.title}
+              </EnhancedText>
+              <EnhancedText style={styles.cardSubtitle}>
+                {session.description}
+              </EnhancedText>
+            </LinearGradient>
+          </TouchableOpacity>
         ))}
       </ScrollView>
     </View>
@@ -88,59 +90,45 @@ const DayJourney = ({ navigateToOption }) => {
 
 const styles = StyleSheet.create({
   journeyContainer: {
-    paddingHorizontal: 10,
+    marginBottom: 20,
+    paddingLeft: 20,
   },
   journeyTitle: {
     fontSize: 18,
     fontWeight: "bold",
+    color: "#1E3A5F",
     marginBottom: 10,
   },
   horizontalScroll: {
     flexDirection: "row",
   },
   card: {
-    width: 250,
-    height: 250,
+    width: 200,
+    height: 200,
     marginRight: 15,
     borderRadius: 10,
-    overflow: "hidden",
-  },
-  cardImage: {
-    flex: 1,
-    justifyContent: "flex-end",
-    backgroundColor: colors.secondary,
-    alignItems: "center",
-  },
-  cardOverlay: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    padding: 20,
-    width: "100%",
+    padding: 15,
+    justifyContent: "space-between",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   cardDayText: {
     fontSize: 14,
-    color: "#fff",
+    color: "#FFFFFF",
+    opacity: 0.8,
   },
   cardTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#fff",
-    marginTop: 10,
+    color: "#FFFFFF",
   },
   cardSubtitle: {
     fontSize: 14,
-    color: "#fff",
-    marginTop: 10,
-  },
-  cardButton: {
-    backgroundColor: "#0066FF",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginTop: 15,
-  },
-  cardButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
+    color: "#FFFFFF",
+    opacity: 0.8,
   },
 });
 

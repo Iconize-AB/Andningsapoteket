@@ -11,6 +11,8 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import EnhancedText from "../regular/EnhancedText";
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { updateOnboardingStep } from "../authentication/endpoints/AuthenticationEndpoints";
 
 const SubscriptionConfirmationModal = ({
   isVisible,
@@ -23,8 +25,21 @@ const SubscriptionConfirmationModal = ({
   const [expiryDate, setExpiryDate] = useState("");
   const [cvv, setCvv] = useState("");
 
-  const handleConfirmPayment = () => {
-    navigation.navigate("ChallengeOverviewScreen");
+  const handleConfirmPayment = async () => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+      const response = await updateOnboardingStep(token, 'completed');
+      console.log('response', response);
+      if (response.ok) {
+        console.log('Onboarding step updated successfully');
+        await AsyncStorage.removeItem('completed');
+        navigation.navigate("ChallengeOverviewScreen");
+      } else {
+        console.error('Failed to update onboarding step');
+      }
+    } catch (error) {
+      console.error('Error updating onboarding step:', error);
+    }
   };
 
   return (

@@ -1,15 +1,31 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import EnhancedText from "../regular/EnhancedText";
-import EnhancedButton from "../regular/EnhancedButton";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { updateOnboardingStep } from '../authentication/endpoints/AuthenticationEndpoints';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ContentScreen = ({ route, navigation }) => {
-  const { content } = route.params;
+  const [content, setContent] = useState(route.params?.content || []);
+
+  useEffect(() => {
+    const loadContent = async () => {
+      if (content.length === 0) {
+        try {
+          const storedContent = await AsyncStorage.getItem('onboardingContent');
+          if (storedContent) {
+            setContent(JSON.parse(storedContent));
+          }
+        } catch (error) {
+          console.error('Error loading content from AsyncStorage:', error);
+        }
+      }
+    };
+
+    loadContent();
+  }, []);
 
   const handleContinue = async () => {
     try {
@@ -17,6 +33,8 @@ const ContentScreen = ({ route, navigation }) => {
       const response = await updateOnboardingStep(token, 'content_viewed');
       if (response.ok) {
         console.log('Onboarding step updated successfully');
+        // Clear the stored content as it's no longer needed
+        await AsyncStorage.removeItem('onboardingContent');
         navigation.navigate("InvitationScreen");
       } else {
         console.error('Failed to update onboarding step');

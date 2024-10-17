@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   faCheckCircle,
@@ -8,50 +8,31 @@ import {
   faBook,
 } from "@fortawesome/free-solid-svg-icons";
 import { useTranslation } from "react-i18next";
-import colors from "../common/colors/Colors";
+import EnhancedText from "../regular/EnhancedText";
 
 const QuickActions = ({ navigateToOption }) => {
   const { t } = useTranslation();
 
+  const actions = [
+    { icon: faCheckCircle, text: t("breathwork_library"), route: "Library" },
+    { icon: faHeartbeat, text: t("condition"), route: "Condition" },
+    { icon: faHeart, text: t("favorites"), route: "Favorites" },
+    { icon: faBook, text: t("breatwork_journeys"), route: "Categories" },
+  ];
+
   return (
     <View style={styles.quickActionsContainer}>
-      <TouchableOpacity
-        style={[styles.actionButton, styles.shadowEffect]}
-        onPress={() => navigateToOption("Library")}
-        activeOpacity={0.9}
-      >
-        <FontAwesomeIcon
-          icon={faCheckCircle}
-          size={24}
-          color={colors.iconColor}
-        />
-        <Text style={styles.actionText}>{t("breathwork_library")}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.actionButton, styles.shadowEffect]}
-        onPress={() => navigateToOption("Condition")}
-      >
-        <FontAwesomeIcon
-          icon={faHeartbeat}
-          size={20}
-          color={colors.iconColor}
-        />
-        <Text style={styles.actionText}>{t("condition")}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.actionButton, styles.shadowEffect]}
-        onPress={() => navigateToOption("Favorites")}
-      >
-        <FontAwesomeIcon icon={faHeart} size={20} color={colors.iconColor} />
-        <Text style={styles.actionText}>{t("favorites")}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.actionButton, styles.shadowEffect]}
-        onPress={() => navigateToOption("Categories")}
-      >
-        <FontAwesomeIcon icon={faBook} size={20} color={colors.iconColor} />
-        <Text style={styles.actionText}>{t("breatwork_journeys")}</Text>
-      </TouchableOpacity>
+      {actions.map((action, index) => (
+        <TouchableOpacity
+          key={index}
+          style={styles.actionButton}
+          onPress={() => navigateToOption(action.route)}
+          activeOpacity={0.8}
+        >
+          <FontAwesomeIcon icon={action.icon} size={24} color="#1E3A5F" />
+          <EnhancedText style={styles.actionText}>{action.text}</EnhancedText>
+        </TouchableOpacity>
+      ))}
     </View>
   );
 };
@@ -61,35 +42,26 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    marginVertical: 20,
-    paddingHorizontal: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
+    marginBottom: 20,
   },
   actionButton: {
     alignItems: "center",
-    backgroundColor: colors.secondary,
+    backgroundColor: "#FFFFFF",
     borderRadius: 15,
     padding: 16,
     width: "48%",
     marginBottom: 15,
-    background: `linear-gradient(145deg, ${colors.secondary}, #cccccc)`,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.3,
-    shadowRadius: 20,
-    elevation: 15,
-    borderWidth: 1,
-    borderColor: "#f0f0f0",
-  },
-  shadowEffect: {
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    elevation: 15,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   actionText: {
     fontSize: 14,
-    color: "#fff",
+    color: "#1E3A5F",
     marginTop: 10,
     textAlign: "center",
     fontWeight: "600",

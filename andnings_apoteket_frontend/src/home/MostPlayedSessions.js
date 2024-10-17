@@ -50,10 +50,12 @@ const styles = StyleSheet.create({
   mostPlayedContainer: {
     marginTop: 20,
     paddingHorizontal: 10,
+    paddingLeft: 20,
   },
   mostPlayedTitle: {
     fontSize: 18,
     fontWeight: "bold",
+    color: "#1E3A5F",
     marginBottom: 10,
   },
   horizontalScroll: {

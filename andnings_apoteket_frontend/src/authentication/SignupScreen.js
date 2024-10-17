@@ -26,6 +26,7 @@ const SignupScreen = ({ navigation }) => {
 
   const handleSignUp = async () => {
     let isValid = true;
+    const token = await AsyncStorage.removeItem("userToken");
     if (!isValidEmail(email)) {
       setFormError((prev) => ({
         ...prev,
@@ -44,6 +45,7 @@ const SignupScreen = ({ navigation }) => {
     if (!isValid) return;
     try {
       const response = await Register(email, password);
+      console.log('response', response);
       if (!response.ok) {
         Toast.show({
           type: "error",
