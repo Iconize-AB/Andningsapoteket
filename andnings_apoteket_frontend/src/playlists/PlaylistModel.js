@@ -12,7 +12,6 @@ import EnhancedText from "../regular/EnhancedText";
 import { useTranslation } from "react-i18next";
 import EnhancedTextInput from "../regular/EnhancedTextInput";
 import EnhancedButton from "../regular/EnhancedButton";
-import colors from "../common/colors/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FetchUserPlaylists } from "../sessions/endpoints/BreatworkSessionActionsEndpoints";
 import PlaylistItem from "../favorites/PlaylistItem";

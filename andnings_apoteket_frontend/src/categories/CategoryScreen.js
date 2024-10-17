@@ -1,7 +1,8 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView, SafeAreaView } from "react-native";
 import { useTranslation } from "react-i18next";
 import CategoryGrid from "./CategoryGrid";
+import EnhancedText from "../regular/EnhancedText";
 import colors from "../common/colors/Colors";
 
 const CategoryScreen = ({ navigation }) => {
@@ -12,23 +13,37 @@ const CategoryScreen = ({ navigation }) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <CategoryGrid onPressCategory={onPressCategory} />
-    </ScrollView>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        <View style={styles.container}>
+          <EnhancedText style={styles.title}>{t("Choose a Category")}</EnhancedText>
+          <CategoryGrid onPressCategory={onPressCategory} />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#F2E8DC', // Beige background
+  },
+  scrollView: {
+    flexGrow: 1,
+  },
   container: {
+    flex: 1,
     padding: 20,
-    backgroundColor: colors.background,
+    backgroundColor: '#F2E8DC', // Beige background
     justifyContent: "center",
-    height: "100%"
   },
   title: {
-    fontSize: 18,
+    fontSize: 32,
     fontWeight: "bold",
-    marginBottom: 10,
+    color: '#1E3A5F',
+    marginBottom: 30,
+    textAlign: "center",
   },
 });
 

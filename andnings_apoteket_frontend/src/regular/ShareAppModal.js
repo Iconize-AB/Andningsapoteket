@@ -2,19 +2,29 @@
 import React, { useState } from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   TouchableOpacity,
   TextInput,
   Modal,
   SafeAreaView,
+  ScrollView,
+  ActivityIndicator,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faTimes, faPlus, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
+import EnhancedText from './EnhancedText';
+import EnhancedButton from './EnhancedButton';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { inviteFriends } from '../profile/endpoints/InvitationEndpoints';
+import Toast from "react-native-toast-message";
+import EnhancedTextInput from './EnhancedTextInput';
 
-const ShareAppModal = ({ isVisible, onClose, onShare }) => {
+const ShareAppModal = ({ isVisible, onClose }) => {
   const { t } = useTranslation();
   const [emails, setEmails] = useState(['']);
+  const [isLoading, setIsLoading] = useState(false);
 
   const addEmailField = () => {
     setEmails([...emails, '']);
@@ -26,8 +36,44 @@ const ShareAppModal = ({ isVisible, onClose, onShare }) => {
     setEmails(newEmails);
   };
 
-  const handleShare = () => {
-    onShare(emails.filter(email => email.trim() !== ''));
+  const handleShare = async () => {
+    const validEmails = emails.filter(email => email.trim() !== '');
+    if (validEmails.length === 0) {
+      Toast.show({
+        type: "error",
+        text1: "Please enter at least one email address.",
+        text2: "Try again 🙏",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+      if (!token) throw new Error("No token found");
+
+      const response = await inviteFriends(token, validEmails);
+      if (response.ok) {
+        Toast.show({
+          type: "success",
+          text1: "Invitations sent successfully!",
+          text2: "Your friends will receive an email soon.",
+        });
+        setEmails([""])
+        onClose();
+      } else {
+        throw new Error("Failed to send invitations");
+      }
+    } catch (error) {
+      console.error("Error sending invitations:", error);
+      Toast.show({
+        type: "error",
+        text1: "Failed to send invitations.",
+        text2: "Please try again later.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -38,40 +84,48 @@ const ShareAppModal = ({ isVisible, onClose, onShare }) => {
       onRequestClose={onClose}
     >
       <SafeAreaView style={styles.modalContainer}>
-        <View style={styles.modalContent}>
-          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Icon name="close" size={24} color="#000" />
-          </TouchableOpacity>
+        <LinearGradient colors={['#1E3A5F', '#091D34']} style={styles.modalContent}>
+          <ScrollView contentContainerStyle={styles.scrollViewContent}>
+            <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+              <FontAwesomeIcon icon={faTimes} size={24} color="#F2E8DC" />
+            </TouchableOpacity>
+            
+            <FontAwesomeIcon icon={faUserPlus} size={40} color="#F2E8DC" style={styles.headerIcon} />
+            
+            <EnhancedText style={styles.title}>{t('Bjud in dina vänner')}</EnhancedText>
+            <EnhancedText style={styles.subtitle}>
+              {t('Ge dina vänner tillgång till andningsapoteket. Dem får även en kod för 30 dagars provperiod för member plus')}
+            </EnhancedText>
+            
+            <EnhancedText style={styles.label}>{t('Email address')}</EnhancedText>
+            {emails.map((email, index) => (
+              <EnhancedTextInput
+                key={index}
+                style={styles.input}
+                value={email}
+                onChangeText={(text) => updateEmail(text, index)}
+                placeholder="email@example.com"
+                placeholderTextColor="#8E8E8E"
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+            ))}
+            
+            <TouchableOpacity style={styles.addButton} onPress={addEmailField}>
+              <FontAwesomeIcon icon={faPlus} size={20} color="#F2E8DC" />
+              <EnhancedText style={styles.addButtonText}>{t('Add another')}</EnhancedText>
+            </TouchableOpacity>
+          </ScrollView>
           
-          <Icon name="account-plus-outline" size={40} color="#000" style={styles.headerIcon} />
-          
-          <Text style={styles.title}>{t('Bjud in dina vänner')}</Text>
-          <Text style={styles.subtitle}>
-            {t('Ge dina vänner tillgång till andningsapoteket. Dem får även en kod för 30 dagars provperiod för member plus')}
-          </Text>
-          
-          <Text style={styles.label}>{t('Email address')}</Text>
-          {emails.map((email, index) => (
-            <TextInput
-              key={index}
-              style={styles.input}
-              value={email}
-              onChangeText={(text) => updateEmail(text, index)}
-              placeholder="email@example.com"
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
-          ))}
-          
-          <TouchableOpacity style={styles.addButton} onPress={addEmailField}>
-            <Icon name="plus" size={20} color="#007AFF" />
-            <Text style={styles.addButtonText}>{t('Add another')}</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
-            <Text style={styles.shareButtonText}>{t('SKICKA')}</Text>
-          </TouchableOpacity>
-        </View>
+          <EnhancedButton
+            title={isLoading ? t('SENDING...') : t('SKICKA')}
+            onPress={handleShare}
+            style={styles.shareButton}
+            textStyle={styles.shareButtonText}
+            disabled={isLoading}
+          />
+          {isLoading && <ActivityIndicator size="large" color="#F2E8DC" style={styles.loader} />}
+        </LinearGradient>
       </SafeAreaView>
     </Modal>
   );
@@ -80,19 +134,20 @@ const ShareAppModal = ({ isVisible, onClose, onShare }) => {
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
   },
   modalContent: {
-    backgroundColor: 'white',
-    borderRadius: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
     padding: 20,
-    width: '90%',
-    maxWidth: 400,
+    maxHeight: '80%',
+  },
+  scrollViewContent: {
+    flexGrow: 1,
   },
   closeButton: {
     alignSelf: 'flex-end',
+    padding: 10,
   },
   headerIcon: {
     alignSelf: 'center',
@@ -101,26 +156,30 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: '#F2E8DC',
     marginBottom: 10,
     textAlign: 'center',
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
+    color: '#F2E8DC',
+    opacity: 0.8,
     marginBottom: 20,
     textAlign: 'center',
   },
   label: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: '#F2E8DC',
     marginBottom: 5,
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 10,
+    padding: 15,
     marginBottom: 10,
+    fontSize: 16,
+    color: '#F2E8DC',
   },
   addButton: {
     flexDirection: 'row',
@@ -128,20 +187,27 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   addButtonText: {
-    color: '#007AFF',
+    color: '#F2E8DC',
     marginLeft: 5,
   },
   shareButton: {
-    backgroundColor: '#F0EAD6',
-    borderRadius: 8,
+    backgroundColor: '#F2E8DC',
+    borderRadius: 10,
     padding: 15,
     alignItems: 'center',
+    marginTop: 20,
   },
   shareButtonText: {
-    color: '#000',
+    color: '#1E3A5F',
     fontWeight: 'bold',
+    fontSize: 16,
+  },
+  loader: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: -25 }, { translateY: -25 }],
   },
 });
 
 export default ShareAppModal;
-

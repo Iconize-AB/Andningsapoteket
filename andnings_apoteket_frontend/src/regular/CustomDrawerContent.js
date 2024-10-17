@@ -19,10 +19,14 @@ const CustomDrawerContent = (props) => {
   const { navigation, userDetails, setShowPlusMembership } = props;
   const { signOut } = useAuth();
   const [isShareAppModalVisible, setShareAppModalVisible] = useState(false);
+  const [isProfileExpanded, setIsProfileExpanded] = useState(true);
 
   const DrawerItem = ({ icon, label, onPress, expandable, expanded, children }) => (
     <View>
-      <TouchableOpacity style={styles.drawerItem} onPress={onPress}>
+      <TouchableOpacity 
+        style={styles.drawerItem} 
+        onPress={expandable ? () => setIsProfileExpanded(!isProfileExpanded) : onPress}
+      >
         <Icon name={icon} size={24} color="#F2E8DC" style={styles.icon} />
         <Text style={styles.drawerItemText}>{label}</Text>
         {expandable && (
@@ -60,31 +64,33 @@ const CustomDrawerContent = (props) => {
               icon="account-outline"
               label={t('Profil')}
               expandable
-              expanded={true}
+              expanded={isProfileExpanded}
               onPress={() => navigation.navigate('ProfileScreen')}
             >
-              <View style={styles.subMenu}>
-                <DrawerItem 
-                  icon="cog-outline" 
-                  label={t('Inställningar')} 
-                  onPress={() => navigation.navigate('Settings')} 
-                />
-                <DrawerItem
-                  icon="translate"
-                  label={userDetails?.language || "Language"} 
-                  onPress={() => navigation.navigate('LanguageScreen')} 
-                />
-                <DrawerItem
-                  icon="bell-outline" 
-                  label={t('Notifikationer')} 
-                  onPress={() => navigation.navigate('NotificationScreen')} 
-                />
-                <DrawerItem 
-                  icon="star-outline" 
-                  label={t('Prenumeration')} 
-                  onPress={() => setShowPlusMembership(true)} 
-                />
-              </View>
+              {isProfileExpanded && (
+                <View style={styles.subMenu}>
+                  <DrawerItem 
+                    icon="cog-outline" 
+                    label={t('Inställningar')} 
+                    onPress={() => navigation.navigate('Settings')} 
+                  />
+                  <DrawerItem
+                    icon="translate"
+                    label={userDetails?.language || "Language"} 
+                    onPress={() => navigation.navigate('LanguageScreen')} 
+                  />
+                  <DrawerItem
+                    icon="bell-outline" 
+                    label={t('Notifikationer')} 
+                    onPress={() => navigation.navigate('NotificationScreen')} 
+                  />
+                  <DrawerItem 
+                    icon="star-outline" 
+                    label={t('Prenumeration')} 
+                    onPress={() => setShowPlusMembership(true)} 
+                  />
+                </View>
+              )}
             </DrawerItem>
             <DrawerItem 
               icon="play-circle-outline" 
@@ -148,22 +154,22 @@ const styles = StyleSheet.create({
   drawerContent: {
     paddingTop: 16,
   },
-  drawerItem: {
+  profileHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    justifyContent: 'space-between',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255, 255, 255, 0.1)',
   },
-  icon: {
-    marginRight: 16,
+  profileInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  drawerItemText: {
+  profileLabel: {
+    marginLeft: 32,
     fontSize: 16,
     color: '#F2E8DC',
-    flex: 1,
-  },
-  expandIcon: {
-    marginLeft: 'auto',
   },
   subMenu: {
     paddingLeft: 16,
@@ -172,6 +178,21 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
     marginVertical: 8,
+  },
+  drawerItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+  },
+  icon: {
+    marginRight: 16,
+  },
+  drawerItemText: {
+    fontSize: 16,
+    color: '#F2E8DC',
+  },
+  expandIcon: {
+    marginLeft: 16,
   },
 });
 
