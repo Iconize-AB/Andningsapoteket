@@ -18,8 +18,7 @@ const ChallengeDay = ({ day, title }) => (
 
 const InvitationScreen = ({ navigation }) => {
   const handleStart = () => {
-    // Navigate to the first day of the challenge or the main app
-    // navigation.navigate('ChallengeDay1');
+    navigation.navigate('SubscriptionScreen');
   };
 
   const handleSkip = () => {
