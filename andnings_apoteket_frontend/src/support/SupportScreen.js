@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { View, TextInput, ScrollView, StyleSheet, Alert } from "react-native";
-import colors from "../common/colors/Colors";
+import { View, TextInput, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import Toast from "react-native-toast-message";
-import EnhancedTextInput from "../regular/EnhancedTextInput";
-import EnhancedButton from "../regular/EnhancedButton";
 import EnhancedText from "../regular/EnhancedText";
 import { useTranslation } from "react-i18next";
 import { sendSupportRequest } from "./endpoints/SupportEndpoints";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LinearGradient } from 'expo-linear-gradient';
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 const SupportScreen = ({ userDetails }) => {
   const { t } = useTranslation();
@@ -19,22 +19,19 @@ const SupportScreen = ({ userDetails }) => {
 
   const handleSubmit = async () => {
     if (!name || !email || !subject || !message) {
-      return Alert.alert("All fields are required!");
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "All fields are required!",
+      });
+      return;
     }
-
-    console.log("sendSupportRequest", token, name, email, subject, message);
 
     setIsLoading(true);
     const token = await AsyncStorage.getItem("userToken");
 
     try {
-      const response = await sendSupportRequest(
-        token,
-        name,
-        email,
-        subject,
-        message,
-      );
+      const response = await sendSupportRequest(token, name, email, subject, message);
 
       if (response.ok) {
         Toast.show({
@@ -42,8 +39,6 @@ const SupportScreen = ({ userDetails }) => {
           text1: "Support request sent",
           text2: "We will get back to you soon!",
         });
-        setName("");
-        setEmail("");
         setSubject("");
         setMessage("");
       } else {
@@ -60,86 +55,107 @@ const SupportScreen = ({ userDetails }) => {
     }
   };
 
-  const customInputStyle = {
-    borderColor: "#000",
-    borderWidth: 2,
-    color: "#000",
-    opacity: 1,
-  };
-
-  const customLabelStyle = {
-    color: "#000",
-  };
-
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View>
-        <EnhancedText style={styles.title}>{t("support")}</EnhancedText>
-      </View>
-      <EnhancedTextInput
-        placeholder="Your Name"
-        value={name}
-        customStyle={customInputStyle}
-        customLabelStyle={customLabelStyle}
-        onChangeText={setName}
-      />
-      <EnhancedTextInput
-        placeholder="Your Email"
-        value={email}
-        customStyle={customInputStyle}
-        customLabelStyle={customLabelStyle}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-      <EnhancedTextInput
-        placeholder="Subject"
-        value={subject}
-        customStyle={customInputStyle}
-        customLabelStyle={customLabelStyle}
-        onChangeText={setSubject}
-      />
-      <TextInput
-        style={styles.textArea}
-        placeholder="How can we help you?"
-        value={message}
-        onChangeText={setMessage}
-        multiline={true}
-      />
-      <EnhancedButton
-        onPress={handleSubmit}
-        disabled={isLoading}
-        title={isLoading ? "Submitting..." : "Submit Request"}
-      />
-    </ScrollView>
+    <LinearGradient colors={['#1E3A5F', '#091D34']} style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        <View style={styles.header}>
+          <EnhancedText style={styles.title}>{t("support")}</EnhancedText>
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Your Name"
+            placeholderTextColor="#A0C8F9"
+            value={name}
+            onChangeText={setName}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Your Email"
+            placeholderTextColor="#A0C8F9"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Subject"
+            placeholderTextColor="#A0C8F9"
+            value={subject}
+            onChangeText={setSubject}
+          />
+          <TextInput
+            style={[styles.input, styles.textArea]}
+            placeholder="How can we help you?"
+            placeholderTextColor="#A0C8F9"
+            value={message}
+            onChangeText={setMessage}
+            multiline={true}
+          />
+        </View>
+        <TouchableOpacity
+          style={[styles.submitButton, isLoading && styles.submitButtonDisabled]}
+          onPress={handleSubmit}
+          disabled={isLoading}
+        >
+          <FontAwesomeIcon icon={faPaperPlane} color="#1E3A5F" size={20} />
+          <EnhancedText style={styles.submitButtonText}>
+            {isLoading ? "Submitting..." : "Submit Request"}
+          </EnhancedText>
+        </TouchableOpacity>
+      </ScrollView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    flex: 1,
+  },
+  scrollView: {
     flexGrow: 1,
-    backgroundColor: colors.background,
+    padding: 20,
+  },
+  header: {
+    marginBottom: 30,
   },
   title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#000",
-    marginTop: 20,
-    marginBottom: 20,
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+  },
+  inputContainer: {
+    marginBottom: 30,
+  },
+  input: {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 15,
+    fontSize: 16,
+    color: '#F2E8DC',
   },
   textArea: {
-    width: "100%",
     height: 120,
-    backgroundColor: "#fff",
-    borderColor: "#000",
-    borderWidth: 2,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingTop: 10,
-    textAlignVertical: "top",
-    marginBottom: 20,
-    marginTop: 30,
+    textAlignVertical: 'top',
+  },
+  submitButton: {
+    flexDirection: 'row',
+    backgroundColor: '#F2E8DC',
+    borderRadius: 25,
+    padding: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  submitButtonDisabled: {
+    opacity: 0.7,
+  },
+  submitButtonText: {
+    color: '#1E3A5F',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 10,
   },
 });
 

@@ -75,6 +75,11 @@ const CustomDrawerContent = (props) => {
                     onPress={() => navigation.navigate('Settings')} 
                   />
                   <DrawerItem
+                    icon="account-outline"
+                    label={t('Dashboard')} 
+                    onPress={() => navigation.navigate('ProfileScreen')} 
+                  />
+                  <DrawerItem
                     icon="translate"
                     label={userDetails?.language || "Language"} 
                     onPress={() => navigation.navigate('LanguageScreen')} 
