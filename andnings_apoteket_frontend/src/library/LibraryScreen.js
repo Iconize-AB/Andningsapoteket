@@ -5,12 +5,14 @@ import {
   TextInput,
   FlatList,
   TouchableOpacity,
-  ScrollView,
+  SafeAreaView,
 } from "react-native";
-import colors from "../common/colors/Colors";
 import { useTranslation } from "react-i18next";
 import EnhancedText from "../regular/EnhancedText";
 import Article from "./Article";
+import { LinearGradient } from 'expo-linear-gradient';
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faSearch, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
 const LibraryScreen = () => {
   const { t } = useTranslation();
@@ -113,71 +115,84 @@ const LibraryScreen = () => {
     setExpanded(!expanded);
   };
 
-  // Only show the first few categories unless "expanded" is true
-  const categoriesToRender = expanded ? categories : categories.slice(0, 3);
-
-  return (
-    <View style={styles.container}>
-      {/* Title */}
-      <EnhancedText style={styles.title}>{t("Library")}</EnhancedText>
-
-      {/* Search Bar */}
-      <TextInput
-        style={styles.searchBar}
-        placeholder={t("Search articles")}
-        value={searchQuery}
-        onChangeText={(text) => setSearchQuery(text)}
-      />
-
-      {/* Filter Section */}
-      <View style={styles.filterContainer}>
-        {categoriesToRender.map((category) => (
-          <TouchableOpacity
-            key={category}
-            style={[
-              styles.filterButton,
-              selectedFilter === category && styles.filterButtonActive,
-            ]}
-            onPress={() => setSelectedFilter(category)}
-          >
-            <EnhancedText style={styles.filterButtonText}>
-              {t(category)}
-            </EnhancedText>
-          </TouchableOpacity>
-        ))}
-
-        {/* "Show More" or "Show Less" Button */}
-        <TouchableOpacity style={styles.filterButton} onPress={handleToggleMore}>
-          <EnhancedText style={styles.filterButtonText}>
-            {expanded ? t("Show Less") : t("Show More")}
-          </EnhancedText>
-        </TouchableOpacity>
+  const renderHeader = () => (
+    <>
+      <View style={styles.header}>
+        <EnhancedText style={styles.title}>{t("Library")}</EnhancedText>
       </View>
 
-      {/* Article List */}
+      <View style={styles.searchBarContainer}>
+        <FontAwesomeIcon icon={faSearch} size={20} color="#A0C8F9" />
+        <TextInput
+          style={styles.searchBar}
+          placeholder={t("Search articles")}
+          placeholderTextColor="#A0C8F9"
+          value={searchQuery}
+          onChangeText={(text) => setSearchQuery(text)}
+        />
+      </View>
+
       <FlatList
-        data={filteredArticles}
-        keyExtractor={(item) => item.id.toString()}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.filterContainer}
+        data={categories}
+        keyExtractor={(item) => item}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => openArticle(item)}
-            style={styles.articleContainer}
+            style={[
+              styles.filterButton,
+              selectedFilter === item && styles.filterButtonActive,
+            ]}
+            onPress={() => setSelectedFilter(item)}
           >
-            <EnhancedText style={styles.articleTitle}>
-              {item.title}
-            </EnhancedText>
-            <EnhancedText style={styles.articleCategory}>
-              {item.category}
+            <EnhancedText style={[
+              styles.filterButtonText,
+              selectedFilter === item && styles.filterButtonTextActive,
+            ]}>
+              {t(item)}
             </EnhancedText>
           </TouchableOpacity>
         )}
-        ListEmptyComponent={
-          <EnhancedText style={styles.noArticlesText}>
-            {t("No articles found")}
-          </EnhancedText>
-        }
-        showsVerticalScrollIndicator={false} // Disable vertical scrollbar here
       />
+    </>
+  );
+
+  const renderArticleItem = ({ item }) => (
+    <TouchableOpacity
+      onPress={() => openArticle(item)}
+      style={styles.articleContainer}
+    >
+      <View style={styles.articleContent}>
+        <EnhancedText style={styles.articleTitle}>
+          {item.title}
+        </EnhancedText>
+        <EnhancedText style={styles.articleCategory}>
+          {item.category}
+        </EnhancedText>
+      </View>
+      <FontAwesomeIcon icon={faChevronRight} color="#A0C8F9" size={16} />
+    </TouchableOpacity>
+  );
+
+  return (
+    <View colors={['#1E3A5F', '#091D34']} style={styles.container}>
+      <SafeAreaView style={styles.safeArea}>
+        <FlatList
+          data={filteredArticles}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={renderArticleItem}
+          ListHeaderComponent={renderHeader}
+          ListEmptyComponent={
+            <EnhancedText style={styles.noArticlesText}>
+              {t("No articles found")}
+            </EnhancedText>
+          }
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.flatListContent}
+        />
+      </SafeAreaView>
+      
       {/* Article Modal */}
       <Article
         modalVisible={modalVisible}
@@ -191,111 +206,83 @@ const LibraryScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#1E3A5F',
+  },
+  safeArea: {
+    flex: 1,
+  },
+  flatListContent: {
     padding: 20,
-    marginBottom: 100,
-    backgroundColor: colors.background,
+  },
+  header: {
+    marginBottom: 30,
   },
   title: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+  },
+  searchBarContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 10,
+    paddingHorizontal: 15,
     marginBottom: 20,
   },
   searchBar: {
+    flex: 1,
     height: 40,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    marginBottom: 20,
-    backgroundColor: "#fff",
+    marginLeft: 10,
+    color: '#FFFFFF',
   },
   filterContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
     marginBottom: 20,
   },
   filterButton: {
-    width: "23%",
-    height: 40,
-    backgroundColor: "#FFF",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 10,
-    marginVertical: 10,
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 20,
+    marginRight: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
   },
   filterButtonActive: {
-    backgroundColor: colors.secondary,
+    backgroundColor: '#A0C8F9',
   },
   filterButtonText: {
-    color: "#333",
+    color: '#A0C8F9',
     fontSize: 14,
-    fontWeight: "bold",
+  },
+  filterButtonTextActive: {
+    color: '#1E3A5F',
   },
   articleContainer: {
-    padding: 15,
-    backgroundColor: "#f9f9f9",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
     borderRadius: 10,
+    padding: 15,
     marginBottom: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 2,
+  },
+  articleContent: {
+    flex: 1,
   },
   articleTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#F2E8DC',
+    marginBottom: 5,
   },
   articleCategory: {
-    marginTop: 5,
     fontSize: 14,
-    color: "#888",
+    color: '#A0C8F9',
   },
   noArticlesText: {
-    textAlign: "center",
+    textAlign: 'center',
     marginTop: 20,
     fontSize: 16,
-    color: "#999",
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Transparent black background
-  },
-  modalView: {
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 20,
-    width: "90%",
-    maxHeight: "80%",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalTitle: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 15,
-  },
-  modalContent: {
-    fontSize: 16,
-    color: "#333",
-    marginBottom: 20,
-  },
-  closeButton: {
-    backgroundColor: "#4CAF50",
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  closeButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
+    color: '#A0C8F9',
   },
 });
 

@@ -45,7 +45,6 @@ const CustomHeader = ({ navigation, route }) => {
           <FontAwesomeIcon icon={faBars} size={30} color={colors.primary} />
         </TouchableOpacity>
       ) : (
-        // Corrected back button functionality
         <Pressable style={styles.backButton} onPress={() => navigation.navigate("Home")}>
           <Svg width="40" height="40" viewBox="0 0 180 180" fill="none">
             <Path

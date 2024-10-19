@@ -109,10 +109,22 @@ const MainTabs = ({ userDetails, refreshUserProfile, navigation, setShowTerms })
 
           return <FontAwesomeIcon icon={icon} size={25} color={iconColor} />;
         },
-        header: () => <CustomHeader navigation={navigation} route={route} />,
+        header: ({ route }) => {
+          // Hide header for LibraryScreen, CategoryScreen, and ConditionScreen
+          if (['Library', 'Categories', 'Condition'].includes(route.name)) {
+            return null;
+          }
+          return <CustomHeader navigation={navigation} route={route} />;
+        },
       })}
     >
-      <Tab.Screen name="Categories" component={CategoryScreen} />
+      <Tab.Screen 
+        name="Categories" 
+        component={CategoryScreen}
+        options={{
+          header: () => null, // Ensure header is hidden for CategoryScreen
+        }}
+      />
       <Tab.Screen name="Favorites" component={CreatedPlayListsScreen} />
       <Tab.Screen name="Home">
         {(props) => (
@@ -139,8 +151,20 @@ const MainTabs = ({ userDetails, refreshUserProfile, navigation, setShowTerms })
       <Tab.Screen name="ProfileScreen" options={{ tabBarButton: () => null }}>
         {(props) => <ProfileScreen {...props} userDetails={userDetails} />}
       </Tab.Screen>
-      <Tab.Screen name="Condition" component={ConditionScreen} />
-      <Tab.Screen name="Library" component={LibraryScreen} />
+      <Tab.Screen 
+        name="Condition" 
+        component={ConditionScreen}
+        options={{
+          header: () => null, // Ensure header is hidden for ConditionScreen
+        }}
+      />
+      <Tab.Screen 
+        name="Library" 
+        component={LibraryScreen}
+        options={{
+          header: () => null, // Ensure header is hidden for LibraryScreen
+        }}
+      />
     </Tab.Navigator>
   );
 };
