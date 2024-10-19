@@ -2,16 +2,15 @@ import React, { useState } from "react";
 import {
   StyleSheet,
   View,
-  Text,
   TouchableOpacity,
   ScrollView,
   Image,
 } from "react-native";
 import { useTranslation } from "react-i18next";
-import colors from "../common/colors/Colors";
-import Icon from "react-native-vector-icons/Ionicons";
 import EnhancedText from "../regular/EnhancedText";
 import NoResult from "../regular/NoResult";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faPlay, faEllipsisH } from "@fortawesome/free-solid-svg-icons";
 
 const Library = ({ library, handleDeleteSessions, navigation }) => {
   const { t } = useTranslation();
@@ -37,69 +36,36 @@ const Library = ({ library, handleDeleteSessions, navigation }) => {
     setIsEditing(false);
   };
 
-  console.log('##session', library?.sessions);
-
   return (
     <View style={styles.container}>
-      {/* Edit Mode */}
-      <View style={styles.editHeader}>
-        <EnhancedText style={styles.greetingText}>
-          {t("your_library")}
-        </EnhancedText>
-        <TouchableOpacity onPress={toggleEditMode}>
-          <Text style={styles.editButtonText}>
-            {isEditing ? t("done") : t("edit")}
-          </Text>
-        </TouchableOpacity>
-        {isEditing && (
-          <TouchableOpacity onPress={handleDeleteSelectedSessions}>
-            <Icon name="trash" size={24} color={colors.primary} />
-          </TouchableOpacity>
-        )}
-      </View>
-
-      {/* Video Item List */}
       {library?.sessions?.length > 0 ? (
         <ScrollView style={styles.listContainer}>
           {library.sessions.map((session, index) => (
-            <View key={index} style={styles.videoItemContainer}>
-              {isEditing && (
-                <TouchableOpacity
-                  onPress={() => handleSelectSession(session.video.id)}
-                >
-                  <Icon
-                    name={
-                      selectedSessions.includes(session.session.id)
-                        ? "checkbox"
-                        : "square-outline"
-                    }
-                    size={24}
-                    color={colors.primary}
-                  />
-                </TouchableOpacity>
-              )}
+            <TouchableOpacity 
+              key={index} 
+              style={styles.sessionItem}
+              onPress={() => {/* Navigate to session details */}}
+            >
               <Image
                 source={{ uri: session.session.imageUrl }}
-                style={styles.videoImage}
+                style={styles.sessionImage}
               />
-              <View style={styles.videoInfo}>
-                <EnhancedText style={styles.videoTitle}>
+              <View style={styles.sessionInfo}>
+                <EnhancedText style={styles.sessionTitle}>
                   {session.session.title}
                 </EnhancedText>
-                <EnhancedText style={styles.videoSubtitle}>
+                <EnhancedText style={styles.sessionSubtitle}>
                   {session.session.description}
                 </EnhancedText>
               </View>
-              <TouchableOpacity style={styles.addButton}>
-                <Icon name="play" size={24} color="#fff" />
+              <TouchableOpacity style={styles.playButton}>
+                <FontAwesomeIcon icon={faPlay} size={16} color="#A0C8F9" />
               </TouchableOpacity>
-            </View>
+            </TouchableOpacity>
           ))}
         </ScrollView>
       ) : (
-        <View>
-          <NoResult />
-        </View>
+        <NoResult />
       )}
     </View>
   );
@@ -109,92 +75,38 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  playlistTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#fff",
-  },
-  playlistSubtitle: {
-    fontSize: 16,
-    color: "#ccc",
-  },
-  editHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    backgroundColor: colors.background,
-  },
-  greetingText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#000",
-  },
-  editButtonText: {
-    fontSize: 16,
-    color: colors.primary,
-  },
   listContainer: {
-    paddingHorizontal: 20,
-    marginTop: 20,
+    marginTop: 10,
   },
-  videoItemContainer: {
+  sessionItem: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
-    padding: 10,
-    borderRadius: 10,
-    marginBottom: 15,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(160, 200, 249, 0.2)',
   },
-  videoImage: {
+  sessionImage: {
     width: 50,
     height: 50,
-    borderRadius: 5,
-  },
-  videoInfo: {
-    flex: 1,
-    marginLeft: 10,
-  },
-  videoTitle: {
-    color: colors.primary,
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  videoSubtitle: {
-    color: "#999",
-  },
-  addButton: {
-    backgroundColor: colors.primary,
-    padding: 8,
     borderRadius: 8,
   },
-  moreSongsButton: {
-    backgroundColor: "#fdd835",
-    paddingVertical: 15,
-    borderRadius: 10,
-    marginTop: 10,
-    alignItems: "center",
+  sessionInfo: {
+    flex: 1,
+    marginLeft: 15,
   },
-  moreSongsText: {
-    color: "#111",
+  sessionTitle: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "600",
+    color: '#FFFFFF',
+    marginBottom: 4,
   },
-  noVideosText: {
-    textAlign: "center",
-    color: "#666",
-    marginTop: 20,
+  sessionSubtitle: {
+    fontSize: 14,
+    color: '#A0C8F9',
   },
-  footer: {
-    padding: 20,
-    backgroundColor: "#222",
-  },
-  footerText: {
-    color: "#ccc",
-    marginBottom: 5,
-  },
-  footerMeta: {
-    color: "#888",
+  playButton: {
+    padding: 8,
   },
 });
 

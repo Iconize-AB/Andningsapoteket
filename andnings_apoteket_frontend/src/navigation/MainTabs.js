@@ -28,7 +28,12 @@ import colors from "../common/colors/Colors";
 
 const Tab = createBottomTabNavigator();
 
-const MainTabs = ({ userDetails, refreshUserProfile, navigation, setShowTerms }) => {
+const MainTabs = ({
+  userDetails,
+  refreshUserProfile,
+  navigation,
+  setShowTerms,
+}) => {
   const styles = StyleSheet.create({
     tabBarStyle: {
       position: "absolute",
@@ -111,21 +116,27 @@ const MainTabs = ({ userDetails, refreshUserProfile, navigation, setShowTerms })
         },
         header: ({ route }) => {
           // Hide header for LibraryScreen, CategoryScreen, and ConditionScreen
-          if (['Library', 'Categories', 'Condition'].includes(route.name)) {
+          if (["Library", "Categories", "Condition", "Favorites"].includes(route.name)) {
             return null;
           }
           return <CustomHeader navigation={navigation} route={route} />;
         },
       })}
     >
-      <Tab.Screen 
-        name="Categories" 
+      <Tab.Screen
+        name="Categories"
         component={CategoryScreen}
         options={{
           header: () => null, // Ensure header is hidden for CategoryScreen
         }}
       />
-      <Tab.Screen name="Favorites" component={CreatedPlayListsScreen} />
+      <Tab.Screen
+        name="Favorites"
+        component={CreatedPlayListsScreen}
+        options={{
+          header: () => null, // Ensure header is hidden for CategoryScreen
+        }}
+      />
       <Tab.Screen name="Home">
         {(props) => (
           <HomeScreen
@@ -135,31 +146,65 @@ const MainTabs = ({ userDetails, refreshUserProfile, navigation, setShowTerms })
           />
         )}
       </Tab.Screen>
-      <Tab.Screen name="BreathworkList" options={{ tabBarButton: () => null }} component={BreathWorkListScreen} />
-      <Tab.Screen name="IndividualBreathworkSession" options={{ tabBarButton: () => null }} component={IndividualBreathworkSessionScreen} />
-      <Tab.Screen name="BreathworkPlaylistDetails" options={{ tabBarButton: () => null }} component={BreathworkPlaylistDetails} />
-      <Tab.Screen name="JourneyOverviewScreen" options={{ tabBarButton: () => null }} component={JourneyOverviewScreen} />
-      <Tab.Screen name="SelectedCategory" options={{ tabBarButton: () => null }} component={SelectedCategoryScreen} />
+      <Tab.Screen
+        name="BreathworkList"
+        options={{ tabBarButton: () => null }}
+        component={BreathWorkListScreen}
+      />
+      <Tab.Screen
+        name="IndividualBreathworkSession"
+        options={{ tabBarButton: () => null }}
+        component={IndividualBreathworkSessionScreen}
+      />
+      <Tab.Screen
+        name="BreathworkPlaylistDetails"
+        options={{ tabBarButton: () => null }}
+        component={BreathworkPlaylistDetails}
+      />
+      <Tab.Screen
+        name="JourneyOverviewScreen"
+        options={{ tabBarButton: () => null }}
+        component={JourneyOverviewScreen}
+      />
+      <Tab.Screen
+        name="SelectedCategory"
+        options={{ tabBarButton: () => null }}
+        component={SelectedCategoryScreen}
+      />
       <Tab.Screen name="Settings" options={{ tabBarButton: () => null }}>
-        {(props) => <SettingsScreen {...props} setShowTerms={setShowTerms} userDetails={userDetails} />}
+        {(props) => (
+          <SettingsScreen
+            {...props}
+            setShowTerms={setShowTerms}
+            userDetails={userDetails}
+          />
+        )}
       </Tab.Screen>
-      <Tab.Screen name="SupportScreen" options={{ tabBarButton: () => null }} component={SupportScreen} />
+      <Tab.Screen
+        name="SupportScreen"
+        options={{ tabBarButton: () => null }}
+        component={SupportScreen}
+      />
       <Tab.Screen name="LanguageScreen" options={{ tabBarButton: () => null }}>
         {(props) => <LanguageScreen {...props} userDetails={userDetails} />}
       </Tab.Screen>
-      <Tab.Screen name="NotificationScreen" options={{ tabBarButton: () => null }} component={NotificationScreen} />
+      <Tab.Screen
+        name="NotificationScreen"
+        options={{ tabBarButton: () => null }}
+        component={NotificationScreen}
+      />
       <Tab.Screen name="ProfileScreen" options={{ tabBarButton: () => null }}>
         {(props) => <ProfileScreen {...props} userDetails={userDetails} />}
       </Tab.Screen>
-      <Tab.Screen 
-        name="Condition" 
+      <Tab.Screen
+        name="Condition"
         component={ConditionScreen}
         options={{
           header: () => null, // Ensure header is hidden for ConditionScreen
         }}
       />
-      <Tab.Screen 
-        name="Library" 
+      <Tab.Screen
+        name="Library"
         component={LibraryScreen}
         options={{
           header: () => null, // Ensure header is hidden for LibraryScreen
