@@ -4,6 +4,9 @@ import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LoadingScreen } from "./LoadingSreen";
 import EnhancedText from "./EnhancedText";
+import { LinearGradient } from 'expo-linear-gradient';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 const termsAndConditionsText = `
 By using this app, you agree to the following terms and conditions:
@@ -82,30 +85,28 @@ const TermsAndConditionPopup = ({ setAccepted, onClose }) => {
 
   return (
     <View style={styles.popupContainer}>
-      <View
-        style={[styles.popupContentWrapper, { marginTop: onClose ? -100 : 0 }]}
-      >
-        <View
-          style={[styles.overlay, { backgroundColor: "rgba(0, 0, 0, 0.8)" }]}
-        />
+      <LinearGradient colors={['#1E3A5F', '#091D34']} style={styles.popupContentWrapper}>
         <View style={styles.popupContent}>
           <EnhancedText style={styles.title}>Terms and Conditions</EnhancedText>
           <ScrollView style={styles.scrollView}>
             <EnhancedText style={styles.message}>{termsAndConditionsText}</EnhancedText>
           </ScrollView>
           <View style={styles.buttonContainer}>
+            {onClose && (
+              <TouchableOpacity style={styles.backButton} onPress={onClose}>
+                <EnhancedText style={styles.backButtonText}>Back</EnhancedText>
+              </TouchableOpacity>
+            )}
             <TouchableOpacity
-              style={[styles.dismissButton, { backgroundColor: "#F55E09" }]}
+              style={styles.acceptButton}
               onPress={onClose ? onClose : handleAccept}
               disabled={isLoading}
             >
-              <EnhancedText style={styles.buttonText}>
-                {onClose ? "Done" : "Accept"}
-              </EnhancedText>
+              <FontAwesomeIcon icon={faChevronRight} color="#1E3A5F" size={20} />
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </LinearGradient>
     </View>
   );
 };
@@ -118,77 +119,55 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     justifyContent: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.6)",
     alignItems: "center",
-    zIndex: 1000,
-  },
-  closeButton: {
-    position: "absolute",
-    top: 40,
-    right: 20,
-    zIndex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   popupContentWrapper: {
     width: "90%",
-    height: 500,
-    borderRadius: 12,
+    height: "80%",
+    borderRadius: 20,
     overflow: "hidden",
   },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    opacity: 0.6,
-  },
   popupContent: {
-    backgroundColor: "transparent",
-    padding: 26,
+    padding: 20,
     height: "100%",
-    width: "100%",
-    position: "relative",
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: "space-between",
   },
   title: {
-    color: "#fff",
-    position: "absolute",
-    top: 40,
-    zIndex: 100,
-    fontSize: 26,
+    color: '#FFFFFF',
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
   },
   scrollView: {
-    marginTop: 80,
-    marginBottom: 100,
-    width: "100%",
+    flex: 1,
+    marginBottom: 20,
   },
   message: {
-    color: "#fff",
-    fontSize: 14,
-    fontFamily: "Corbel-Regular",
-    paddingHorizontal: 20,
-    textAlign: "left",
+    color: '#F2E8DC',
+    fontSize: 16,
+    lineHeight: 24,
   },
   buttonContainer: {
-    display: "flex",
-    flexDirection: "row",
-    gap: 20,
-    position: "absolute",
-    bottom: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  dismissButton: {
-    paddingHorizontal: 10,
+  backButton: {
+    padding: 10,
+  },
+  backButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+  },
+  acceptButton: {
+    width: 50,
     height: 50,
-    width: 120,
-    borderRadius: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.5,
-    elevation: 2,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 20,
+    borderRadius: 25,
+    backgroundColor: '#F2E8DC',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

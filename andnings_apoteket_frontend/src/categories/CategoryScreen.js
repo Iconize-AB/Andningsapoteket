@@ -3,7 +3,6 @@ import { View, StyleSheet, ScrollView, SafeAreaView } from "react-native";
 import { useTranslation } from "react-i18next";
 import CategoryGrid from "./CategoryGrid";
 import EnhancedText from "../regular/EnhancedText";
-import colors from "../common/colors/Colors";
 
 const CategoryScreen = ({ navigation }) => {
   const { t } = useTranslation();
