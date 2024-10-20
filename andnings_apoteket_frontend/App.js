@@ -5,6 +5,7 @@ import * as Font from "expo-font";
 import { ActivityIndicator, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { I18nextProvider } from "react-i18next";
+import 'intl-pluralrules';  // Add this import
 
 import { AuthProvider, useAuth } from "./src/context/AuthContext";
 import i18n from "./src/i18n";

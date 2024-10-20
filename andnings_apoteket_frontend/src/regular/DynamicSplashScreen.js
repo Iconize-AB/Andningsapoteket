@@ -6,10 +6,11 @@ import {
   TouchableOpacity,
   Linking,
 } from "react-native";
+import { LinearGradient } from 'expo-linear-gradient';
 
 const DynamicSplashScreen = () => {
   return (
-    <View style={styles.container}>
+    <LinearGradient colors={['#1E3A5F', '#091D34']} style={styles.container}>
       <TouchableOpacity
         style={styles.companyInfo}
         onPress={() =>
@@ -25,14 +26,13 @@ const DynamicSplashScreen = () => {
           />
         </View>
       </TouchableOpacity>
-    </View>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000",
     justifyContent: "center",
     alignItems: "center",
     position: "relative",

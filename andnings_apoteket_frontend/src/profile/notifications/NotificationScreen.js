@@ -15,8 +15,11 @@ const NotificationScreen = () => {
   const handleToggleEmailNotification = async (newSetting) => {
     const token = await AsyncStorage.getItem("userToken");
     const response = await emailNotificationSettingsChange(token, newSetting);
+    const data = await response.json();
+    console.log('response', data);
     if (response.ok) {
-      setEmailNotification(newSetting);A
+      setEmailNotification(newSetting);
+      console.log('newSetting', newSetting);
       setUserDetails({ ...userDetails, emailNotification: newSetting });
     } else {
       Toast.show({

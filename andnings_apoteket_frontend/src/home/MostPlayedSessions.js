@@ -39,7 +39,11 @@ const MostPlayedSessions = () => {
       <EnhancedText style={styles.mostPlayedTitle}>{t("most_played_sessions")}</EnhancedText>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
         {mostPlayedSessions?.map((session) => (
-          <SessionItem session={session} handlePlayNow={handlePlayNow}  />
+          <SessionItem 
+            key={session.id}
+            session={session} 
+            handlePlayNow={handlePlayNow}  
+          />
         ))}
       </ScrollView>
     </View>
@@ -64,4 +68,3 @@ const styles = StyleSheet.create({
 });
 
 export default MostPlayedSessions;
-

@@ -29,6 +29,7 @@ export async function changeLanguageSetting(token, language) {
 }
 
 export async function emailNotificationSettingsChange(token, newSetting) {
+  console.log('newSetting', newSetting);
   const response = await fetch(
     "http://localhost:3000/v1/settings/user/toggle-email-notification",
     {
