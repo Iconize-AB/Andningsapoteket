@@ -130,6 +130,7 @@ const SignupScreen = ({ navigation }) => {
                 errorMessage={formError.confirmPassword}
               />
             </View>
+            <SingleSignOn navigation={navigation} />
             <EnhancedText style={styles.footerText}>
               By signing up, you agree to our Terms of Service and Privacy Policy.
             </EnhancedText>

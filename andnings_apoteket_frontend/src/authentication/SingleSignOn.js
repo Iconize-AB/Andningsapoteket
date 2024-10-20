@@ -105,6 +105,7 @@ const SingleSignOn = ({ navigation }) => {
         disabled={!request}
         style={styles.googleButton}
       >
+        <FontAwesome name="google" size={20} color="#000" />
         <Text style={styles.buttonText}>Google</Text>
       </TouchableOpacity>
 
@@ -112,7 +113,7 @@ const SingleSignOn = ({ navigation }) => {
       <AppleAuthentication.AppleAuthenticationButton
         buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
         buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
-        cornerRadius={8}
+        cornerRadius={5}
         style={styles.appleButton}
         onPress={handleAppleSignIn}
       />
@@ -125,26 +126,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 20,
-    padding: 10,
     width: '100%',
   },
   googleButton: {
     backgroundColor: '#fff',
-    width: 185,
-    height: 40,
-    justifyContent: 'center',
+    flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 8,
-    marginRight: 10,
+    justifyContent: 'center',
+    width: '48%',
+    height: 40,
+    borderRadius: 5,
   },
   appleButton: {
-    width: 185,
+    width: '48%',
     height: 40,
-    borderRadius: 8,
   },
   buttonText: {
     color: '#000',
     fontWeight: 'bold',
+    marginLeft: 10,
   },
 });
 

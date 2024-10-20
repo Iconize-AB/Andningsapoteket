@@ -9,6 +9,7 @@ import { Signin } from "./endpoints/AuthenticationEndpoints";
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { LinearGradient } from 'expo-linear-gradient';
+import SingleSignOn from "./SingleSignOn";
 
 const SigninScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -97,6 +98,7 @@ const SigninScreen = ({ navigation }) => {
             <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
               <EnhancedText style={styles.forgotPasswordText}>Forgot Password?</EnhancedText>
             </TouchableOpacity>
+            <SingleSignOn navigation={navigation} />
           </View>
         </ScrollView>
         <View style={styles.footer}>
