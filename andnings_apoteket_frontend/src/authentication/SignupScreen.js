@@ -22,7 +22,7 @@ const SignupScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [formError, setFormError] = useState({ email: "", password: "" });
+  const [formError, setFormError] = useState({ email: "", password: "", confirmPassword: "" });
 
   const handleSignUp = async () => {
     let isValid = true;
@@ -38,8 +38,8 @@ const SignupScreen = ({ navigation }) => {
       setFormError((prev) => ({ ...prev, password: "Password is required." }));
       isValid = false;
     }
-    if (!password === confirmPassword) {
-      setFormError((prev) => ({ ...prev, password: "Passwords do not match." }));
+    if (password !== confirmPassword) {
+      setFormError((prev) => ({ ...prev, confirmPassword: "Passwords do not match." }));
       isValid = false;
     }
     if (!isValid) return;
@@ -127,6 +127,7 @@ const SignupScreen = ({ navigation }) => {
                 onChangeText={setConfirmPassword}
                 placeholder="Confirm Password"
                 secureTextEntry
+                errorMessage={formError.confirmPassword}
               />
             </View>
             <EnhancedText style={styles.footerText}>
@@ -141,7 +142,6 @@ const SignupScreen = ({ navigation }) => {
           <TouchableOpacity 
             style={[styles.signupButton, isFormValid && styles.signupButtonActive]} 
             onPress={handleSignUp}
-            disabled={!isFormValid}
           >
             <FontAwesomeIcon icon={faChevronRight} color={isFormValid ? "#1E3A5F" : "#8E8E8E"} size={20} />
           </TouchableOpacity>

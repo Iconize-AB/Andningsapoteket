@@ -12,6 +12,7 @@ import EnhancedText from "../regular/EnhancedText";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { updateOnboardingStep } from "../authentication/endpoints/AuthenticationEndpoints";
+import { useAuth } from "../context/AuthContext";
 
 const SubscriptionConfirmationModal = ({
   isVisible,
@@ -23,6 +24,7 @@ const SubscriptionConfirmationModal = ({
   const [cardNumber, setCardNumber] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
   const [cvv, setCvv] = useState("");
+  const { signIn } = useAuth();
 
   const handleConfirmPayment = async () => {
     try {
@@ -33,6 +35,8 @@ const SubscriptionConfirmationModal = ({
         console.log('Onboarding step updated successfully');
         await AsyncStorage.removeItem('completed');
         navigation.navigate("ChallengeOverviewScreen");
+        signIn(token);
+        onClose();
       } else {
         console.error('Failed to update onboarding step');
       }

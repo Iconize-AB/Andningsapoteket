@@ -2,16 +2,12 @@
 import React, { useState, useEffect } from "react";
 import {
   View,
-  Text,
-  ImageBackground,
   TouchableOpacity,
   ScrollView,
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
-import colors from "../common/colors/Colors"; // Assuming you have this color file
 import { useTranslation } from "react-i18next";
-import EnhancedButton from "../regular/EnhancedButton";
 import EnhancedText from "../regular/EnhancedText";
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from "@react-native-async-storage/async-storage";

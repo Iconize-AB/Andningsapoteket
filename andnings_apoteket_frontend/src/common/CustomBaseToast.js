@@ -1,36 +1,30 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faCheckCircle, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import EnhancedText from "../regular/EnhancedText";
+import { LinearGradient } from 'expo-linear-gradient';
 
 const CustomBaseToast = ({ text1, text2, type }) => {
+  const isSuccess = type === "success";
+
   return (
-    <View style={styles.toastContainer}>
-      <View style={styles.toastTextContainer}>
-        <EnhancedText style={styles.toastText1}>
-          {text1}
-          {!text2 && (
-            <FontAwesome
-              name={type === "error" ? "pray" : "heart"}
-              size={15}
-              color={type === "error" ? "orange" : "red"}
-              style={styles.iconSpacing}
-            />
-          )}
-        </EnhancedText>
-        <EnhancedText style={styles.toastText2}>
-          {text2}
-          {text2 && (
-            <FontAwesome
-              name={type === "error" ? "pray" : "heart"}
-              size={15}
-              color={type === "error" ? "orange" : "red"}
-              style={styles.iconSpacing}
-            />
-          )}
-        </EnhancedText>
+    <LinearGradient
+      colors={isSuccess ? ['#1E3A5F', '#091D34'] : ['#8B0000', '#4B0000']}
+      style={styles.toastContainer}
+    >
+      <View style={styles.iconContainer}>
+        <FontAwesomeIcon
+          icon={isSuccess ? faCheckCircle : faExclamationCircle}
+          size={24}
+          color="#F2E8DC"
+        />
       </View>
-    </View>
+      <View style={styles.toastTextContainer}>
+        <EnhancedText style={styles.toastText1}>{text1}</EnhancedText>
+        {text2 && <EnhancedText style={styles.toastText2}>{text2}</EnhancedText>}
+      </View>
+    </LinearGradient>
   );
 };
 
@@ -39,27 +33,31 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 16,
-    backgroundColor: "#466F78",
-    borderColor: "green",
-    minWidth: 300,
-    justifyContent: "center",
-    borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 10,
+    marginHorizontal: 20,
+    marginTop: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  iconContainer: {
+    marginRight: 12,
   },
   toastTextContainer: {
-    marginLeft: 10,
+    flex: 1,
   },
   toastText1: {
-    color: "#fff",
+    color: '#F2E8DC',
     fontWeight: "bold",
-    display: "flex",
+    fontSize: 16,
+    marginBottom: 2,
   },
   toastText2: {
-    color: "#fff",
-    display: "flex",
-  },
-  iconSpacing: {
-    marginLeft: 10,
+    color: '#F2E8DC',
+    fontSize: 14,
+    opacity: 0.8,
   },
 });
 
