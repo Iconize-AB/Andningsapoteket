@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Font from "expo-font";
-import { ActivityIndicator, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { I18nextProvider } from "react-i18next";
 import 'intl-pluralrules';  // Add this import
 
 import { AuthProvider, useAuth } from "./src/context/AuthContext";
-import i18n from "./src/i18n";
+import i18n, { I18nProvider } from "./src/i18n";
 import toastConfiguration from "./src/common/ToastConfiguration";
 import DynamicSplashScreen from "./src/regular/DynamicSplashScreen";
 import AuthStack from "./src/navigation/AuthStack";
@@ -16,14 +16,12 @@ import MainNavigator from "./src/navigation/MainNavigator";
 
 const App = () => {
   return (
-    <I18nextProvider i18n={i18n}>
-      <AuthProvider>
-        <NavigationContainer>
-          <AppContent />
-          <Toast config={toastConfiguration} />
-        </NavigationContainer>
-      </AuthProvider>
-    </I18nextProvider>
+    <AuthProvider>
+      <NavigationContainer>
+        <AppContent />
+        <Toast config={toastConfiguration} />
+      </NavigationContainer>
+    </AuthProvider>
   );
 };
 

@@ -21,6 +21,7 @@ const SigninScreen = ({ navigation }) => {
     let isValid = true;
 
     if (!isValidEmail(email)) {
+      console.log('email', email);
       setFormError((prev) => ({
         ...prev,
         email: "Please enter a valid email address.",
@@ -34,6 +35,7 @@ const SigninScreen = ({ navigation }) => {
     if (!isValid) return;
     try {
       const response = await Signin(email, password);
+      console.log('response', response);
       const json = await response.json();
       if (response.ok) {
         signIn(json.token);

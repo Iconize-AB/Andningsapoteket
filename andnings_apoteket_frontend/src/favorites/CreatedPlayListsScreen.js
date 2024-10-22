@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   SafeAreaView,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { useTranslation } from "react-i18next";
 import EnhancedText from "../regular/EnhancedText";
@@ -15,6 +16,7 @@ import {
   FetchUserPlaylists,
   DeleteUserPlaylist,
   DeleteUserLibrarySessions,
+  AddVideoToPlaylist,
 } from "../sessions/endpoints/BreatworkSessionActionsEndpoints";
 import PlaylistItem from "./PlaylistItem";
 import Library from "./Library";
@@ -22,40 +24,19 @@ import NoResult from "../regular/NoResult";
 import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPlus, faMusic, faBook } from "@fortawesome/free-solid-svg-icons";
+import { usePlaylistsAndLibrary } from "../hooks/usePlaylistsAndLibrary";
+import AddToPlaylistModel from "../playlists/PlaylistModel";
 
 const CreatedPlayListsScreen = ({ navigation }) => {
   const { t } = useTranslation();
-  const [playlists, setPlaylists] = useState([]);
-  const [library, setLibrary] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const tabs = [
-    { label: "Playlists", value: "playlists" },
-    { label: "Library", value: "library" },
-  ];
+  const { playlists, library, loading, refreshData } = usePlaylistsAndLibrary();
   const [activeTab, setActiveTab] = useState("playlists");
-
-  const fetchData = useCallback(async () => {
-    try {
-      const token = await AsyncStorage.getItem("userToken");
-      if (!token) throw new Error("No token found");
-
-      const [playlistsData, libraryData] = await Promise.all([
-        FetchUserPlaylists(token),
-        FetchUserLibrary(token),
-      ]);
-
-      setPlaylists(playlistsData?.lists || []);
-      setLibrary(libraryData?.library || []);
-    } catch (error) {
-      console.error("Failed to fetch data", error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [listName, setListName] = useState("");
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    refreshData();
+  }, [refreshData]);
 
   const handleDeletePlaylist = useCallback(async (playlistId) => {
     try {
@@ -93,24 +74,26 @@ const CreatedPlayListsScreen = ({ navigation }) => {
   }, []);
 
   const renderPlaylists = () => (
-    <View style={styles.sectionContainer}>
-      {playlists.length > 0 ? (
-        playlists.map((list) => (
-          <PlaylistItem
-            key={list.id}
-            playlist={list}
-            onPress={() =>
-              navigation.navigate("BreathworkPlaylistDetails", {
-                playlist: list,
-              })
-            }
-            onDelete={() => handleDeletePlaylist(list.id)}
-          />
-        ))
-      ) : (
-        <NoResult />
-      )}
-    </View>
+    <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
+      <View style={styles.sectionContainer}>
+        {playlists.length > 0 ? (
+          playlists.map((list) => (
+            <PlaylistItem
+              key={list.id}
+              playlist={list}
+              onPress={() =>
+                navigation.navigate("BreathworkPlaylistDetails", {
+                  playlist: list,
+                })
+              }
+              onDelete={() => handleDeletePlaylist(list.id)}
+            />
+          ))
+        ) : (
+          <NoResult />
+        )}
+      </View>
+    </ScrollView>
   );
 
   if (loading) {
@@ -121,16 +104,37 @@ const CreatedPlayListsScreen = ({ navigation }) => {
     );
   }
 
+  const handleAddNewPlaylist = async () => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+      if (!token) throw new Error("No token found");
+
+      if (listName.trim() === "") {
+        Alert.alert("Error", "Please enter a valid list name");
+        return;
+      }
+
+      const response = await AddVideoToPlaylist(token, listName);
+      if (response.status === 200) {
+        Alert.alert("Success", "New playlist created");
+        setModalVisible(false);
+        refreshData();
+      } else {
+        Alert.alert("Error", "Failed to create new playlist");
+      }
+    } catch (error) {
+      console.error("Error creating new playlist:", error);
+      Alert.alert("Error", "An error occurred while creating the playlist");
+    }
+  };
+
   return (
     <LinearGradient colors={['#1E3A5F', '#091D34']} style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
-        <ScrollView
-          contentContainerStyle={styles.scrollViewContent}
-          showsVerticalScrollIndicator={false}
-        >
+        <View style={styles.content}>
           <View style={styles.header}>
             <EnhancedText style={styles.title}>{t("Your Favorites")}</EnhancedText>
-            <TouchableOpacity onPress={() => {/* Add new playlist logic */}}>
+            <TouchableOpacity onPress={() => setModalVisible(true)}>
               <FontAwesomeIcon icon={faPlus} size={24} color="#A0C8F9" />
             </TouchableOpacity>
           </View>
@@ -167,8 +171,20 @@ const CreatedPlayListsScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
 
-          {activeTab === "playlists" ? renderPlaylists() : <Library library={library} handleDeleteSessions={handleDeleteSessions} navigation={navigation} />}
-        </ScrollView>
+          {activeTab === "playlists" ? renderPlaylists() : (
+            <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
+              <Library library={library} handleDeleteSessions={handleDeleteSessions} navigation={navigation} />
+            </ScrollView>
+          )}
+
+          <AddToPlaylistModel
+            setModalVisible={setModalVisible}
+            saveVideoToList={handleAddNewPlaylist}
+            setListName={setListName}
+            listName={listName}
+            modalVisible={modalVisible}
+          />
+        </View>
       </SafeAreaView>
     </LinearGradient>
   );
@@ -181,15 +197,22 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
+  content: {
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
   scrollViewContent: {
-    flexGrow: 1,
-    padding: 20,
+    paddingBottom: 100, // Adjust this value based on your bottom navigation height
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 30,
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
   title: {
     fontSize: 34,
@@ -200,6 +223,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginBottom: 30,
+    paddingHorizontal: 20,
   },
   statItem: {
     alignItems: 'center',
@@ -217,6 +241,7 @@ const styles = StyleSheet.create({
   tabContainer: {
     flexDirection: 'row',
     marginBottom: 20,
+    paddingHorizontal: 20,
   },
   tab: {
     flex: 1,
@@ -239,6 +264,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
     borderRadius: 15,
     overflow: 'hidden',
+    marginHorizontal: 20,
   },
   loadingContainer: {
     justifyContent: "center",

@@ -12,6 +12,7 @@ import DayJourney from "./DayJourney";
 import MostPlayedSessions from "./MostPlayedSessions";
 import EnhancedText from "../regular/EnhancedText";
 import colors from "../common/colors/Colors";
+import HighlightedSessions from "./HighlightedSessions";
 
 const HomeScreen = ({ navigation }) => {
   const navigateToOption = (option) => {
@@ -29,6 +30,9 @@ const HomeScreen = ({ navigation }) => {
 
             {/* Rounded buttons for quick actions */}
             <QuickActions navigateToOption={navigateToOption} />
+
+            {/* Highlighted sessions */}
+            <HighlightedSessions navigateToOption={navigateToOption} />
 
             {/* Start Your 7 Day Journey */}
             <DayJourney navigateToOption={navigateToOption} />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   StyleSheet,
@@ -22,6 +22,8 @@ import AddToPlaylistModel from "../playlists/PlaylistModel";
 import {
   AddVideoToLibrary,
   AddVideoToPlaylist,
+  FetchUserLibrary,
+  FetchUserPlaylists,
 } from "./endpoints/BreatworkSessionActionsEndpoints";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import BottomSlider from "./BottomSlider";
@@ -30,6 +32,8 @@ import { TrackGlobalWatchedSessionEvent } from "../events/TrackEventsEndpoints";
 import RelatedSessions from "./RelatedSessions";
 import Toast from "react-native-toast-message";
 import AudioPlayerModal from "../regular/AudioPlayerModal";
+import { useAuth } from "../context/AuthContext";
+import { usePlaylistsAndLibrary } from "../hooks/usePlaylistsAndLibrary";
 
 const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
   const { session } = route.params;
@@ -43,6 +47,8 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
   const [isMoreVisible, setIsMoreVisible] = useState(false);
   const [listName, setListName] = useState("");
   const { t } = useTranslation();
+  const { refreshUserProfile } = useAuth();
+  const { refreshData, updateData } = usePlaylistsAndLibrary();
 
   const handlePlay = async () => {
     try {
@@ -112,6 +118,11 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
           },
           text2Style: { color: "#466F78" },
         });
+        refreshUserProfile();
+        
+        // Fetch the updated library data
+        const updatedLibraryData = await FetchUserLibrary(token);
+        updateData(null, updatedLibraryData?.library || []);
       } else {
         Toast.show({
           type: "error",
@@ -125,7 +136,7 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
         });
       }
     } catch (error) {
-      console.error("Error tracking watch session:", error);
+      console.error("Error adding video to library:", error);
     }
   };
 
@@ -141,9 +152,15 @@ const IndividualBreathworkSessionScreen = ({ route, navigation }) => {
       listId,
       session.id
     );
+    console.log('response', response);
     if (response.status === 200) {
       Alert.alert("Success", "Video saved to list");
       setIsSaved(true);
+      refreshUserProfile();
+      
+      // Fetch the updated playlists data
+      const updatedPlaylistsData = await FetchUserPlaylists(token);
+      updateData(updatedPlaylistsData?.lists || [], null);
     }
     setModalVisible(false);
   };

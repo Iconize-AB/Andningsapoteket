@@ -1,5 +1,5 @@
 export async function AddVideoToPlaylist(token, listName, listId, sessionId) {
-  console.log('listName, listId, sessionId', listName, listId, sessionId);
+  console.log('listName', listName, listId, sessionId);
   const response = await fetch(
     "http://localhost:3000/v1/playlists/add-session",
     {

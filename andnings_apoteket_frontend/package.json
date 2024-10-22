@@ -28,6 +28,7 @@
     "expo-linear-gradient": "^13.0.2",
     "expo-notifications": "^0.28.17",
     "expo-status-bar": "~1.12.1",
+    "i18n-js": "^4.5.0",
     "i18next": "^23.15.1",
     "intl-pluralrules": "^2.0.1",
     "react": "18.2.0",

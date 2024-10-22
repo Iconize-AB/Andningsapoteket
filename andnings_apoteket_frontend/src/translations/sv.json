@@ -6,6 +6,7 @@
   "library": "Bibliotek",
   "start_your_journey": "Börja din 6-dagarsresa",
   "most_played_sessions": "Mest spelade sessioner denna vecka",
+  "highlighted_sessions": "Markerade sessioner",
   "breathwork_library": "Andnings biblioteket",
   "recommended_sessions": "Vi rekommenderar att du testar dessa",
   "guest": "Gäst",
@@ -64,5 +65,14 @@
       "description": "Öva medveten andning för att främja lugn och balans.",
       "buttonText": "Börja dag 6"
     }
-  }
+  },
+  "language_updated_success": "Språket har uppdaterats",
+  "language_update_failed": "Det gick inte att uppdatera språket",
+  "please_try_again": "Vänligen försök igen",
+  "app_interface": "App-gränssnitt",
+  "device_language": "Ditt enhetsspråk är inställt på {{language}}",
+  "content": "Innehåll",
+  "select_language": "Välj språk",
+  "english": "Engelska",
+  "svenska": "Svenska"
 }

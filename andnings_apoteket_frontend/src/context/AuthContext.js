@@ -6,6 +6,9 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import i18n, { changeLanguage as i18nChangeLanguage } from "../i18n";
+import en from "../translations/en.json";
+import sv from "../translations/sv.json";
 
 const AuthContext = createContext();
 
@@ -32,7 +35,7 @@ export const AuthProvider = ({ children }) => {
       const json = await response.json();
 
       if (response.ok) {
-        setUserDetails({
+        const updatedUserDetails = {
           fullName: json.fullName,
           email: json.email,
           id: json.id,
@@ -43,17 +46,17 @@ export const AuthProvider = ({ children }) => {
           avatar: json.profile.profileImageUrl,
           emailNotification: json.profile.emailNotifications,
           pushNotification: json.profile.pushNotifications,
-        });
-        await AsyncStorage.setItem("userDetails", JSON.stringify(json));
-      } else {
-        return;
+        };
+        setUserDetails(updatedUserDetails);
+        await AsyncStorage.setItem("userDetails", JSON.stringify(updatedUserDetails));
+        
+        // Set the language for i18n
+        i18nChangeLanguage(updatedUserDetails.language);
       }
     } catch (error) {
-      return;
+      console.error("Error fetching user profile:", error);
     }
   };
-
-  console.log('userDetails', userDetails);
 
   const refreshUserProfile = useCallback(() => {
     fetchUserProfile();
@@ -72,6 +75,16 @@ export const AuthProvider = ({ children }) => {
   const signOut = async () => {
     await AsyncStorage.removeItem("userToken");
     setUserToken(null);
+    setUserDetails(null);
+  };
+
+  const changeLanguageSetting = async (newLanguage) => {
+    if (userDetails) {
+      const updatedUserDetails = { ...userDetails, language: newLanguage };
+      setUserDetails(updatedUserDetails);
+      await AsyncStorage.setItem("userDetails", JSON.stringify(updatedUserDetails));
+      i18nChangeLanguage(newLanguage);
+    }
   };
 
   return (
@@ -84,6 +97,7 @@ export const AuthProvider = ({ children }) => {
         refreshUserProfile,
         signIn,
         signOut,
+        changeLanguageSetting,
       }}
     >
       {children}

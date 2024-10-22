@@ -1,27 +1,20 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
+import { I18n } from 'i18n-js';
+import en from './translations/en.json';
+import sv from './translations/sv.json';
 
-// Import translation files
-import svTranslation from './translations/sv.json';
-import enTranslation from './translations/en.json';
+const i18n = new I18n({
+  en,
+  sv
+});
 
-// Initialize i18next
-i18n
-  .use(initReactI18next) // Passes i18n down to React components
-  .init({
-    resources: {
-      en: {
-        translation: enTranslation,
-      },
-      sv: {
-        translation: svTranslation,
-      },
-    },
-    lng: 'sv', // Default language
-    fallbackLng: 'en', // Fallback language if the current language is not available
-    interpolation: {
-      escapeValue: false, // React already escapes values to prevent XSS
-    },
-  });
+i18n.enableFallback = true;
+i18n.defaultLocale = 'en';
+
+export const t = (key, options) => i18n.t(key, options);
+
+export const changeLanguage = (lang) => {
+  console.log('lang', lang);
+  i18n.locale = lang === 'Svenska' ? 'sv' : 'en';
+};
 
 export default i18n;

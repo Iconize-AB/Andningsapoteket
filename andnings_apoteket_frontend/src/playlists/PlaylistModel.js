@@ -37,6 +37,7 @@ const AddToPlaylistModel = ({
           if (!token) throw new Error("No token found");
 
           const data = await FetchUserPlaylists(token);
+          console.log('data', data);
           if (data) {
             setPlaylists(data?.lists || []);
           }

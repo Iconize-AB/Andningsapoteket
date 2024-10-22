@@ -1,4 +1,5 @@
 export async function Signin(email, password) {
+  console.log('email', email, 'password', password);
   const response = await fetch(`http://localhost:3000/v1/user/signin`, {
     method: "POST",
     headers: {

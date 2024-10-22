@@ -1,36 +1,31 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   Switch,
   Image,
 } from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
 import colors from "../../common/colors/Colors";
 import { useAuth } from "../../context/AuthContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
-import { changeLanguageSetting } from "../endpoints/SettingsEndpoints";
+import { changeLanguageSetting as apiChangeLanguageSetting } from "../endpoints/SettingsEndpoints";
+import { t } from "../../i18n";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const LanguageScreen = ({ userDetails }) => {
-  const [selectedLanguage, setSelectedLanguage] = useState(userDetails?.language || "Svenska");
-  const { setUserDetails } = useAuth();
+const LanguageScreen = () => {
+  const { userDetails, changeLanguageSetting } = useAuth();
 
   const handleToggleLanguage = async (newLanguage) => {
     try {
       const token = await AsyncStorage.getItem("userToken");
-      if (!token) throw new Error("No token found");
-
-      const response = await changeLanguageSetting(token, newLanguage); // Call API to update language
+      const response = await apiChangeLanguageSetting(token, newLanguage);
       if (response.ok) {
-        setSelectedLanguage(newLanguage);
-        setUserDetails({ ...userDetails, language: newLanguage });
+        await changeLanguageSetting(newLanguage);
 
         Toast.show({
           type: "success",
-          text1: "Language updated successfully!",
+          text1: t("language_updated_success"),
         });
       } else {
         throw new Error("Failed to update language");
@@ -38,8 +33,8 @@ const LanguageScreen = ({ userDetails }) => {
     } catch (error) {
       Toast.show({
         type: "error",
-        text1: "Failed to update language!",
-        text2: error.message || "Please try again.",
+        text1: t("language_update_failed"),
+        text2: error.message || t("please_try_again"),
       });
     }
   };
@@ -48,14 +43,14 @@ const LanguageScreen = ({ userDetails }) => {
     <View style={styles.container}>
       {/* App Interface Section */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>App Interface</Text>
-        <Text style={styles.subTitle}>Your device is set to English</Text>
+        <Text style={styles.sectionTitle}>{t("app_interface")}</Text>
+        <Text style={styles.subTitle}>{t("device_language", { language: t(userDetails?.language || "English") })}</Text>
       </View>
 
       {/* Content Section */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Content</Text>
-        <Text style={styles.subTitle}>Select up to 1 language</Text>
+        <Text style={styles.sectionTitle}>{t("content")}</Text>
+        <Text style={styles.subTitle}>{t("select_language")}</Text>
 
         {/* English Language Option */}
         <View style={styles.languageRow}>
@@ -66,11 +61,11 @@ const LanguageScreen = ({ userDetails }) => {
               }}
               style={styles.flag}
             />
-            <Text style={styles.languageText}>English</Text>
+            <Text style={styles.languageText}>{t("english")}</Text>
           </View>
           <Switch
             onValueChange={() => handleToggleLanguage("English")}
-            value={selectedLanguage === "English"}
+            value={userDetails?.language === "English"}
           />
         </View>
 
@@ -83,11 +78,11 @@ const LanguageScreen = ({ userDetails }) => {
               }}
               style={styles.flag}
             />
-            <Text style={styles.languageText}>Svenska</Text>
+            <Text style={styles.languageText}>{t("svenska")}</Text>
           </View>
           <Switch
             onValueChange={() => handleToggleLanguage("Svenska")}
-            value={selectedLanguage === "Svenska"}
+            value={userDetails?.language === "Svenska"}
           />
         </View>
       </View>
