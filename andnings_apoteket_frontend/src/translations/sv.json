@@ -74,5 +74,22 @@
   "content": "Innehåll",
   "select_language": "Välj språk",
   "english": "Engelska",
-  "svenska": "Svenska"
+  "svenska": "Svenska",
+  "account": "Konto",
+  "support_and_about": "Support och Om",
+  "subscription": "Prenumeration",
+  "help_and_support": "Hjälp och support",
+  "actions": "Åtgärder",
+  "report_a_problem": "Rapportera ett problem",
+  "delete_my_account": "Radera mitt konto",
+  "completed_challenges": "Avslutade utmaningar",
+  "streak": "Svit",
+  "days": "{{count}} dagar",
+  "total_minutes": "Totala minuter",
+  "edit_profile": "Redigera profil",
+  "privacy_settings": "Sekretessinställningar",
+  "profile": "Profil",
+  "dashboard": "Översikt",
+  "new_sessions": "Nya sessioner",
+  "language": "Språk"
 }

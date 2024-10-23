@@ -24,17 +24,17 @@ export default function ProfileScreen({ navigation, userDetails }) {
   }
 
   const stats = [
-    { label: "Completed Challenges", value: 12 },
-    { label: "Streak", value: "7 days" },
-    { label: "Total Minutes", value: 360 },
+    { label: t("completed_challenges"), value: 12 },
+    { label: t("streak"), value: t("days", { count: 7 }) },
+    { label: t("total_minutes"), value: 360 },
   ];
 
   const menuItems = [
-    { label: "Edit Profile", icon: faUser, onPress: () => navigation.navigate("EditProfile") },
-    { label: "Notifications", icon: faBell, onPress: () => navigation.navigate("NotificationScreen") },
-    { label: "Privacy Settings", icon: faLock, onPress: () => navigation.navigate("PrivacySettings") },
-    { label: "Help & Support", icon: faQuestionCircle, onPress: () => navigation.navigate("SupportScreen") },
-    { label: "Sign Out", icon: faSignOutAlt, onPress: signOut },
+    { label: t("edit_profile"), icon: faUser, onPress: () => navigation.navigate("EditProfile") },
+    { label: t("notifications"), icon: faBell, onPress: () => navigation.navigate("NotificationScreen") },
+    { label: t("privacy_settings"), icon: faLock, onPress: () => navigation.navigate("PrivacySettings") },
+    { label: t("help_and_support"), icon: faQuestionCircle, onPress: () => navigation.navigate("SupportScreen") },
+    { label: t("sign_out"), icon: faSignOutAlt, onPress: signOut },
   ];
 
   return (
@@ -42,7 +42,7 @@ export default function ProfileScreen({ navigation, userDetails }) {
       <SafeAreaView style={styles.safeArea}>
         <ScrollView contentContainerStyle={styles.scrollView}>
           <View style={styles.header}>
-            <EnhancedText style={styles.title}>Profile</EnhancedText>
+            <EnhancedText style={styles.title}>{t("profile")}</EnhancedText>
             <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
               <FontAwesomeIcon icon={faCog} size={24} color="#F2E8DC" />
             </TouchableOpacity>

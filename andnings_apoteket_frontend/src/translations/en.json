@@ -74,5 +74,22 @@
   "content": "Content",
   "select_language": "Select language",
   "english": "English",
-  "svenska": "Swedish"
+  "svenska": "Swedish",
+  "account": "Account",
+  "support_and_about": "Support and About",
+  "subscription": "Subscription",
+  "help_and_support": "Help and Support",
+  "actions": "Actions",
+  "report_a_problem": "Report a Problem",
+  "delete_my_account": "Delete My Account",
+  "completed_challenges": "Completed Challenges",
+  "streak": "Streak",
+  "days": "{{count}} days",
+  "total_minutes": "Total Minutes",
+  "edit_profile": "Edit Profile",
+  "privacy_settings": "Privacy Settings",
+  "profile": "Profile",
+  "dashboard": "Dashboard",
+  "new_sessions": "New Sessions",
+  "language": "Language"
 }

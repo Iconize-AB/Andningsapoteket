@@ -47,22 +47,22 @@ const CustomDrawerContent = (props) => {
       <SafeAreaView style={styles.safeArea}>
         <ScrollView style={styles.scrollView}>
           <View style={styles.header}>
-            <Text style={styles.headerText}>{t('Philip')}</Text>
+            <Text style={styles.headerText}>{t('greeting')}</Text>
           </View>
           <DrawerContentScrollView {...props} contentContainerStyle={styles.drawerContent}>
             <DrawerItem 
               icon="check-circle-outline" 
-              label={t('Checka in')} 
+              label={t('check_in')} 
               onPress={() => navigation.navigate('CheckIn')} 
             />
             <DrawerItem 
               icon="file-document-outline"
-              label={t('Allmänna villkor')}
+              label={t('terms_and_condition')}
               onPress={() => navigation.navigate('Terms')}
             />
             <DrawerItem
               icon="account-outline"
-              label={t('Profil')}
+              label={t('profile')}
               expandable
               expanded={isProfileExpanded}
               onPress={() => navigation.navigate('ProfileScreen')}
@@ -71,27 +71,27 @@ const CustomDrawerContent = (props) => {
                 <View style={styles.subMenu}>
                   <DrawerItem 
                     icon="cog-outline" 
-                    label={t('Inställningar')} 
+                    label={t('settings')} 
                     onPress={() => navigation.navigate('Settings')} 
                   />
                   <DrawerItem
                     icon="account-outline"
-                    label={t('Dashboard')} 
+                    label={t('dashboard')} 
                     onPress={() => navigation.navigate('ProfileScreen')} 
                   />
                   <DrawerItem
                     icon="translate"
-                    label={userDetails?.language || "Language"} 
+                    label={t(userDetails?.language || "language")} 
                     onPress={() => navigation.navigate('LanguageScreen')} 
                   />
                   <DrawerItem
                     icon="bell-outline" 
-                    label={t('Notifikationer')} 
+                    label={t('notifications')} 
                     onPress={() => navigation.navigate('NotificationScreen')} 
                   />
                   <DrawerItem 
                     icon="star-outline" 
-                    label={t('Prenumeration')} 
+                    label={t('subscription')} 
                     onPress={() => setShowPlusMembership(true)} 
                   />
                 </View>
@@ -99,25 +99,25 @@ const CustomDrawerContent = (props) => {
             </DrawerItem>
             <DrawerItem 
               icon="play-circle-outline" 
-              label={t('Nya sessions')} 
+              label={t('new_sessions')} 
               onPress={() => navigation.navigate('NewSessions')} 
             />
             <DrawerItem 
               icon="cog-outline" 
-              label={t('Inställningar')} 
+              label={t('settings')} 
               onPress={() => navigation.navigate('Settings')} 
             />
             <View style={styles.separator} />
             <DrawerItem 
               icon="share-variant-outline" 
-              label={t('Dela andningsapoteket')} 
+              label={t('share_andningsapoteket')} 
               onPress={() => {
                 setShareAppModalVisible(true);
               }} 
             />
             <DrawerItem 
               icon="logout"
-              label={t('Logga ut')}
+              label={t('sign_out')}
               onPress={signOut} 
             />
             <ShareAppModal 

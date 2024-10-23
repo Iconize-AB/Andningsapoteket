@@ -97,9 +97,8 @@ const SettingsScreen = ({
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* Account Section */}
       <View style={styles.section}>
-        <EnhancedText style={styles.sectionTitle}>Account</EnhancedText>
+        <EnhancedText style={styles.sectionTitle}>{t("account")}</EnhancedText>
         <View style={styles.sectionBody}>
           <TouchableOpacity
             style={styles.row}
@@ -134,16 +133,15 @@ const SettingsScreen = ({
         </View>
       </View>
 
-      {/* Support & About Section */}
       <View style={styles.section}>
-        <EnhancedText style={styles.sectionTitle}>Support & About</EnhancedText>
+        <EnhancedText style={styles.sectionTitle}>{t("support_and_about")}</EnhancedText>
         <View style={styles.sectionBody}>
           <TouchableOpacity
             style={styles.row}
             onPress={() => setModalVisible(true)}
           >
             <Icon name="card-outline" size={24} color="#333" />
-            <EnhancedText style={styles.rowText}>Prenumeration</EnhancedText>
+            <EnhancedText style={styles.rowText}>{t("subscription")}</EnhancedText>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -151,19 +149,18 @@ const SettingsScreen = ({
             onPress={() => navigation.navigate("SupportScreen")}
           >
             <Icon name="help-circle-outline" size={24} color="#333" />
-            <EnhancedText style={styles.rowText}>Hjälp och support</EnhancedText>
+            <EnhancedText style={styles.rowText}>{t("help_and_support")}</EnhancedText>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.row} onPress={() => setShowTerms(true)}>
             <Icon name="information-circle-outline" size={24} color="#333" />
-            <EnhancedText style={styles.rowText}>Terms & condition</EnhancedText>
+            <EnhancedText style={styles.rowText}>{t("terms_and_conditions")}</EnhancedText>
           </TouchableOpacity>
         </View>
       </View>
 
-      {/* Actions Section */}
       <View style={styles.section}>
-        <EnhancedText style={styles.sectionTitle}>Actions</EnhancedText>
+        <EnhancedText style={styles.sectionTitle}>{t("actions")}</EnhancedText>
         <View style={styles.sectionBody}>
           <TouchableOpacity
             style={styles.row}
@@ -171,20 +168,19 @@ const SettingsScreen = ({
           >
             <Icon name="flag-outline" size={24} color="#333" />
             <EnhancedText style={styles.rowText}>
-              Rapportera ett problem
+              {t("report_a_problem")}
             </EnhancedText>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.row} onPress={handleOnDelete}>
             <Icon name="trash-outline" size={24} color="#333" />
             <EnhancedText style={[styles.rowText, styles.deleteText]}>
-              Radera mitt konto
+              {t("delete_my_account")}
             </EnhancedText>
           </TouchableOpacity>
         </View>
       </View>
 
-      {/* Modal for Subscription */}
       <SubscriptionModal isModalVisible={isModalVisible} setModalVisible={setModalVisible}/>
     </ScrollView>
   );

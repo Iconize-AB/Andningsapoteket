@@ -10,11 +10,12 @@ import colors from "../../common/colors/Colors";
 import { useAuth } from "../../context/AuthContext";
 import Toast from "react-native-toast-message";
 import { changeLanguageSetting as apiChangeLanguageSetting } from "../endpoints/SettingsEndpoints";
-import { t } from "../../i18n";
+import { useTranslation } from 'react-i18next';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LanguageScreen = () => {
   const { userDetails, changeLanguageSetting } = useAuth();
+  const { t } = useTranslation();
 
   const handleToggleLanguage = async (newLanguage) => {
     try {
