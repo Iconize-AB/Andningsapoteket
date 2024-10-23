@@ -13,6 +13,7 @@ import InvitationScreen from "../onboarding/InvitationScreen";
 import PaymentMethodScreen from "../payment/PaymentMethodScreen";
 import SubscriptionScreen from "../onboarding/SubscriptionScreen";
 import ChallengeOverviewScreen from "../screens/ChallengeOverviewScreen";
+import UserConfigurationScreen from "../authentication/UserConfigurationScreen";
 
 const Stack = createStackNavigator();
 
@@ -50,6 +51,7 @@ const AuthStack = ({ viewedOnBoarding }) => {
       <Stack.Screen name="AuthorizationCode" component={AuthorizationCodeScreen} />
       <Stack.Screen name="ResetPasswordScreen" component={ResetAccountScreen} />
       <Stack.Screen name="HelpOptionsScreen" component={HelpOptionsScreen} />
+      <Stack.Screen name="UserConfigurationScreen" component={UserConfigurationScreen} />
       <Stack.Screen name="ContentScreen" component={ContentScreen} />
       <Stack.Screen name="InvitationScreen" component={InvitationScreen} />
       <Stack.Screen name="PaymentMethodScreen" component={PaymentMethodScreen} />

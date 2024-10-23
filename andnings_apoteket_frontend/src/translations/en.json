@@ -91,5 +91,9 @@
   "profile": "Profile",
   "dashboard": "Dashboard",
   "new_sessions": "New Sessions",
-  "language": "Language"
+  "language": "Language",
+  "choose_your_language": "Choose Your Language",
+  "please_select_language": "Please select a language",
+  "select_language_to_continue": "Select a language to continue",
+  "language_selection_info": "You can change your language later in the app settings."
 }

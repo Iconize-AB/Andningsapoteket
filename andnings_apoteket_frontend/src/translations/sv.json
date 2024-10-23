@@ -91,5 +91,9 @@
   "profile": "Profil",
   "dashboard": "Översikt",
   "new_sessions": "Nya sessioner",
-  "language": "Språk"
+  "language": "Språk",
+  "choose_your_language": "Välj ditt språk",
+  "please_select_language": "Vänligen välj ett språk",
+  "select_language_to_continue": "Välj ett språk för att fortsätta",
+  "language_selection_info": "Du kan ändra ditt språk senare i appinställningarna."
 }

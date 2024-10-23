@@ -3,17 +3,12 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
-  ImageBackground,
   SafeAreaView,
-  TextInput,
 } from "react-native";
 import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from "react-native-confirmation-code-field";
 import Toast from "react-native-toast-message";
 import EnhancedText from "../regular/EnhancedText";
-import BackIcon from "../regular/BackIcon";
 import { updateOnboardingStep, VerifyAccount } from "./endpoints/AuthenticationEndpoints";
-import colors from "../common/colors/Colors";
-import { useAuth } from "../context/AuthContext";
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -28,7 +23,6 @@ const VerifyAccountScreen = ({ route, navigation }) => {
     value,
     setValue,
   });
-  const { signIn } = useAuth();
 
   const handleVerify = async () => {
     try {
@@ -55,7 +49,7 @@ const VerifyAccountScreen = ({ route, navigation }) => {
         }
 
         // signIn(data.token);
-        navigation.navigate("HelpOptionsScreen");
+        navigation.navigate("UserConfigurationScreen");
       } else {
         Toast.show({
           type: "error",
